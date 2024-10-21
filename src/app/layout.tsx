@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
+import ReactQueryProviders from "./_components/ReactQueryProvider";
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",
@@ -22,8 +23,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${pretendard.variable}`}>
-      <Toaster />
-      <body className={`${pretendard.className} antialiased`}>{children}</body>
+      <Toaster richColors />
+      <body className={`${pretendard.className} antialiased`}>
+        <ReactQueryProviders>{children}</ReactQueryProviders>
+      </body>
     </html>
   );
 }
