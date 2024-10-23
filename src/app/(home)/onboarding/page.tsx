@@ -36,6 +36,7 @@ import CustomMonthRangePicker from "./_components/custom-month-range-picker";
 import { useRouter } from "next/navigation";
 import { useProfileQuery } from "./_hooks/useProfileQuery";
 import { useAuthStore } from "@/app/store/useAuthStore";
+import { MonthPicker } from "@/components/ui/month-picker";
 
 export default function Page() {
   // const [repoList, setRepoList] = useState(repositories);
@@ -227,7 +228,10 @@ export default function Page() {
                         className="w-full h-full object-cover rounded-full"
                         width={100}
                         height={100}
-                        src={imageSrc || userProfile.result.avatarUrl}
+                        src={
+                          imageSrc ||
+                          `${process.env.NEXT_PUBLIC_S3_URL}${userProfile.result.avatarUrl}`
+                        }
                         priority
                         alt="profile_url"
                       />
@@ -916,7 +920,7 @@ export default function Page() {
                       control={form.control}
                       name={`certificates.${index}.certificateGrade`}
                       render={({ field }) => (
-                        <FormItem className="flex flex-col">
+                        <FormItem className="flex flex-col flex-1">
                           <FormLabel>점수/급</FormLabel>
                           <FormControl>
                             <Input
@@ -935,7 +939,12 @@ export default function Page() {
                         <FormItem className="flex flex-col">
                           <FormLabel>취득월</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="YYYY.MM." />
+                            <Input
+                              className="text-center"
+                              type="month"
+                              {...field}
+                              placeholder="YYYY.MM."
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -946,7 +955,7 @@ export default function Page() {
                       name={`certificates.${index}.certificateOrganization`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="flex flex-col">
+                          <FormLabel className="flex flex-col flex-1">
                             발급 기관
                           </FormLabel>
                           <FormControl>
