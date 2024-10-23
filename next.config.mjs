@@ -8,6 +8,28 @@ const nextConfig = {
     });
     return config;
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://localhost:8080/api/:path*",
+      },
+      {
+        source: "/api2/:path*",
+        destination: "http://localhost:8081/api/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
