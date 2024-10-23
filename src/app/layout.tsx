@@ -23,8 +23,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${pretendard.variable}`}>
-      <Toaster richColors />
       <body className={`${pretendard.className} antialiased`}>
+        <Toaster richColors />
         <ReactQueryProviders>{children}</ReactQueryProviders>
       </body>
     </html>
