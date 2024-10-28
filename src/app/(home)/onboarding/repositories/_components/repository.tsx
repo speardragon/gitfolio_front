@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -16,15 +15,11 @@ import { useState } from "react";
 import { repositories } from "../../dummy";
 import TYPESCRIPT_LOGO from "../../../../../../public/images/typescript-logo.png";
 import Image from "next/image";
+import { Input } from "@/components/ui/input";
 
 export default function Repository() {
   const [selectedRepos, setSelectedRepos] = useState<number[]>([]);
-
-  // const handleCheckBoxChange = (id: number) => {
-  //   setSelectedRepos((prev) =>
-  //     prev.includes(id) ? prev.filter((repoId) => repoId !== id) : [...prev, id]
-  //   );
-  // };
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleCheckBoxChange = (id: number) => {
     if (selectedRepos.includes(id)) {
@@ -39,21 +34,32 @@ export default function Repository() {
     }
   };
 
+  const filteredRepos = repositories.filter((repo) =>
+    repo.repoName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="flex flex-col w-2/3 p-4 space-y-2 justify-center items-center">
-      <Card className="h-[300px] overflow-y-auto">
+    <div className="flex flex-col items-center justify-center w-1/2 p-4 space-y-4">
+      <Card className="w-full overflow-y-auto h-1/2">
         <CardHeader>
           <CardTitle>깃허브 레파지토리 선택</CardTitle>
           <CardDescription>
             프로젝트를 생성할 레파지토리를 선택해주세요(최대 3개)
           </CardDescription>
         </CardHeader>
-        <CardContent className="overflow-y-auto">
+        <CardContent className="space-y-4 overflow-y-auto">
+          <Input
+            type="text"
+            placeholder="레포지토리 이름 검색"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full p-6 rounded-md"
+          />
           <div className="overflow-y-auto">
-            {repositories.map((repo) => (
+            {filteredRepos.map((repo) => (
               <div
                 key={repo.repoId}
-                className="flex items-center p-2 py-4 border space-x-4 border-gray-100"
+                className="flex items-center p-2 py-4 space-x-4 border border-gray-200"
               >
                 <input
                   type="checkbox"
@@ -80,7 +86,7 @@ export default function Repository() {
           </div>
         </CardContent>
       </Card>
-      <Button>이력서 만들러 가기</Button>
+      <Button className="w-full">이력서 만들러 가기</Button>
     </div>
   );
 }

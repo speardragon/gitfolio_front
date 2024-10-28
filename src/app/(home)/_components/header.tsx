@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="flex flex-col bg-white h-full p-4">
+    <header className="flex flex-col h-full p-4 bg-white">
       <Link href={"/"}>
         <Image alt="github_white_logo" src={GITFOLIO_LOGO} width={200} />
       </Link>

@@ -35,9 +35,9 @@ export default function MainLayout({
     reissueAccessToken();
   }, []);
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen bg-gray-100">
       <Header />
-      {children}
+      <div className="flex-grow overflow-y-auto h-[1000px]">{children}</div>
     </div>
   );
 }
