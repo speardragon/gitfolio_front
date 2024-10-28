@@ -1,12 +1,12 @@
 import { z } from "zod";
 
 export const OnboardingFormSchema = z.object({
-  name: z.string().optional(),
-  phoneNumber: z.string().optional(),
-  email: z.string().optional(),
-  position: z.string().optional(),
-
-  // avatarUrl: z.string().optional().default("/images/gitfolio-logo.png"), // 프로필 사진 기본값 설정
+  name: z.string().min(1, "이름은 필수 항목입니다."),
+  phoneNumber: z
+    .string()
+    .min(10, "전화번호는 필수 항목입니다. 올바른 번호를 입력해주세요"),
+  email: z.string().email({ message: "올바른 이메일 형식이 아닙니다." }),
+  position: z.string().min(1, "직군은 필수 항목입니다."),
 
   workExperiences: z
     .array(
