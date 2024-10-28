@@ -20,9 +20,8 @@ export default function MainLayout({
         });
 
         if (response.ok) {
-          // 응답의 body에서 access token을 가져옴
           const data = await response.json();
-          const accessToken = data.access; // API 응답에서 accessToken 추출
+          const accessToken = data.accessToken;
           // console.log(accessToken);
           setAccessToken(accessToken);
         } else {

@@ -43,7 +43,6 @@ export default function Page() {
   const [iconType, setIconType] = useState(<Link />);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File>();
-  // const [accessToken, setAccessToken] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -90,10 +89,10 @@ export default function Page() {
         },
       ],
     },
+    mode: "onChange",
   });
 
   const { accessToken } = useAuthStore((state) => state);
-  console.log(accessToken);
   const { mutate } = useOnboardingUpdate();
   const { data: userProfile, refetch } = useProfileQuery(accessToken!);
 
@@ -213,7 +212,7 @@ export default function Page() {
                 <div className="font-bold text-xl">
                   기본 정보
                   <span className="text-red-500">*</span>
-                  <span className="text-sm font-normal"> (권장 사항)</span>
+                  <span className="text-sm font-normal"> (필수 사항)</span>
                 </div>
               </CardTitle>
               <Separator className="border-2 border-black" />
@@ -228,10 +227,7 @@ export default function Page() {
                         className="w-full h-full object-cover rounded-full"
                         width={100}
                         height={100}
-                        src={
-                          imageSrc ||
-                          `${process.env.NEXT_PUBLIC_S3_URL}${userProfile.result.avatarUrl}`
-                        }
+                        src={userProfile.result.avatarUrl}
                         priority
                         alt="profile_url"
                       />
@@ -454,8 +450,19 @@ export default function Page() {
                                 <SelectValue placeholder="선택" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="정규직">정규직</SelectItem>
-                                <SelectItem value="계약직">계약직</SelectItem>
+                                <SelectItem value="INTERN">인턴</SelectItem>
+                                <SelectItem value="CONTRACT_WORKER">
+                                  계약직
+                                </SelectItem>
+                                <SelectItem value="FULL_TIME">
+                                  정규직
+                                </SelectItem>
+                                <SelectItem value="PRIVATE_BUSINESS">
+                                  개인사업
+                                </SelectItem>
+                                <SelectItem value="FREELANCER">
+                                  프리랜서
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                           </FormItem>
@@ -476,8 +483,12 @@ export default function Page() {
                                 <SelectValue placeholder="선택" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="재직중">재직중</SelectItem>
-                                <SelectItem value="퇴사">퇴사</SelectItem>
+                                <SelectItem value="EMPLOYMENT">
+                                  재직중
+                                </SelectItem>
+                                <SelectItem value="RESIGNATION">
+                                  퇴사
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                           </FormItem>
@@ -591,18 +602,22 @@ export default function Page() {
                               <SelectValue placeholder="선택" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="사설교육">사설교육</SelectItem>
-                              <SelectItem value="고등학교">계약직</SelectItem>
-                              <SelectItem value="대학교(전문학사)">
+                              <SelectItem value="PRIVATE_EDUCATION">
+                                사설교육
+                              </SelectItem>
+                              <SelectItem value="HIGH_SCHOOL">
+                                고등학교
+                              </SelectItem>
+                              <SelectItem value="UNIVERSITY_ASSOCIATE_DEGREE">
                                 대학교(전문학사)
                               </SelectItem>
-                              <SelectItem value="대학교(학사)">
+                              <SelectItem value="UNIVERSITY_BACHELOR">
                                 대학교(학사)
                               </SelectItem>
-                              <SelectItem value="대학원(석사)">
+                              <SelectItem value="GRADUATE_SCHOOL_MASTER">
                                 대학원(석사)
                               </SelectItem>
-                              <SelectItem value="대학원(박사)">
+                              <SelectItem value="GRADUATE_SCHOOL_DOCTOR">
                                 대학원(박사)
                               </SelectItem>
                             </SelectContent>
@@ -673,156 +688,19 @@ export default function Page() {
                         )}
                       />
                       <div className="flex flex-col w-full justify-between">
-                        <div className="text-sm font-semibold">근무 기간</div>
+                        <div className="text-sm font-semibold">재학 기간</div>
                         <CustomMonthRangePicker
                           value={"educations"}
                           form={form}
                           index={index}
                         />
                       </div>
-                      {/* <FormField
-                          control={form.control}
-                          name={`educations.${index}.enrollmentStartAt`}
-                          render={({ field }) => (
-                            <FormItem className="w-2/3">
-                              <FormLabel>재학 기간</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder="YYYY.MM - YYYY.MM"
-                                />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        /> */}
                     </div>
                   </div>
                   <Separator className="my-4" />
                 </div>
               </CardContent>
             ))}
-          </Card>
-
-          {/* 링크 */}
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-lg font-medium flex items-center justify-between">
-                <div className="font-bold text-xl">
-                  링크
-                  <span className="text-sm font-normal"> (선택 사항)</span>
-                </div>
-              </CardTitle>
-              <Separator className="border-2 border-black" />
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  linksAppend({
-                    linkUrl: "",
-                    linkTitle: "",
-                  });
-                }}
-                className="w-full text-black gap-1 bg-gray-100 hover:bg-gray-200 rounded-md mx-auto text-center py-2"
-              >
-                <Plus />
-                링크추가
-              </Button>
-              {linksFields.map((field, index) => {
-                return (
-                  <div
-                    className="flex w-full justify-between gap-2 "
-                    key={index}
-                  >
-                    <div className="flex w-full justify-center items-center gap-2 border border-gray-200 rounded-md">
-                      <div className="aspect-square w-14 h-14 p-4 border-r border-gray-200">
-                        {iconType}
-                      </div>
-                      <div className="flex w-full text-sm flex-col p-2">
-                        <FormField
-                          control={form.control}
-                          name={`links.${index}.linkUrl`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <input
-                                  {...field}
-                                  className="flex h-9 w-full rounded-md bg-transparent placeholder:text-gray-400 px-3 py-1 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                                  placeholder="https://"
-                                  onBlur={() => handleIconChange(field.value!)}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name={`links.${index}.linkTitle`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <input
-                                  className="flex h-9 w-full text-base font-bold placeholder:font-bold placeholder:text-gray-400 rounded-md bg-transparent px-3 py-1 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...field}
-                                  placeholder="URL 제목을 입력해주세요."
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        {/* <div className="font-bold">깃허브</div> */}
-                      </div>
-                    </div>
-                    <div className="flex justify-center items-center space-x-2 border border-gray-200 rounded-md">
-                      <Button
-                        className="border-r border-gray-200 "
-                        variant="ghost"
-                        size="sm"
-                        disabled={index === 0}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          if (index > 0) {
-                            linksMove(index, index - 1);
-                          }
-                        }}
-                      >
-                        <ArrowUp className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        className="border-r border-gray-200 "
-                        variant="ghost"
-                        size="sm"
-                        disabled={index === linksFields.length - 1}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          if (index < linksFields.length - 1) {
-                            linksMove(index, index + 1);
-                          }
-                        }}
-                      >
-                        <ArrowDown className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          linksRemove(index);
-                        }}
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })}
-            </CardContent>
           </Card>
 
           {/* 자격증 */}
@@ -973,6 +851,128 @@ export default function Page() {
                 </div>
               </CardContent>
             ))}
+          </Card>
+
+          {/* 링크 */}
+          <Card className="shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-lg font-medium flex items-center justify-between">
+                <div className="font-bold text-xl">
+                  링크
+                  <span className="text-sm font-normal"> (선택 사항)</span>
+                </div>
+              </CardTitle>
+              <Separator className="border-2 border-black" />
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  linksAppend({
+                    linkUrl: "",
+                    linkTitle: "",
+                  });
+                }}
+                className="w-full text-black gap-1 bg-gray-100 hover:bg-gray-200 rounded-md mx-auto text-center py-2"
+              >
+                <Plus />
+                링크추가
+              </Button>
+              {linksFields.map((field, index) => {
+                return (
+                  <div
+                    className="flex w-full justify-between gap-2 "
+                    key={index}
+                  >
+                    <div className="flex w-full justify-center items-center gap-2 border border-gray-200 rounded-md">
+                      <div className="aspect-square w-14 h-14 p-4 border-r border-gray-200">
+                        {iconType}
+                      </div>
+                      <div className="flex w-full text-sm flex-col p-2">
+                        <FormField
+                          control={form.control}
+                          name={`links.${index}.linkUrl`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <input
+                                  {...field}
+                                  className="flex h-9 w-full rounded-md bg-transparent placeholder:text-gray-400 px-3 py-1 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                  placeholder="https://"
+                                  onBlur={() => handleIconChange(field.value!)}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`links.${index}.linkTitle`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <input
+                                  className="flex h-9 w-full text-base font-bold placeholder:font-bold placeholder:text-gray-400 rounded-md bg-transparent px-3 py-1 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                  {...field}
+                                  placeholder="URL 제목을 입력해주세요."
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        {/* <div className="font-bold">깃허브</div> */}
+                      </div>
+                    </div>
+                    <div className="flex justify-center items-center space-x-2 border border-gray-200 rounded-md">
+                      <Button
+                        className="border-r border-gray-200 "
+                        variant="ghost"
+                        size="sm"
+                        disabled={index === 0}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (index > 0) {
+                            linksMove(index, index - 1);
+                          }
+                        }}
+                      >
+                        <ArrowUp className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        className="border-r border-gray-200 "
+                        variant="ghost"
+                        size="sm"
+                        disabled={index === linksFields.length - 1}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (index < linksFields.length - 1) {
+                            linksMove(index, index + 1);
+                          }
+                        }}
+                      >
+                        <ArrowDown className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          linksRemove(index);
+                        }}
+                      >
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </CardContent>
           </Card>
 
           <div className="flex justify-end">

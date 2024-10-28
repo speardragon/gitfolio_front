@@ -17,9 +17,7 @@ export function useOnboardingUpdate() {
       const response = await fetch(`/api2/members/me`, {
         method: "PUT",
         headers: {
-          // Authorization: `Bearer ${accessToken}`,
-          // access: `${accessToken}`,
-          access: accessToken,
+          Authorization: `Bearer ${accessToken}`,
         },
         credentials: "include",
         body: data,

@@ -68,7 +68,7 @@ const getUserProfile = async (accessToken: string) => {
     method: "GET",
     credentials: "include",
     headers: {
-      access: accessToken,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
   if (!response.ok) {
