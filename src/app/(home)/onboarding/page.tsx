@@ -33,18 +33,13 @@ import Linedin from "../../../../public/linkedin.svg";
 import { OnboardingFormSchema } from "./_lib/schema";
 import { useOnboardingUpdate } from "./_hooks/useOnboardingUpdate";
 import CustomMonthRangePicker from "./_components/custom-month-range-picker";
-import { useRouter } from "next/navigation";
 import { useProfileQuery } from "./_hooks/useProfileQuery";
 import { useAuthStore } from "@/app/store/useAuthStore";
-import { MonthPicker } from "@/components/ui/month-picker";
 
 export default function Page() {
   // const [repoList, setRepoList] = useState(repositories);
   const [iconType, setIconType] = useState(<Link />);
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File>();
-
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof OnboardingFormSchema>>({
     resolver: zodResolver(OnboardingFormSchema),
@@ -53,48 +48,48 @@ export default function Page() {
       phoneNumber: "",
       email: "",
       position: "",
-      workExperiences: [
-        {
-          companyName: "",
-          departmentName: "",
-          role: "",
-          workTime: "",
-          employmentStatus: "",
-          startedAt: "",
-          endedAt: "",
-        },
-      ],
-      educations: [
-        {
-          schoolType: "",
-          schoolName: "",
-          major: "",
-          graduationStatus: "",
-          startedAt: "",
-          endedAt: "",
-        },
-      ],
-      links: [
-        {
-          linkUrl: "",
-          linkTitle: "",
-        },
-      ],
-      certificates: [
-        {
-          certificateName: "",
-          certificateGrade: "",
-          certificateOrganization: "",
-          certificatedAt: "",
-        },
-      ],
+      // workExperiences: [
+      //   {
+      //     companyName: "",
+      //     departmentName: "",
+      //     role: "",
+      //     workTime: "",
+      //     employmentStatus: "",
+      //     startedAt: "",
+      //     endedAt: "",
+      //   },
+      // ],
+      // educations: [
+      //   {
+      //     schoolType: "",
+      //     schoolName: "",
+      //     major: "",
+      //     graduationStatus: "",
+      //     startedAt: "",
+      //     endedAt: "",
+      //   },
+      // ],
+      // links: [
+      //   {
+      //     linkUrl: "",
+      //     linkTitle: "",
+      //   },
+      // ],
+      // certificates: [
+      //   {
+      //     certificateName: "",
+      //     certificateGrade: "",
+      //     certificateOrganization: "",
+      //     certificatedAt: "",
+      //   },
+      // ],
     },
     mode: "onChange",
   });
 
   const { accessToken } = useAuthStore((state) => state);
   const { mutate } = useOnboardingUpdate();
-  const { data: userProfile, refetch } = useProfileQuery(accessToken!);
+  const { data: userProfile } = useProfileQuery(accessToken!);
 
   const {
     fields: experiencesFields,
@@ -176,7 +171,6 @@ export default function Page() {
 
       reader.onloadend = () => {
         setImageFile(file);
-        setImageSrc(reader.result as string);
       };
 
       reader.readAsDataURL(file);
@@ -202,14 +196,14 @@ export default function Page() {
   }
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto p-4">
+    <div className="max-w-3xl p-4 mx-auto space-y-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           {/* 기본정보 */}
           <Card className="shadow-lg">
             <CardHeader>
-              <CardTitle className="text-lg font-medium flex items-center justify-between">
-                <div className="font-bold text-xl">
+              <CardTitle className="flex items-center justify-between text-lg font-medium">
+                <div className="text-xl font-bold">
                   기본 정보
                   <span className="text-red-500">*</span>
                   <span className="text-sm font-normal"> (필수 사항)</span>
@@ -224,17 +218,17 @@ export default function Page() {
                   <div className="flex flex-col justify-center gap-2">
                     <div className="relative group w-[100px] h-[100px] rounded-full overflow-hidden">
                       <Image
-                        className="w-full h-full object-cover rounded-full"
+                        className="object-cover w-full h-full rounded-full"
                         width={100}
                         height={100}
                         src={userProfile.result.avatarUrl}
                         priority
                         alt="profile_url"
                       />
-                      <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-40 transition-opacity"></div>
+                      <div className="absolute inset-0 transition-opacity bg-black opacity-0 group-hover:opacity-40"></div>
                       <button
                         type="button"
-                        className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm text-white font-semibold"
+                        className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-white transition-opacity opacity-0 group-hover:opacity-100"
                         onClick={() =>
                           document.getElementById("file-input")!.click()
                         }
@@ -251,7 +245,7 @@ export default function Page() {
                       }}
                     />
                   </div>
-                  <div className="flex flex-col w-full gap-2 justify-between">
+                  <div className="flex flex-col justify-between w-full gap-2">
                     <FormField
                       control={form.control}
                       name="name"
@@ -316,8 +310,8 @@ export default function Page() {
           {/* 경력 */}
           <Card className="shadow-lg">
             <CardHeader>
-              <CardTitle className="text-lg font-medium flex items-center justify-between">
-                <div className="font-bold text-xl">
+              <CardTitle className="flex items-center justify-between text-lg font-medium">
+                <div className="text-xl font-bold">
                   경력
                   <span className="text-sm font-normal"> (선택 사항)</span>
                 </div>
@@ -338,7 +332,7 @@ export default function Page() {
                     });
                   }}
                 >
-                  <PlusCircle className="h-4 w-4 mr-2" />
+                  <PlusCircle className="w-4 h-4 mr-2" />
                   추가
                 </Button>
               </CardTitle>
@@ -363,7 +357,7 @@ export default function Page() {
                           }
                         }}
                       >
-                        <ArrowUp className="h-4 w-4" />
+                        <ArrowUp className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -376,7 +370,7 @@ export default function Page() {
                           }
                         }}
                       >
-                        <ArrowDown className="h-4 w-4" />
+                        <ArrowDown className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -386,11 +380,11 @@ export default function Page() {
                           experiencesRemove(index);
                         }}
                       >
-                        <Trash className="h-4 w-4" />
+                        <Trash className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
-                  <div className="flex w-full gap-2 justify-between">
+                  <div className="flex justify-between w-full gap-2">
                     <FormField
                       control={form.control}
                       name={`workExperiences.${index}.companyName`}
@@ -433,7 +427,7 @@ export default function Page() {
                       )}
                     />
                   </div>
-                  <div className="flex w-full gap-2 justify-between">
+                  <div className="flex justify-between w-full gap-2">
                     <div className="flex flex-1 gap-2">
                       <FormField
                         control={form.control}
@@ -513,8 +507,8 @@ export default function Page() {
           {/* 교육 */}
           <Card className="shadow-lg">
             <CardHeader>
-              <CardTitle className="text-lg font-medium flex items-center justify-between">
-                <div className="font-bold text-xl">
+              <CardTitle className="flex items-center justify-between text-lg font-medium">
+                <div className="text-xl font-bold">
                   교육
                   <span className="text-sm font-normal"> (선택 사항)</span>
                 </div>
@@ -534,7 +528,7 @@ export default function Page() {
                     });
                   }}
                 >
-                  <PlusCircle className="h-4 w-4 mr-2" />
+                  <PlusCircle className="w-4 h-4 mr-2" />
                   추가
                 </Button>
               </CardTitle>
@@ -559,7 +553,7 @@ export default function Page() {
                           }
                         }}
                       >
-                        <ArrowUp className="h-4 w-4" />
+                        <ArrowUp className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -572,7 +566,7 @@ export default function Page() {
                           }
                         }}
                       >
-                        <ArrowDown className="h-4 w-4" />
+                        <ArrowDown className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -582,11 +576,11 @@ export default function Page() {
                           educationRemove(index);
                         }}
                       >
-                        <Trash className="h-4 w-4" />
+                        <Trash className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
-                  <div className="flex flex-1 w-full gap-2 justify-between">
+                  <div className="flex justify-between flex-1 w-full gap-2">
                     <FormField
                       control={form.control}
                       name={`educations.${index}.schoolType`}
@@ -662,7 +656,7 @@ export default function Page() {
                       )}
                     />
                   </div>
-                  <div className="flex w-full gap-2 justify-between">
+                  <div className="flex justify-between w-full gap-2">
                     <div className="flex flex-1 gap-2">
                       <FormField
                         control={form.control}
@@ -687,7 +681,7 @@ export default function Page() {
                           </FormItem>
                         )}
                       />
-                      <div className="flex flex-col w-full justify-between">
+                      <div className="flex flex-col justify-between w-full">
                         <div className="text-sm font-semibold">재학 기간</div>
                         <CustomMonthRangePicker
                           value={"educations"}
@@ -706,8 +700,8 @@ export default function Page() {
           {/* 자격증 */}
           <Card className="shadow-lg">
             <CardHeader>
-              <CardTitle className="text-lg font-medium flex items-center justify-between">
-                <div className="font-bold text-xl">
+              <CardTitle className="flex items-center justify-between text-lg font-medium">
+                <div className="text-xl font-bold">
                   자격증
                   <span className="text-sm font-normal"> (선택사항)</span>
                 </div>
@@ -725,7 +719,7 @@ export default function Page() {
                     });
                   }}
                 >
-                  <PlusCircle className="h-4 w-4 mr-2" />
+                  <PlusCircle className="w-4 h-4 mr-2" />
                   추가
                 </Button>
               </CardTitle>
@@ -750,7 +744,7 @@ export default function Page() {
                           }
                         }}
                       >
-                        <ArrowUp className="h-4 w-4" />
+                        <ArrowUp className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -763,7 +757,7 @@ export default function Page() {
                           }
                         }}
                       >
-                        <ArrowDown className="h-4 w-4" />
+                        <ArrowDown className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -773,7 +767,7 @@ export default function Page() {
                           certificationsRemove(index);
                         }}
                       >
-                        <Trash className="h-4 w-4" />
+                        <Trash className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
@@ -793,7 +787,7 @@ export default function Page() {
                       </FormItem>
                     )}
                   />
-                  <div className="flex flex-1 w-full gap-2 justify-between">
+                  <div className="flex justify-between flex-1 w-full gap-2">
                     <FormField
                       control={form.control}
                       name={`certificates.${index}.certificateGrade`}
@@ -856,8 +850,8 @@ export default function Page() {
           {/* 링크 */}
           <Card className="shadow-lg">
             <CardHeader>
-              <CardTitle className="text-lg font-medium flex items-center justify-between">
-                <div className="font-bold text-xl">
+              <CardTitle className="flex items-center justify-between text-lg font-medium">
+                <div className="text-xl font-bold">
                   링크
                   <span className="text-sm font-normal"> (선택 사항)</span>
                 </div>
@@ -874,7 +868,7 @@ export default function Page() {
                     linkTitle: "",
                   });
                 }}
-                className="w-full text-black gap-1 bg-gray-100 hover:bg-gray-200 rounded-md mx-auto text-center py-2"
+                className="w-full gap-1 py-2 mx-auto text-center text-black bg-gray-100 rounded-md hover:bg-gray-200"
               >
                 <Plus />
                 링크추가
@@ -882,14 +876,14 @@ export default function Page() {
               {linksFields.map((field, index) => {
                 return (
                   <div
-                    className="flex w-full justify-between gap-2 "
+                    className="flex justify-between w-full gap-2 "
                     key={index}
                   >
-                    <div className="flex w-full justify-center items-center gap-2 border border-gray-200 rounded-md">
-                      <div className="aspect-square w-14 h-14 p-4 border-r border-gray-200">
+                    <div className="flex items-center justify-center w-full gap-2 border border-gray-200 rounded-md">
+                      <div className="p-4 border-r border-gray-200 aspect-square w-14 h-14">
                         {iconType}
                       </div>
-                      <div className="flex w-full text-sm flex-col p-2">
+                      <div className="flex flex-col w-full p-2 text-sm">
                         <FormField
                           control={form.control}
                           name={`links.${index}.linkUrl`}
@@ -898,7 +892,7 @@ export default function Page() {
                               <FormControl>
                                 <input
                                   {...field}
-                                  className="flex h-9 w-full rounded-md bg-transparent placeholder:text-gray-400 px-3 py-1 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                  className="flex w-full px-3 py-1 transition-colors bg-transparent rounded-md shadow-sm h-9 placeholder:text-gray-400 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                   placeholder="https://"
                                   onBlur={() => handleIconChange(field.value!)}
                                 />
@@ -914,7 +908,7 @@ export default function Page() {
                             <FormItem>
                               <FormControl>
                                 <input
-                                  className="flex h-9 w-full text-base font-bold placeholder:font-bold placeholder:text-gray-400 rounded-md bg-transparent px-3 py-1 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                  className="flex w-full px-3 py-1 text-base font-bold transition-colors bg-transparent rounded-md shadow-sm h-9 placeholder:font-bold placeholder:text-gray-400 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                   {...field}
                                   placeholder="URL 제목을 입력해주세요."
                                 />
@@ -926,7 +920,7 @@ export default function Page() {
                         {/* <div className="font-bold">깃허브</div> */}
                       </div>
                     </div>
-                    <div className="flex justify-center items-center space-x-2 border border-gray-200 rounded-md">
+                    <div className="flex items-center justify-center space-x-2 border border-gray-200 rounded-md">
                       <Button
                         className="border-r border-gray-200 "
                         variant="ghost"
@@ -940,7 +934,7 @@ export default function Page() {
                           }
                         }}
                       >
-                        <ArrowUp className="h-4 w-4" />
+                        <ArrowUp className="w-4 h-4" />
                       </Button>
                       <Button
                         className="border-r border-gray-200 "
@@ -955,7 +949,7 @@ export default function Page() {
                           }
                         }}
                       >
-                        <ArrowDown className="h-4 w-4" />
+                        <ArrowDown className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -966,7 +960,7 @@ export default function Page() {
                           linksRemove(index);
                         }}
                       >
-                        <Trash className="h-4 w-4" />
+                        <Trash className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>

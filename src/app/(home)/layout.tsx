@@ -22,7 +22,7 @@ export default function MainLayout({
         if (response.ok) {
           const data = await response.json();
           const accessToken = data.accessToken;
-          // console.log(accessToken);
+          console.log(accessToken);
           setAccessToken(accessToken);
         } else {
           console.error("Failed to reissue access token");
@@ -37,7 +37,7 @@ export default function MainLayout({
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Header />
-      <div className="flex-grow overflow-y-auto h-[1000px]">{children}</div>
+      <div className="flex-grow overflow-y-auto">{children}</div>
     </div>
   );
 }
