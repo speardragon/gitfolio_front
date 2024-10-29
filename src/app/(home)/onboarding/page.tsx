@@ -35,6 +35,7 @@ import { useOnboardingUpdate } from "./_hooks/useOnboardingUpdate";
 import CustomMonthRangePicker from "./_components/custom-month-range-picker";
 import { useProfileQuery } from "./_hooks/useProfileQuery";
 import { useAuthStore } from "@/app/store/useAuthStore";
+import { toast } from "sonner";
 
 export default function Page() {
   // const [repoList, setRepoList] = useState(repositories);
@@ -160,6 +161,13 @@ export default function Page() {
     formData.append("imageFile", imageFile as Blob);
 
     mutate({ accessToken: accessToken!, data: formData });
+    // toast.message("You submitted the following values:", {
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+    //     </pre>
+    //   ),
+    // });
   }
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {

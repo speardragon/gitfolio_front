@@ -14,7 +14,7 @@ export function useOnboardingUpdate() {
   return useMutation({
     mutationKey: ["onboardingUpdate"],
     mutationFn: async ({ accessToken, data }: OnboardingRequest) => {
-      const response = await fetch(`/api2/members/me`, {
+      const response = await fetch(`/api/members/me`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${accessToken}`,

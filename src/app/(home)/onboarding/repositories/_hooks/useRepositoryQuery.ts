@@ -17,13 +17,14 @@ interface ApiResponse {
 }
 
 const getMyRepositories = async (accessToken: string) => {
-  const response = await fetch(`/api2/members/myRepo`, {
+  const response = await fetch(`/api/members/myRepo`, {
     method: "GET",
     credentials: "include",
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   });
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
