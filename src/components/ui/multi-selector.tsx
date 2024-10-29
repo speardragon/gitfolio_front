@@ -13,11 +13,17 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import moment from "moment";
+import "moment/locale/ko";
+import GITHUB_LOGO from "../../../public/images/github-mark.png";
 
 export interface Option {
   value: string;
   label: string;
   disable?: boolean;
+  topLanguage?: string; // 많이 사용된 언어
+  updatedAt?: string; // 업데이트 시간
   /** fixed option that can't be removed. */
   fixed?: boolean;
   /** Group the options by providing key. */
@@ -615,7 +621,21 @@ const MultipleSelector = React.forwardRef<
                                   "cursor-default text-muted-foreground"
                               )}
                             >
+                              <Image
+                                src={
+                                  option.topLanguage
+                                    ? `/images/languages/${option.topLanguage}.png`
+                                    : GITHUB_LOGO
+                                }
+                                alt="repo-logo"
+                                width={20}
+                                height={20}
+                                className="mr-2"
+                              />
                               {option.label}
+                              <span className="ml-auto text-gray-500">
+                                {moment(option.updatedAt).fromNow()}
+                              </span>
                             </CommandItem>
                           );
                         })}
