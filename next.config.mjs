@@ -27,12 +27,16 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/:path*",
-        destination: "http://localhost:8080/api/:path*",
+        source: "/api/auth/:path*",
+        destination: "http://localhost:8080/api/auth/:path*",
       },
       {
-        source: "/api2/:path*",
-        destination: "http://localhost:8081/api/:path*",
+        source: "/api/members/:path*",
+        destination: "http://localhost:8081/api/members/:path*",
+      },
+      {
+        source: "/api/resumes/:path*",
+        destination: "http://localhost:8082/api/resumes/:path*",
       },
     ];
   },
