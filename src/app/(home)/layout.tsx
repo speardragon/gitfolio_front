@@ -3,6 +3,9 @@
 import { useEffect } from "react";
 import Header from "./_components/header";
 import { useAuthStore } from "../store/useAuthStore";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
 
 export default function MainLayout({
   children,
@@ -35,7 +38,7 @@ export default function MainLayout({
     reissueAccessToken();
   }, []);
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen">
       <Header />
       <div className="flex-grow overflow-y-auto">{children}</div>
     </div>
