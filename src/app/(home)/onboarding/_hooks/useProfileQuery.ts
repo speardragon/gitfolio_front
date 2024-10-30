@@ -64,7 +64,7 @@ interface ApiResponse {
 }
 
 const getUserProfile = async (accessToken: string) => {
-  const response = await fetch(`/api2/members/me`, {
+  const response = await fetch(`/api/members/me`, {
     method: "GET",
     credentials: "include",
     headers: {

@@ -5,82 +5,117 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { LockOpen } from "lucide-react";
-import moment from "moment";
 import "moment/locale/ko";
 import { useState } from "react";
-import { repositories } from "../../dummy";
-import TYPESCRIPT_LOGO from "../../../../../../public/images/typescript-logo.png";
-import Image from "next/image";
+import { useRepositoryQuery } from "../_hooks/useRepositoryQuery";
+import { useAuthStore } from "@/app/store/useAuthStore";
+import MultipleSelector, { Option } from "@/components/ui/multi-selector";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useResumeMutation } from "../_hooks/useResumeMutation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Repository() {
-  const [selectedRepos, setSelectedRepos] = useState<number[]>([]);
+  const { accessToken } = useAuthStore((state) => state);
 
-  // const handleCheckBoxChange = (id: number) => {
-  //   setSelectedRepos((prev) =>
-  //     prev.includes(id) ? prev.filter((repoId) => repoId !== id) : [...prev, id]
-  //   );
-  // };
+  const router = useRouter();
 
-  const handleCheckBoxChange = (id: number) => {
-    if (selectedRepos.includes(id)) {
-      // 이미 선택된 항목을 선택 해제
-      setSelectedRepos((prev) => prev.filter((repoId) => repoId !== id));
-    } else if (selectedRepos.length < 3) {
-      // 최대 3개까지 선택 가능
-      setSelectedRepos((prev) => [...prev, id]);
-    } else {
-      // 최대 3개를 초과한 경우 알림 (또는 다른 처리)
+  const [value, setValue] = useState<Option[]>([]);
+  const [requirements, setRequirements] = useState<string>("");
+
+  const { data: repositories } = useRepositoryQuery(accessToken!);
+  const { mutate } = useResumeMutation();
+
+  if (!repositories) {
+    return (
+      <div className="flex flex-col items-center justify-center w-1/2 h-full p-4 my-auto space-y-4">
+        <Card className="w-full">
+          <CardHeader>
+            <Skeleton className="w-1/2 h-6 mb-2" />
+            <Skeleton className="w-3/4 h-4" />
+          </CardHeader>
+          <CardContent className="h-full space-y-4">
+            <Skeleton className="w-full h-10" />
+            <Skeleton className="w-full h-10" />
+          </CardContent>
+        </Card>
+        <Skeleton className="w-full h-10" />
+      </div>
+    );
+  }
+
+  const options: Option[] = repositories.result.map((repo) => ({
+    label: repo.repoName,
+    value: repo.repoUrl,
+    topLanguage: repo.topLanguage,
+    updatedAt: repo.updatedAt,
+  }));
+
+  const onSubmit = () => {
+    const data = {
+      selectedRepo: value.map((repo) => repo.value),
+      requirements: requirements,
+    };
+    mutate({ accessToken: accessToken!, data });
+    router.push("/community");
+    // toast.message("You submitted the following values:", {
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+    //     </pre>
+    //   ),
+    // });
+    // console.log(data);
+  };
+
+  const handleValueChange = (selectedOptions: Option[]) => {
+    if (selectedOptions.length > 3) {
       alert("최대 3개까지만 선택할 수 있습니다.");
+      return;
+    } else {
+      setValue(selectedOptions);
     }
   };
 
   return (
-    <div className="flex flex-col w-2/3 p-4 space-y-2 justify-center items-center">
-      <Card className="h-[300px] overflow-y-auto">
+    <div className="flex flex-col items-center justify-center w-1/2 h-full p-4 my-auto space-y-4">
+      <Card className="w-full ">
         <CardHeader>
           <CardTitle>깃허브 레파지토리 선택</CardTitle>
           <CardDescription>
             프로젝트를 생성할 레파지토리를 선택해주세요(최대 3개)
           </CardDescription>
         </CardHeader>
-        <CardContent className="overflow-y-auto">
-          <div className="overflow-y-auto">
-            {repositories.map((repo) => (
-              <div
-                key={repo.repoId}
-                className="flex items-center p-2 py-4 border space-x-4 border-gray-100"
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedRepos.includes(repo.repoId)}
-                  onChange={() => handleCheckBoxChange(repo.repoId)}
-                />
-                <Image src={TYPESCRIPT_LOGO} alt="app_logo" width={20} />
-                <LockOpen className="text-gray-400" />
-                <span style={{ marginRight: "1rem" }}>
-                  <a
-                    href={repo.repoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {repo.repoName}
-                  </a>
-                </span>
-                {/* UpdatedAt (한국어 표기로 몇일 전인지 표시) */}
-                <span>
-                  {moment(repo.updatedAt).fromNow()} {/* n일 전 */}
-                </span>
-              </div>
-            ))}
-          </div>
+        <CardContent className="h-full space-y-4">
+          <MultipleSelector
+            className=""
+            hidePlaceholderWhenSelected
+            value={value}
+            onChange={handleValueChange}
+            defaultOptions={options}
+            placeholder="원하는 레포지토리를 최대 3개까지 선택해주세요."
+            emptyIndicator={
+              <p className="text-lg leading-10 text-center text-gray-600 dark:text-gray-400">
+                레포지토리가 존재하지 않습니다.
+              </p>
+            }
+          />
+          <Input
+            type="text"
+            placeholder="더 나은 이력서를 만들기 위한 요청사항을 입력해주세요."
+            value={requirements}
+            onChange={(e) => setRequirements(e.target.value)}
+            className="w-full rounded-md"
+          />
         </CardContent>
       </Card>
-      <Button>이력서 만들러 가기</Button>
+      <Button onClick={onSubmit} className="w-full">
+        이력서 만들러 가기
+      </Button>
     </div>
   );
 }
