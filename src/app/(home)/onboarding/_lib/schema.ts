@@ -14,7 +14,7 @@ export const OnboardingFormSchema = z.object({
         companyName: z.string().optional(),
         role: z.string().optional(),
         departmentName: z.string().optional(),
-        workTime: z.string().optional(),
+        workType: z.string().optional(),
         employmentStatus: z.string().optional(),
         startedAt: z.string().optional(),
         endedAt: z.string().optional(),

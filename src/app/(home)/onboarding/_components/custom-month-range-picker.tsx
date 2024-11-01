@@ -26,7 +26,6 @@ export default function CustomMonthRangePicker({ value, form, index }: Props) {
     start: Date;
     end: Date;
   }) => {
-    console.log(selectedDates);
     setDates(selectedDates);
     const formattedStart = moment(selectedDates.start).format("YYYY-MM");
     const formattedEnd = moment(selectedDates.end).format("YYYY-MM");

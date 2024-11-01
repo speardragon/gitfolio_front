@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/app/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 
 interface Result {
@@ -16,7 +17,7 @@ interface ApiResponse {
   result: Result[];
 }
 
-const getMyRepositories = async (accessToken: string) => {
+const getMyRepositories = async (accessToken: string | null) => {
   const response = await fetch(`/api/members/myRepo`, {
     method: "GET",
     credentials: "include",
@@ -31,7 +32,8 @@ const getMyRepositories = async (accessToken: string) => {
   const data: ApiResponse = await response.json();
   return data || "";
 };
-export const useRepositoryQuery = (accessToken: string) => {
+export const useRepositoryQuery = () => {
+  const { accessToken } = useAuthStore((state) => state);
   return useQuery<ApiResponse>({
     queryKey: ["repositories"],
     queryFn: () => getMyRepositories(accessToken),

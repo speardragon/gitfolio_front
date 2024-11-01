@@ -1,10 +1,11 @@
+import { useAuthStore } from "@/app/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 
 interface WorkExperience {
   companyName: string;
   departmentName: string;
   role: string;
-  workTime: string;
+  workType: string;
   employmentStatus: string;
   startedAt: string | null;
   endedAt: string | null;
@@ -63,7 +64,7 @@ interface ApiResponse {
   result: Result;
 }
 
-const getUserProfile = async (accessToken: string) => {
+const getUserProfile = async (accessToken: string | null) => {
   const response = await fetch(`/api/members/me`, {
     method: "GET",
     credentials: "include",
@@ -77,7 +78,8 @@ const getUserProfile = async (accessToken: string) => {
   const data: ApiResponse = await response.json();
   return data || "";
 };
-export const useProfileQuery = (accessToken: string) => {
+export const useProfileQuery = () => {
+  const { accessToken } = useAuthStore((state) => state);
   return useQuery<ApiResponse>({
     queryKey: ["profile"],
     queryFn: () => getUserProfile(accessToken),

@@ -19,7 +19,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
-import { ArrowDown, ArrowUp, Plus, PlusCircle, Trash } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  // Linkedin,
+  Plus,
+  PlusCircle,
+  Trash,
+} from "lucide-react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { z } from "zod";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -29,18 +36,20 @@ import { Link } from "lucide-react";
 import { Github } from "lucide-react";
 import Notion from "../../../../public/notion.svg";
 import Tistory from "../../../../public/tistory.svg";
-import Linedin from "../../../../public/linkedin.svg";
+import Linkedin from "../../../../public/linkedin.svg";
 import { OnboardingFormSchema } from "./_lib/schema";
 import { useOnboardingUpdate } from "./_hooks/useOnboardingUpdate";
 import CustomMonthRangePicker from "./_components/custom-month-range-picker";
 import { useProfileQuery } from "./_hooks/useProfileQuery";
 import { useAuthStore } from "@/app/store/useAuthStore";
-import { toast } from "sonner";
+import OnboardingSkeleton from "./_components/onboarding-skeleton";
+import { useRepositoryQuery } from "./repositories/_hooks/useRepositoryQuery";
+import { positionTypeMap } from "@/app/types/type";
 
 export default function Page() {
-  // const [repoList, setRepoList] = useState(repositories);
-  const [iconType, setIconType] = useState(<Link />);
+  // const [iconType, setIconType] = useState(<Link />);
   const [imageFile, setImageFile] = useState<File>();
+  const [preview, setPreview] = useState<string>();
 
   const form = useForm<z.infer<typeof OnboardingFormSchema>>({
     resolver: zodResolver(OnboardingFormSchema),
@@ -49,48 +58,13 @@ export default function Page() {
       phoneNumber: "",
       email: "",
       position: "",
-      // workExperiences: [
-      //   {
-      //     companyName: "",
-      //     departmentName: "",
-      //     role: "",
-      //     workTime: "",
-      //     employmentStatus: "",
-      //     startedAt: "",
-      //     endedAt: "",
-      //   },
-      // ],
-      // educations: [
-      //   {
-      //     schoolType: "",
-      //     schoolName: "",
-      //     major: "",
-      //     graduationStatus: "",
-      //     startedAt: "",
-      //     endedAt: "",
-      //   },
-      // ],
-      // links: [
-      //   {
-      //     linkUrl: "",
-      //     linkTitle: "",
-      //   },
-      // ],
-      // certificates: [
-      //   {
-      //     certificateName: "",
-      //     certificateGrade: "",
-      //     certificateOrganization: "",
-      //     certificatedAt: "",
-      //   },
-      // ],
     },
     mode: "onChange",
   });
 
   const { accessToken } = useAuthStore((state) => state);
   const { mutate } = useOnboardingUpdate();
-  const { data: userProfile } = useProfileQuery(accessToken!);
+  const { data: userProfile } = useProfileQuery();
 
   const {
     fields: experiencesFields,
@@ -128,6 +102,12 @@ export default function Page() {
     control: form.control,
     name: "certificates",
   });
+
+  const [iconTypes, setIconTypes] = useState(
+    Array(linksFields.length).fill(<Link />)
+  );
+
+  useRepositoryQuery();
 
   function onSubmit(data: z.infer<typeof OnboardingFormSchema>) {
     const formData = new FormData();
@@ -179,28 +159,33 @@ export default function Page() {
 
       reader.onloadend = () => {
         setImageFile(file);
+        setPreview(reader.result as string);
       };
 
       reader.readAsDataURL(file);
     }
   };
 
-  const handleIconChange = (url: string) => {
-    if (url.includes("github.com")) {
-      setIconType(<Github />);
-    } else if (url.includes("linkedin.com")) {
-      setIconType(<Linedin />);
-    } else if (url.includes("tistory.com")) {
-      setIconType(<Tistory />);
-    } else if (url.includes("notion.site")) {
-      setIconType(<Notion />);
-    } else {
-      setIconType(<Link />);
-    }
+  const handleIconChange = (url: string, index: number) => {
+    setIconTypes((prevIconTypes) => {
+      const newIconTypes = [...prevIconTypes];
+      if (url.includes("github.com")) {
+        newIconTypes[index] = <Github />;
+      } else if (url.includes("linkedin.com")) {
+        newIconTypes[index] = <Linkedin />;
+      } else if (url.includes("tistory.com")) {
+        newIconTypes[index] = <Tistory />;
+      } else if (url.includes("notion.site")) {
+        newIconTypes[index] = <Notion />;
+      } else {
+        newIconTypes[index] = <Link />;
+      }
+      return newIconTypes;
+    });
   };
 
   if (!userProfile) {
-    return <div>loading</div>;
+    return <OnboardingSkeleton />;
   }
 
   return (
@@ -229,7 +214,7 @@ export default function Page() {
                         className="object-cover w-full h-full rounded-full"
                         width={100}
                         height={100}
-                        src={userProfile.result.avatarUrl}
+                        src={preview || userProfile.result.avatarUrl}
                         priority
                         alt="profile_url"
                       />
@@ -299,6 +284,33 @@ export default function Page() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>직군</FormLabel>
+                          <Select
+                            name={field.name}
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="선택" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Object.entries(positionTypeMap).map(
+                                ([key, label]) => (
+                                  <SelectItem key={key} value={key}>
+                                    {label}
+                                  </SelectItem>
+                                )
+                              )}
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      )}
+                    />
+                    {/* <FormField
+                      control={form.control}
+                      name="position"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>직군</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -308,7 +320,7 @@ export default function Page() {
                           <FormMessage />
                         </FormItem>
                       )}
-                    />
+                    /> */}
                   </div>
                 </div>
               </div>
@@ -333,7 +345,7 @@ export default function Page() {
                       companyName: "",
                       departmentName: "",
                       role: "",
-                      workTime: "",
+                      workType: "",
                       employmentStatus: "",
                       startedAt: "",
                       endedAt: "",
@@ -439,7 +451,7 @@ export default function Page() {
                     <div className="flex flex-1 gap-2">
                       <FormField
                         control={form.control}
-                        name={`workExperiences.${index}.workTime`}
+                        name={`workExperiences.${index}.workType`}
                         render={({ field }) => (
                           <FormItem className="flex-1">
                             <FormLabel>근무 형태</FormLabel>
@@ -681,9 +693,11 @@ export default function Page() {
                                 <SelectValue placeholder="선택" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="졸업">졸업</SelectItem>
-                                <SelectItem value="재학중">재학중</SelectItem>
-                                <SelectItem value="중퇴">중퇴</SelectItem>
+                                <SelectItem value="GRADUATED">졸업</SelectItem>
+                                <SelectItem value="ATTENDING">
+                                  재학중
+                                </SelectItem>
+                                <SelectItem value="DROP_OUT">중퇴</SelectItem>
                               </SelectContent>
                             </Select>
                           </FormItem>
@@ -889,7 +903,7 @@ export default function Page() {
                   >
                     <div className="flex items-center justify-center w-full gap-2 border border-gray-200 rounded-md">
                       <div className="p-4 border-r border-gray-200 aspect-square w-14 h-14">
-                        {iconType}
+                        {iconTypes[index]}
                       </div>
                       <div className="flex flex-col w-full p-2 text-sm">
                         <FormField
@@ -902,7 +916,12 @@ export default function Page() {
                                   {...field}
                                   className="flex w-full px-3 py-1 transition-colors bg-transparent rounded-md shadow-sm h-9 placeholder:text-gray-400 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                   placeholder="https://"
-                                  onBlur={() => handleIconChange(field.value!)}
+                                  onBlur={() =>
+                                    handleIconChange(field.value!, index)
+                                  }
+                                  // onChange={() =>
+                                  //   handleIconChange(field.value!, index)
+                                  // }
                                 />
                               </FormControl>
                               <FormMessage />
