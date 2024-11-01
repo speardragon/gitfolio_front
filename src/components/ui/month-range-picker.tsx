@@ -30,7 +30,7 @@ const MONTHS: Month[][] = [
     { number: 1, name: "2월", yearOffset: 0 },
     { number: 2, name: "3월", yearOffset: 0 },
     { number: 3, name: "4월", yearOffset: 0 },
-    { number: 0, name: "6월", yearOffset: 1 },
+    { number: 0, name: "1월", yearOffset: 1 },
     { number: 1, name: "2월", yearOffset: 1 },
     { number: 2, name: "3월", yearOffset: 1 },
     { number: 3, name: "4월", yearOffset: 1 },

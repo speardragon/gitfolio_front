@@ -13,39 +13,20 @@ import { useState } from "react";
 import { useRepositoryQuery } from "../_hooks/useRepositoryQuery";
 import { useAuthStore } from "@/app/store/useAuthStore";
 import MultipleSelector, { Option } from "@/components/ui/multi-selector";
-import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { useResumeMutation } from "../_hooks/useResumeMutation";
-import { Skeleton } from "@/components/ui/skeleton";
+import RepositorySkeleton from "./repository-skeleton";
 
 export default function Repository() {
   const { accessToken } = useAuthStore((state) => state);
 
-  const router = useRouter();
-
   const [value, setValue] = useState<Option[]>([]);
   const [requirements, setRequirements] = useState<string>("");
 
-  const { data: repositories } = useRepositoryQuery(accessToken!);
+  const { data: repositories } = useRepositoryQuery();
   const { mutate } = useResumeMutation();
 
   if (!repositories) {
-    return (
-      <div className="flex flex-col items-center justify-center w-1/2 h-full p-4 my-auto space-y-4">
-        <Card className="w-full">
-          <CardHeader>
-            <Skeleton className="w-1/2 h-6 mb-2" />
-            <Skeleton className="w-3/4 h-4" />
-          </CardHeader>
-          <CardContent className="h-full space-y-4">
-            <Skeleton className="w-full h-10" />
-            <Skeleton className="w-full h-10" />
-          </CardContent>
-        </Card>
-        <Skeleton className="w-full h-10" />
-      </div>
-    );
+    return <RepositorySkeleton />;
   }
 
   const options: Option[] = repositories.result.map((repo) => ({
@@ -56,12 +37,15 @@ export default function Repository() {
   }));
 
   const onSubmit = () => {
+    if (value.length > 3) {
+      alert("최대 3개까지만 선택할 수 있습니다.");
+      return;
+    }
     const data = {
       selectedRepo: value.map((repo) => repo.value),
       requirements: requirements,
     };
     mutate({ accessToken: accessToken!, data });
-    router.push("/community");
     // toast.message("You submitted the following values:", {
     //   description: (
     //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
@@ -75,6 +59,9 @@ export default function Repository() {
   const handleValueChange = (selectedOptions: Option[]) => {
     if (selectedOptions.length > 3) {
       alert("최대 3개까지만 선택할 수 있습니다.");
+      const updatedOptions = [...selectedOptions];
+      updatedOptions.pop();
+      setValue(updatedOptions);
       return;
     } else {
       setValue(selectedOptions);
@@ -104,13 +91,13 @@ export default function Repository() {
               </p>
             }
           />
-          <Input
+          {/* <Input
             type="text"
             placeholder="더 나은 이력서를 만들기 위한 요청사항을 입력해주세요."
             value={requirements}
             onChange={(e) => setRequirements(e.target.value)}
             className="w-full rounded-md"
-          />
+          /> */}
         </CardContent>
       </Card>
       <Button onClick={onSubmit} className="w-full">
