@@ -630,6 +630,7 @@ const MultipleSelector = React.forwardRef<
                                 alt="repo-logo"
                                 width={20}
                                 height={20}
+                                style={{ width: "auto", height: "auto" }}
                                 className="mr-2"
                               />
                               {option.label}
