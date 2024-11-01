@@ -11,16 +11,25 @@ interface AuthStoreInterface {
 }
 
 // create our store
-export const useAuthStore = create(
-  persist<AuthStoreInterface>(
-    (set) => ({
-      authenticated: false,
-      setAuthentication: (val) => set((state) => ({ authenticated: val })),
-      user: {},
-      setUser: (user) => set({ user }),
-      accessToken: null,
-      setAccessToken: (token) => set((state) => ({ accessToken: token })),
-    }),
-    { name: "AuthStore" }
-  )
-);
+// export const useAuthStore = create(
+//   persist<AuthStoreInterface>(
+//     (set) => ({
+//       authenticated: false,
+//       setAuthentication: (val) => set((state) => ({ authenticated: val })),
+//       user: {},
+//       setUser: (user) => set({ user }),
+//       accessToken: null,
+//       setAccessToken: (token) => set((state) => ({ accessToken: token })),
+//     }),
+//     { name: "AuthStore" }
+//   )
+// );
+
+export const useAuthStore = create<AuthStoreInterface>((set) => ({
+  authenticated: false,
+  setAuthentication: (val) => set((state) => ({ authenticated: val })),
+  user: {},
+  setUser: (user) => set({ user }),
+  accessToken: null,
+  setAccessToken: (token) => set((state) => ({ accessToken: token })),
+}));

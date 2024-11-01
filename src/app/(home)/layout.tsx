@@ -12,7 +12,9 @@ export default function MainLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { setAccessToken } = useAuthStore((state) => state);
+  const { setAccessToken, authenticated, setAuthentication } = useAuthStore(
+    (state) => state
+  );
 
   useEffect(() => {
     const reissueAccessToken = async () => {
@@ -27,6 +29,7 @@ export default function MainLayout({
           const accessToken = data.accessToken;
           console.log(accessToken);
           setAccessToken(accessToken);
+          setAuthentication(true);
         } else {
           console.error("Failed to reissue access token");
         }
@@ -34,13 +37,12 @@ export default function MainLayout({
         console.error("Error reissuing access token:", error);
       }
     };
-
     reissueAccessToken();
   }, []);
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="flex-grow overflow-y-auto">{children}</div>
+      <div className="flex-grow mt-16">{children}</div>
     </div>
   );
 }
