@@ -3,7 +3,7 @@ name: Next.js CI/CD Pipeline
 on:
   push:
     branches:
-      - feature/cicd    # dev 브랜치에 푸시될 때 실행
+      - develop    # dev 브랜치에 푸시될 때 실행
 
 jobs:
   build:
