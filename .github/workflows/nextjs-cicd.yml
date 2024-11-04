@@ -68,8 +68,6 @@ jobs:
             docker run -d \
               --name nextjs-frontend \
               -p 3000:3000 \
-#              -e NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
-#              sixman/frontend-image:dev
               -e NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
               -e NEXT_PUBLIC_S3_URL=${{ secrets.NEXT_PUBLIC_S3_URL }} \
-              ${{ secrets.DOCKERHUB_USERNAME }}/frontend-image:dev
+              sixman/frontend-image:dev
