@@ -50,7 +50,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: SSH 연결 테스트
-        run: ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'echo SSH 연결 성공'
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > private_key
+          chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'echo SSH 연결 성공'
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.4 #최신 안정버전 변경
         with:
@@ -60,6 +63,7 @@ jobs:
           port: 22
           script: |
             # 최신 이미지 풀
+            export AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }}
             docker pull ${{ secrets.DOCKER_REPO }}:dev # 레포지토리이름 환경변수로 바꿈
             
             # 기존 컨테이너 중지 및 제거
