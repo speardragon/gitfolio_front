@@ -1,0 +1,72 @@
+name: Next.js CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - feature/cicd    # dev 브랜치에 푸시될 때 실행
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code    # 소스 코드 체크아웃
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js    # Node.js 설정
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'    # Next.js 14 권장 버전
+          cache: 'npm'    # 패키지 캐싱으로 빌드 속도 향상
+
+      - name: Install dependencies    # 의존성 설치
+        run: npm ci    # clean install, package-lock.json 기반 설치
+
+      - name: Build Next.js app    # Next.js 앱 빌드
+        run: npm run build
+        env:    # 빌드 시 필요한 환경변수들
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_S3_URL: ${{ secrets.NEXT_PUBLIC_S3_URL }}
+          # 필요한 다른 환경변수들 추가
+      - name: Set up Docker Buildx    # Docker Buildx 설정
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub    # Docker Hub 로그인
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build and Push Docker Image    # Docker 이미지 빌드 및 푸시
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64    # EC2 호환성을 위한 플랫폼 지정
+          push: true
+          tags: sixman/frontend-image:dev    # 이미지 이름과 태그
+
+  deploy:
+    needs: build    # build 작업 완료 후 실행
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            # 최신 이미지 풀
+            docker pull sixman/frontend-image:dev
+            
+            # 기존 컨테이너 중지 및 제거
+            docker stop nextjs-frontend || true
+            docker rm nextjs-frontend || true
+            
+            # 새 컨테이너 실행
+            docker run -d \
+              --name nextjs-frontend \
+              -p 3000:3000 \
+              -e NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
+              sixman/frontend-image:dev
