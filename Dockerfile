@@ -25,9 +25,9 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# 시스템 의존성 설치
-RUN groupadd --system --gid 1001 nodejs
-RUN useradd --system --uid 1001 nextjs
+# 시스템 의존성 설치 및 사용자 생성
+RUN groupadd --system --gid 1001 nodejs && \
+    useradd --system --uid 1001 --create-home --home-dir /home/nextjs nextjs
 
 # 빌드 파일 복사
 COPY --from=builder /app/public ./public
@@ -42,8 +42,8 @@ USER nextjs
 EXPOSE 3000
 
 # 환경변수 설정
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 # 서버 실행
 CMD ["npm", "start"]
