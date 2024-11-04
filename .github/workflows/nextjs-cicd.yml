@@ -56,6 +56,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
+          debug: true     # 디버그 모드 활성화
+          script_stop: true
           script: |
             # 최신 이미지 풀
             docker pull ${{ secrets.DOCKER_REPO }}:dev # 레포지토리이름 환경변수로 바꿈
