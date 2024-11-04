@@ -46,7 +46,7 @@ jobs:
           tags: sixman/frontend-image:dev    # 이미지 이름과 태그
 
   deploy:
-    needs: build    # build 작업 완료 후 실행
+    needs: build    # build 작업 완료 후 실행 #
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to EC2
