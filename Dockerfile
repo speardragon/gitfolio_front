@@ -24,6 +24,8 @@ WORKDIR /app
 # 환경변수 설정
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
+ENV PORT=3000
+ENV HOST=0.0.0.0
 
 # 시스템 의존성 설치 및 사용자 생성
 RUN groupadd --system --gid 1001 nodejs && \
@@ -40,10 +42,6 @@ USER nextjs
 
 # 포트 설정
 EXPOSE 3000
-
-# 환경변수 설정
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
 
 # 서버 실행
 CMD ["npm", "start"]
