@@ -104,7 +104,7 @@ export default function Page() {
   });
 
   const [iconTypes, setIconTypes] = useState(
-    Array(linksFields.length).fill(<Link />)
+    Array(linksFields.length).fill(<Link />),
   );
 
   useRepositoryQuery();
@@ -130,13 +130,13 @@ export default function Page() {
       "memberUpdateRequestDTO",
       new Blob([JSON.stringify(memberUpdateRequestDTO)], {
         type: "application/json",
-      })
+      }),
     );
     formData.append(
       "memberAdditionalRequestDTO",
       new Blob([JSON.stringify(memberAdditionalRequestDTO)], {
         type: "application/json",
-      })
+      }),
     );
     formData.append("imageFile", imageFile as Blob);
 
@@ -190,6 +190,13 @@ export default function Page() {
 
   return (
     <div className="max-w-3xl p-4 mx-auto space-y-6">
+      <div className="text-center text-2xl font-bold">
+        기본 정보(필수) / 추가 정보(선택) 입력
+      </div>
+      <div className="text-center">
+        많은 정보를 입력해주시면 더 좋은 이력서가 만들어집니다!
+      </div>
+      <Separator />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           {/* 기본정보 */}
@@ -298,7 +305,7 @@ export default function Page() {
                                   <SelectItem key={key} value={key}>
                                     {label}
                                   </SelectItem>
-                                )
+                                ),
                               )}
                             </SelectContent>
                           </Select>
