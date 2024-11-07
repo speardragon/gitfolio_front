@@ -4,7 +4,6 @@ import Image from "next/image";
 import NAMKI from "../../../../public/images/namki.jpeg";
 import GITHUB_LOGO from "../../../../public/images/github-mark.png";
 import { Separator } from "@/components/ui/separator";
-import generatePDF, { Margin, Resolution, usePDF } from "react-to-pdf";
 import { Button } from "@/components/ui/button";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 // import html2pdf from "html2pdf.js";
@@ -24,7 +23,6 @@ type Props = {
 
 export default function Page({ params }: Props) {
   const resumeId = parseInt(params.resumeId);
-  const { toPDF, targetRef } = usePDF({ filename: "page.pdf" });
 
   const [messages, setMessages] = useState<string[]>(["이렇게 이렇게 바꿔줘"]);
   const [input, setInput] = useState("");
@@ -139,10 +137,7 @@ export default function Page({ params }: Props) {
         </div>
       </aside>
       <div className="mr-[25%] items-center justify-center w-full h-full p-24 space-y-4 overflow-y-auto">
-        <div
-          ref={targetRef}
-          className="border w-[1000px] border-gray-300 p-10 px-32 space-y-10"
-        >
+        <div className="border w-[1000px] border-gray-300 p-10 px-32 space-y-10">
           <div className="flex flex-row">
             <div className="flex flex-col flex-grow">
               <div className="mb-4 text-5xl font-semibold">김남기</div>
@@ -305,7 +300,7 @@ export default function Page({ params }: Props) {
 
         {/* </TextSelector> */}
         <Button
-          onClick={() => generatePDF(targetRef, { filename: "page.pdf" })}
+        // onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}
         >
           pdf로 저장
         </Button>

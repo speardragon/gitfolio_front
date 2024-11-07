@@ -53,14 +53,7 @@ export default function ResumeComment({ resumeId }: Props) {
               <div className="flex flex-col" key={comment.id}>
                 <div className="flex items-start w-full gap-3 p-4">
                   <Avatar className="w-12 h-12">
-                    <AvatarImage
-                      src={
-                        comment.avatarUrl.startsWith("https://avatars")
-                          ? comment.avatarUrl
-                          : `${process.env.NEXT_PUBLIC_S3_URL}${comment.avatarUrl}`
-                      }
-                      alt="프로필 이미지"
-                    />
+                    <AvatarImage src={comment.avatarUrl} alt="프로필 이미지" />
                     <AvatarFallback>
                       {comment.nickname.charAt(0)}
                     </AvatarFallback>
@@ -73,7 +66,7 @@ export default function ResumeComment({ resumeId }: Props) {
                       <p className="text-sm text-muted-foreground">
                         {format(
                           new Date(comment.updatedAt),
-                          "yyyy. MM. dd. HH:mm"
+                          "yyyy. MM. dd. HH:mm",
                         )}
                       </p>
                     </div>

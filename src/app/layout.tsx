@@ -12,7 +12,7 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Gitfolio",
+  title: "이력서 자동 생성 서비스 - 깃트폴리오",
   description: "당신의 이력서를 만들어드립니다.",
 };
 
