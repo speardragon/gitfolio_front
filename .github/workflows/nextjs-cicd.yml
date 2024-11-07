@@ -3,7 +3,7 @@ name: Next.js CI/CD Pipeline
 on:
   push:
     branches:
-      - develop
+      - feature/cicd
 
 jobs:
   build:
