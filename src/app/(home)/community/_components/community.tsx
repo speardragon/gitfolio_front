@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { Heart, RefreshCw } from 'lucide-react';
-import MAIN_BANNER from '../../../../../public/images/main-banner.png';
+import Image from "next/image";
+import { Heart, Plus, RefreshCw } from "lucide-react";
+import MAIN_BANNER from "../../../../../public/images/main-banner.png";
 import {
   ResumeFilter,
   ResumeResponse,
   useResumeQuery,
-} from '../_hooks/useResumeQuery';
-import { Button } from '@/components/ui/button';
+} from "../_hooks/useResumeQuery";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { MouseEvent, useEffect, useState } from 'react';
+} from "@/components/ui/select";
+import { MouseEvent, useEffect, useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -25,41 +25,40 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import CommunitySkeleton from '../_components/community-skeleton';
-import { PositionType, positionTypeMap, schoolTypeMap } from '@/app/types/type';
-import { useQueryClient } from '@tanstack/react-query';
-import { useLikeMutation } from '../_hooks/useLikeMutation';
+} from "@/components/ui/pagination";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import CommunitySkeleton from "../_components/community-skeleton";
+import { PositionType, positionTypeMap, schoolTypeMap } from "@/app/types/type";
+import { useQueryClient } from "@tanstack/react-query";
+import { useLikeMutation } from "../_hooks/useLikeMutation";
 
 export default function Community() {
   const queryClient = useQueryClient();
 
   const searchParams = useSearchParams();
-  const pageParam = searchParams.get('page');
+  const pageParam = searchParams.get("page");
   const page = pageParam ? parseInt(pageParam) : 1;
 
   const [size, setsize] = useState(12);
   const [filters, setFilters] = useState<ResumeFilter>({
     // tags: [""],
-    position: '',
-    techStack: '',
-    schoolType: '',
-    sortOrder: 'recent',
+    position: "",
+    techStack: "",
+    schoolType: "",
+    sortOrder: "recent",
   });
 
   const router = useRouter();
-  console.log('sdf');
   const { data: resumes, isLoading } = useResumeQuery(page, size, filters);
   const { mutate } = useLikeMutation(page, size, filters);
 
   useEffect(() => {
     const newFilters = {
-      position: searchParams.get('position') || '',
-      techStack: searchParams.get('techStack') || '',
-      schoolType: searchParams.get('schoolType') || '',
-      sortOrder: searchParams.get('sortOrder') || '',
+      position: searchParams.get("position") || "",
+      techStack: searchParams.get("techStack") || "",
+      schoolType: searchParams.get("schoolType") || "",
+      sortOrder: searchParams.get("sortOrder") || "",
     };
     setFilters(newFilters);
   }, [searchParams]);
@@ -71,16 +70,16 @@ export default function Community() {
   const resetFilter = () => {
     setFilters({
       // tag: [""],
-      position: '',
-      techStack: '',
-      schoolType: '',
-      sortOrder: 'recent',
+      position: "",
+      techStack: "",
+      schoolType: "",
+      sortOrder: "recent",
     });
     router.push(`/community`);
   };
 
   const handleFilterChange = (field: string, value: string) => {
-    const newValue = value === 'all' ? '' : value; // Map 'all' to ''
+    const newValue = value === "all" ? "" : value; // Map 'all' to ''
     const newFilters = {
       ...filters,
       [field]: newValue,
@@ -93,7 +92,7 @@ export default function Community() {
         query.append(key, val as string); // Include only non-empty filters
       }
     });
-    query.append('page', '1'); // Reset to page 1 when filter changes
+    query.append("page", "1"); // Reset to page 1 when filter changes
     router.push(`/community?${query.toString()}`);
   };
 
@@ -104,7 +103,7 @@ export default function Community() {
         query.append(key, val as string);
       }
     });
-    query.append('page', newPage.toString());
+    query.append("page", newPage.toString());
     router.push(`/community?${query.toString()}`); // 페이지 이동
   };
 
@@ -114,6 +113,15 @@ export default function Community() {
 
   return (
     <>
+      <Button
+        className="fixed bottom-8 pr-6 py-6 right-4 bg-blue-500 text-white gap-2 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none"
+        onClick={() => {
+          router.push("/myResume/create");
+        }}
+      >
+        <Plus />
+        <div className="text-base">새 이력서 만들기</div>
+      </Button>
       <div className="w-full">
         <Image src={MAIN_BANNER} alt="sdf" priority />
       </div>
@@ -130,7 +138,7 @@ export default function Community() {
             </Button>
             <Select
               value={filters.position}
-              onValueChange={(value) => handleFilterChange('position', value)}
+              onValueChange={(value) => handleFilterChange("position", value)}
             >
               <SelectTrigger className="w-[120px]">
                 <SelectValue placeholder="포지션" />
@@ -146,7 +154,7 @@ export default function Community() {
             </Select>
             <Select
               value={filters.techStack}
-              onValueChange={(value) => handleFilterChange('techStack', value)}
+              onValueChange={(value) => handleFilterChange("techStack", value)}
             >
               <SelectTrigger className="w-[120px]">
                 <SelectValue placeholder="기술 스택" />
@@ -161,7 +169,7 @@ export default function Community() {
             </Select>
             <Select
               value={filters.schoolType}
-              onValueChange={(value) => handleFilterChange('schoolType', value)}
+              onValueChange={(value) => handleFilterChange("schoolType", value)}
             >
               <SelectTrigger className="w-[120px]">
                 <SelectValue placeholder="학교" />
@@ -177,7 +185,7 @@ export default function Community() {
             </Select>
             <Select
               value={filters.sortOrder}
-              onValueChange={(value) => handleFilterChange('sortOrder', value)}
+              onValueChange={(value) => handleFilterChange("sortOrder", value)}
             >
               <SelectTrigger className="w-[120px]">
                 <SelectValue placeholder="정렬 기준" />
@@ -209,7 +217,7 @@ export default function Community() {
                   <div className="flex items-center space-x-2 text-xs text-gray-500">
                     {(resume.tags && resume.tags.length > 0
                       ? resume.tags
-                      : ['#기타']
+                      : ["#기타"]
                     ).map((tag, index) => (
                       <span
                         key={index}
@@ -222,7 +230,7 @@ export default function Community() {
                 </div>
                 <Image
                   src={
-                    resume.avatarUrl.startsWith('https://avatars')
+                    resume.avatarUrl.startsWith("https://avatars")
                       ? resume.avatarUrl
                       : `${process.env.NEXT_PUBLIC_S3_URL}${resume.avatarUrl}`
                   }
@@ -235,8 +243,8 @@ export default function Community() {
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-semibold">
                       {positionTypeMap[
-                        resume.position.replace('개발자', '') as PositionType
-                      ] || resume.position}{' '}
+                        resume.position.replace("개발자", "") as PositionType
+                      ] || resume.position}{" "}
                       개발자
                     </h3>
                     <button
@@ -245,11 +253,11 @@ export default function Community() {
                         handleHeartClick(resume.resumeId);
                       }}
                       className="cursor-pointer"
-                      aria-label={resume.isLiked ? 'Unlike' : 'Like'}
+                      aria-label={resume.isLiked ? "Unlike" : "Like"}
                     >
                       <Heart
-                        fill={resume.isLiked ? 'red' : 'none'}
-                        stroke={resume.isLiked ? 'red' : 'currentColor'}
+                        fill={resume.isLiked ? "red" : "none"}
+                        stroke={resume.isLiked ? "red" : "currentColor"}
                       />
                     </button>
                   </div>
@@ -267,7 +275,7 @@ export default function Community() {
               href={`?page=${
                 resumes.result.currentPage > 0
                   ? resumes.result.currentPage - 1
-                  : 0
+                  : 1
               }`}
               onClick={() =>
                 resumes.result.currentPage > 0 &&
@@ -282,7 +290,7 @@ export default function Community() {
                     onClick={() => handlePageChange(index + 1)}
                     href={`?page=${index + 1}`}
                     className={
-                      index === resumes.result.currentPage ? 'font-bold' : ''
+                      index === resumes.result.currentPage ? "font-bold" : ""
                     }
                   >
                     {index + 1}
@@ -299,7 +307,7 @@ export default function Community() {
               href={`?page=${
                 resumes.result.currentPage < resumes.result.totalPages - 1
                   ? resumes.result.currentPage + 1
-                  : resumes.result.totalPages - 1
+                  : 1
               }`}
             />
           </PaginationContent>
