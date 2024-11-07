@@ -31,15 +31,15 @@ const nextConfig = {
     return [
       {
         source: '/api/auth/:path*',
-        destination: 'http://10.0.105.75/api/auth/:path*',
+        destination: 'http://10.0.105.44/api/auth/:path*',
       },
       {
         source: '/api/members/:path*',
-        destination: 'http://10.0.105.21/api/members/:path*',
+        destination: 'http://10.0.105.44:81/api/members/:path*',
       },
       {
         source: '/api/resumes/:path*',
-        destination: 'http://10.0.105.7/api/resumes/:path*',
+        destination: 'http://10.0.105.75/api/resumes/:path*',
       },
     ];
   },
