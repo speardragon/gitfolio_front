@@ -18,27 +18,13 @@ export default function HeaderPopover({ avatarUrl, nickname, credit }: Props) {
     <Popover>
       <PopoverTrigger asChild>
         <Avatar>
-          <AvatarImage
-            src={
-              avatarUrl.startsWith("https://avatars")
-                ? avatarUrl
-                : `${process.env.NEXT_PUBLIC_S3_URL}${avatarUrl}`
-            }
-            alt="Profile Image"
-          />
+          <AvatarImage src={avatarUrl} alt="Profile Image" />
         </Avatar>
       </PopoverTrigger>
       <PopoverContent className="w-56 p-4">
         <div className="flex flex-col items-center space-y-4">
           <Avatar>
-            <AvatarImage
-              src={
-                avatarUrl.startsWith("https://avatars")
-                  ? avatarUrl
-                  : `${process.env.NEXT_PUBLIC_S3_URL}${avatarUrl}`
-              }
-              alt="Profile Image"
-            />
+            <AvatarImage src={avatarUrl} alt="Profile Image" />
           </Avatar>
           <p className="text-lg font-semibold">{nickname}</p>
           <p className="text-sm text-muted-foreground">Credit: {credit}</p>
