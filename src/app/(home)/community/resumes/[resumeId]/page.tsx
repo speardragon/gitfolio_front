@@ -3,7 +3,6 @@
 import Image from "next/image";
 import GITHUB_LOGO from "../../../../../../public/images/github-mark.png";
 import { Separator } from "@/components/ui/separator";
-import generatePDF, { Margin, Resolution, usePDF } from "react-to-pdf";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faHeart, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { Github, Link, Linkedin } from "lucide-react";
@@ -11,6 +10,8 @@ import { useResumeDetailQuery } from "../../_hooks/useResumeQuery";
 import {
   GraduationStatus,
   graduationStatusMap,
+  PositionType,
+  positionTypeMap,
   SchoolType,
   schoolTypeMap,
   WorkType,
@@ -81,7 +82,9 @@ export default function Page({ params }: Props) {
               <div className="mb-4 text-5xl font-semibold">
                 {resume.result.memberName}
               </div>
-              <div className="text-2xl">{resume.result.position}</div>
+              <div className="text-2xl">
+                {positionTypeMap[resume.result.position as PositionType]}
+              </div>
             </div>
             <div className="relative w-[228px] h-[228px]">
               {/* sdf */}
@@ -96,12 +99,6 @@ export default function Page({ params }: Props) {
                 fill
                 className="object-cover rounded-lg "
               />
-              {/* <img
-                src={`${process.env.NEXT_PUBLIC_S3_URL}${resume.result.avatarUrl}`}
-                alt="프로필 이미지"
-                className="w-full h-full rounded-lg "
-                // style={{ width: "228px", height: "228px" }}
-              /> */}
             </div>
           </div>
 
