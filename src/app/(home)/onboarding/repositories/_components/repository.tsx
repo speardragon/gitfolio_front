@@ -15,6 +15,7 @@ import { useAuthStore } from "@/app/store/useAuthStore";
 import MultipleSelector, { Option } from "@/components/ui/multi-selector";
 import { useResumeMutation } from "../_hooks/useResumeMutation";
 import RepositorySkeleton from "./repository-skeleton";
+import Link from "next/link";
 
 export default function Repository() {
   const { accessToken } = useAuthStore((state) => state);
@@ -69,12 +70,13 @@ export default function Repository() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-1/2 h-full p-4 my-auto space-y-4">
+    <div className="flex flex-col items-center justify-center w-1/2 h-full p-4 my-auto space-y-10">
       <Card className="w-full ">
         <CardHeader>
-          <CardTitle>깃허브 레파지토리 선택</CardTitle>
-          <CardDescription>
-            프로젝트를 생성할 레파지토리를 선택해주세요(최대 3개)
+          <CardTitle className="text-xl">깃허브 레파지토리 선택</CardTitle>
+          <CardDescription className="text-lg">
+            이력서에 넣고 싶은 프로젝트를 생성하기 위한 레파지토리를
+            선택해주세요(최대 3개)
           </CardDescription>
         </CardHeader>
         <CardContent className="h-full space-y-4">
@@ -103,6 +105,9 @@ export default function Repository() {
       <Button onClick={onSubmit} className="w-full">
         이력서 만들러 가기
       </Button>
+      <Link className="text-gray-400 underline" href={"/community"}>
+        이력서 등록 하지 않고 커뮤니티로 이동
+      </Link>
     </div>
   );
 }
