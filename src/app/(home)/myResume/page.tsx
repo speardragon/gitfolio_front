@@ -37,11 +37,7 @@ export default function Page() {
           className="p-4 space-y-2 border border-gray-300 rounded-xl shadow-xl cursor-pointer transition-transform duration-500 ease-in-out transform hover:-translate-y-1"
         >
           <Image
-            src={
-              resume.avatarUrl.startsWith("https://avatars")
-                ? resume.avatarUrl
-                : `${process.env.NEXT_PUBLIC_S3_URL}${resume.avatarUrl}`
-            }
+            src={resume.avatarUrl}
             width={64}
             height={64}
             alt="Avatar"

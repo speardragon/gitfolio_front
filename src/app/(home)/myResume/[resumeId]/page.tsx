@@ -209,11 +209,7 @@ export default function Page({ params }: Props) {
             </div>
             <div className="relative w-[228px] h-[228px]">
               <Image
-                src={
-                  resume.result.avatarUrl.startsWith("https://avatars")
-                    ? resume.result.avatarUrl
-                    : `${process.env.NEXT_PUBLIC_S3_URL}${resume.result.avatarUrl}`
-                }
+                src={resume.result.avatarUrl}
                 alt="프로필 이미지"
                 priority
                 fill

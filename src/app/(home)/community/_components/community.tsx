@@ -229,11 +229,7 @@ export default function Community() {
                   </div>
                 </div>
                 <Image
-                  src={
-                    resume.avatarUrl.startsWith("https://avatars")
-                      ? resume.avatarUrl
-                      : `${process.env.NEXT_PUBLIC_S3_URL}${resume.avatarUrl}`
-                  }
+                  src={resume.avatarUrl}
                   alt="프로필 이미지"
                   width={300}
                   height={300}
