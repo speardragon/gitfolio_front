@@ -16,6 +16,7 @@ import MultipleSelector, { Option } from "@/components/ui/multi-selector";
 import { useResumeMutation } from "../_hooks/useResumeMutation";
 import RepositorySkeleton from "./repository-skeleton";
 import Link from "next/link";
+import { Input } from "@/components/ui/input";
 
 export default function Repository() {
   const { accessToken } = useAuthStore((state) => state);
@@ -93,13 +94,13 @@ export default function Repository() {
               </p>
             }
           />
-          {/* <Input
+          <Input
             type="text"
             placeholder="더 나은 이력서를 만들기 위한 요청사항을 입력해주세요."
             value={requirements}
             onChange={(e) => setRequirements(e.target.value)}
             className="w-full rounded-md"
-          /> */}
+          />
         </CardContent>
       </Card>
       <Button onClick={onSubmit} className="w-full">
