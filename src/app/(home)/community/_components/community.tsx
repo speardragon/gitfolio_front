@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -38,6 +38,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { debounce } from "lodash";
 
 export default function Community() {
   const queryClient = useQueryClient();
@@ -68,6 +69,14 @@ export default function Community() {
     };
     setFilters(newFilters);
   }, [searchParams]);
+
+  const handleHeartClick = useMemo(
+    () =>
+      debounce((resumeId: string) => {
+        mutate(resumeId);
+      }, 500),
+    [mutate],
+  );
 
   if (isLoading || !resumes) {
     return <CommunitySkeleton size={size} />;
@@ -113,14 +122,10 @@ export default function Community() {
     router.push(`/community?${query.toString()}`); // 페이지 이동
   };
 
-  const handleHeartClick = (resumeId: string) => {
-    mutate(resumeId);
-  };
-
   return (
     <>
       <Button
-        className="fixed bottom-8 pr-6 py-6 right-4 bg-blue-500 text-white gap-2 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none"
+        className="fixed bottom-8 pr-6 py-6 z-30 right-4 bg-blue-500 text-white gap-2 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none"
         onClick={() => {
           router.push("/myResume/create");
         }}
@@ -158,7 +163,7 @@ export default function Community() {
                 ))}
               </SelectContent>
             </Select>
-            <Select
+            {/* <Select
               value={filters.techStack}
               onValueChange={(value) => handleFilterChange("techStack", value)}
             >
@@ -170,9 +175,8 @@ export default function Community() {
                 <SelectItem value="React">React</SelectItem>
                 <SelectItem value="Node.js">Node.js</SelectItem>
                 <SelectItem value="Python">Python</SelectItem>
-                {/* 추가적인 기술 스택 옵션 */}
               </SelectContent>
-            </Select>
+            </Select> */}
             <Select
               value={filters.schoolType}
               onValueChange={(value) => handleFilterChange("schoolType", value)}
@@ -205,9 +209,9 @@ export default function Community() {
           </div>
           <TooltipProvider delayDuration={0}>
             <Tooltip>
-              <TooltipTrigger className="flex gap-4 p-2 px-4 items-center text-gray-500 border border-gray-400 rounded-2xl">
-                <Heart className="w-6 h-6" />
-                <div className="text-lg">좋아요 누른 이력서만 보기</div>
+              <TooltipTrigger className="flex gap-2 p-2 px-4 items-center text-gray-500 border border-gray-400 rounded-2xl">
+                <Heart className="w-4 h-4" />
+                <div className="">좋아요 누른 이력서만 보기</div>
               </TooltipTrigger>
               <TooltipContent className="text-base">
                 <p>준비중입니다!</p>

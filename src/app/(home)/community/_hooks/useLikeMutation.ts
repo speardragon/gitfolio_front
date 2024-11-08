@@ -1,17 +1,6 @@
 import { useAuthStore } from "@/app/store/useAuthStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { ResumeFilter } from "./useResumeQuery";
-
-const addProduct = (resumeId: string, accessToken: string) => {
-  return fetch(`/api/resumes/${resumeId}/likes`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    credentials: "include",
-  });
-};
 
 export function useLikeMutation(
   page: number,
@@ -23,6 +12,7 @@ export function useLikeMutation(
 
   return useMutation({
     mutationKey: ["likes"],
+    retry: 0,
     mutationFn: async (resumeId: string) => {
       const response = await fetch(`/api/resumes/${resumeId}/likes`, {
         method: "POST",
@@ -45,6 +35,7 @@ export function useLikeMutation(
       await queryClient.cancelQueries({
         queryKey: ["resume", page, size, filters],
       });
+
       const previousResumes = queryClient.getQueryData([
         "resume",
         page,
@@ -52,7 +43,7 @@ export function useLikeMutation(
         filters,
       ]);
 
-      queryClient.setQueryData(["resumes", page, size, filters], (old: any) => {
+      queryClient.setQueryData(["resume", page, size, filters], (old: any) => {
         return {
           ...old,
           result: {
