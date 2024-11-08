@@ -1,10 +1,10 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from '@/components/ui/skeleton';
 
 type Props = {
-  size: number;
+  size?: number;
 };
 
-export default function CommunitySkeleton({ size }: Props) {
+export default function CommunitySkeleton({ size = 12 }: Props) {
   return (
     <>
       <Skeleton className="w-full h-52 object-cover rounded-lg" />

@@ -5,22 +5,36 @@ import ResumeSkeleton from "../community/resumes/[resumeId]/_components/resume-s
 import { useMyResumeQuery } from "./_hooks/useMyResumeQuery";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import MyResumeSkeleton from "./_components/my-resume-skeleton";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Plus } from "lucide-react";
+import { PositionType, positionTypeMap } from "@/app/types/type";
 
 export default function Page() {
   const { data: myResume } = useMyResumeQuery();
   const router = useRouter();
 
   if (!myResume) {
-    return <ResumeSkeleton />;
+    return <MyResumeSkeleton />;
   }
 
   return (
-    <div className="flex flex-col w-full h-full p-12 px-40">
+    <div className="flex flex-col w-full space-y-2 h-full p-12 px-40 overflow-y-auto">
+      <div className="flex justify-between items-center mb-4">
+        <div className="text-2xl font-semibold">내 이력서 리스트</div>
+        <Link
+          className="flex gap-2 pr-6 bg-blue-500 hover:bg-blue-600 text-white px-4 p-2 rounded-lg"
+          href={"/myResume/create"}
+        >
+          <Plus />새 이력서 만들기
+        </Link>
+      </div>
       {myResume.result.map((resume) => (
         <div
           key={resume.resumeId}
           onClick={() => router.push(`/myResume/${resume.resumeId}`)}
-          className="p-4 space-y-2 border-b cursor-pointer"
+          className="p-4 space-y-2 border border-gray-300 rounded-xl shadow-xl cursor-pointer transition-transform duration-500 ease-in-out transform hover:-translate-y-1"
         >
           <Image
             src={resume.avatarUrl}
@@ -29,10 +43,12 @@ export default function Page() {
             alt="Avatar"
             className="w-16 h-16 rounded-full avatar"
           />
-          <div className="resume-info">
-            <h2 className="font-bold position">{resume.position}</h2>
+          <div className="resume-info space-y-2">
+            <h2 className="font-bold position">
+              {positionTypeMap[resume.position as PositionType]}
+            </h2>
             <p className="text-sm text-gray-600 about-me">{resume.aboutMe}</p>
-            <div className="flex flex-wrap gap-2 mt-2 tags">
+            <div className="flex flex-wrap gap-2 tags">
               {(resume.tags && resume.tags.length > 0
                 ? resume.tags
                 : ["#기타"]
@@ -42,9 +58,10 @@ export default function Page() {
                 </Badge>
               ))}
             </div>
-            <div className="mt-2 text-xs text-gray-500 stats">
-              <span>Views: {resume.viewCount}</span> |{" "}
-              <span>Likes: {resume.likeCount}</span>
+            <div className="text-sm">2024.11.06 14:00</div>
+            <div className="text-xs text-gray-600 stats">
+              <span>조회수: {resume.viewCount}</span> |{" "}
+              <span>좋아요: {resume.likeCount}</span>
             </div>
           </div>
         </div>

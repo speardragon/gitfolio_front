@@ -12,6 +12,8 @@ type OnboardingRequest = {
 
 export function useResumeMutation() {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ["createResume"],
     mutationFn: async ({ accessToken, data }: OnboardingRequest) => {
@@ -54,7 +56,7 @@ export function useResumeMutation() {
         ),
         // error: (error) => error.message || "이력서 등록에 실패했습니다.",
         error: (error) => {
-          router.push("/onboarding/repositories");
+          // router.push("/onboarding/repositories");
           return error.message || "이력서 등록에 실패했습니다.";
         },
         position: "top-right",
@@ -62,6 +64,7 @@ export function useResumeMutation() {
       });
     },
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["resume"] });
       // toast.custom((t) => (
       //   <div></div>
       // ));
