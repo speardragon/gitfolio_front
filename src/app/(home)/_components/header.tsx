@@ -44,7 +44,7 @@ export default function Header() {
                   채팅
                 </Link>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent className="text-base">
                 <p>준비중입니다!</p>
               </TooltipContent>
             </Tooltip>

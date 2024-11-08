@@ -32,6 +32,12 @@ import CommunitySkeleton from "../_components/community-skeleton";
 import { PositionType, positionTypeMap, schoolTypeMap } from "@/app/types/type";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLikeMutation } from "../_hooks/useLikeMutation";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function Community() {
   const queryClient = useQueryClient();
@@ -197,13 +203,17 @@ export default function Community() {
               </SelectContent>
             </Select>
           </div>
-          <Button
-            variant="outline"
-            className="flex gap-2 p-2 px-4 text-gray-500 border border-gray-400 rounded-2xl"
-          >
-            <Heart className="w-4 h-4" />
-            좋아요 누른 이력서만 보기
-          </Button>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger className="flex gap-4 p-2 px-4 items-center text-gray-500 border border-gray-400 rounded-2xl">
+                <Heart className="w-6 h-6" />
+                <div className="text-lg">좋아요 누른 이력서만 보기</div>
+              </TooltipTrigger>
+              <TooltipContent className="text-base">
+                <p>준비중입니다!</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {resumes.result.content.map((resume, idx) => {

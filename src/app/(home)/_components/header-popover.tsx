@@ -36,7 +36,7 @@ export default function HeaderPopover({ avatarUrl, nickname, credit }: Props) {
             className="w-full mt-2 bg-red-500 text-white"
             onClick={() => {
               // mutate();
-              console.log("로그아웃");
+              // console.log("로그아웃");
             }}
           >
             로그아웃
