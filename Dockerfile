@@ -1,54 +1,59 @@
-# Build stage
-FROM node:20.4-alpine as builder
-WORKDIR /app
+# 기본 Node.js 이미지 사용
+FROM node:20.4-alpine AS base
 
-# Environment variables for build time
+# 빌드 시간 변수 선언
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_S3_URL
-ARG NODE_ENV
 ARG AUTH_SERVER_URL
 ARG MEMBERS_SERVER_URL
 ARG RESUMES_SERVER_URL
 ARG NOTIFICATIONS_SERVER_URL
 
-# Copy package files
-COPY package*.json ./
+# 환경 변수 설정
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+ENV NEXT_PUBLIC_S3_URL=${NEXT_PUBLIC_S3_URL}
+ENV AUTH_SERVER_URL=${AUTH_SERVER_URL}
+ENV MEMBERS_SERVER_URL=${MEMBERS_SERVER_URL}
+ENV RESUMES_SERVER_URL=${RESUMES_SERVER_URL}
+ENV NOTIFICATIONS_SERVER_URL=${NOTIFICATIONS_SERVER_URL}
 
-# Install dependencies including Tailwind Typography
-RUN npm ci && \
-    npm install -D @tailwindcss/typography && \
-    npm cache clean --force
-
-# Copy source code
-COPY . .
-#이미 next.config.js 관련 파일이 있다.
-# Install sharp for image optimization (addressing the warning)
-RUN npm install sharp
-
-# Build the application
-RUN CI=false npm run build
-
-# Production stage
-FROM node:20.4-alpine
+# 의존성 설치 단계
+FROM base AS builder
 WORKDIR /app
 
-# Create non-root user
+# 패키지 파일 복사
+COPY package*.json ./
+
+# 의존성 설치
+RUN npm ci && \
+    npm cache clean --force
+
+# 소스 코드 복사
+COPY . .
+
+# Next.js 빌드
+RUN CI=false npm run build
+
+# 프로덕션 이미지 생성
+FROM base AS runner
+WORKDIR /app
+
+# 시스템 의존성 설치 및 사용자 생성
 RUN addgroup -S -g 1001 nodejs && \
     adduser -S -u 1001 -G nodejs nextjs && \
     chown -R nextjs:nodejs /app
 
-# Copy built artifacts from builder stage
+# 빌드 파일 복사
+COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./next.config.js
 
-# Switch to non-root user
+# 사용자 전환
 USER nextjs
 
-# Expose port 3000
+# 포트 설정
 EXPOSE 3000
 
-# Start the application
+# 서버 실행
 CMD ["npm", "start"]
