@@ -16,13 +16,14 @@ ENV AUTH_SERVER_URL=${AUTH_SERVER_URL}
 ENV MEMBERS_SERVER_URL=${MEMBERS_SERVER_URL}
 ENV RESUMES_SERVER_URL=${RESUMES_SERVER_URL}
 ENV NOTIFICATIONS_SERVER_URL=${NOTIFICATIONS_SERVER_URL}
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 
 # 패키지 파일 복사
 COPY package*.json ./
 
 # 의존성 설치
-RUN npm ci && \
+RUN npm ci --include=dev && \
+    npm install -D @tailwindcss/typography && \
     npm cache clean --force
 
 # 소스 코드 복사
