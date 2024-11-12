@@ -26,7 +26,7 @@ COPY . .
 RUN npm install sharp
 
 # Build the application
-RUN CI=false npm run build
+RUN CI
 
 # Production stage
 FROM node:20.4-alpine
