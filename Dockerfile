@@ -1,29 +1,31 @@
 # 기본 Node.js 이미지 사용
 FROM node:20.4-alpine AS base
 
-# 의존성 설치 단계
-FROM base AS builder
-WORKDIR /app
-
-# 빌드 시 필요한 환경변수 정의
+# 빌드 시간 변수 선언
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_S3_URL
 ARG AUTH_SERVER_URL
 ARG MEMBERS_SERVER_URL
 ARG RESUMES_SERVER_URL
 ARG NOTIFICATIONS_SERVER_URL
 
-# 빌드 환경변수 설정
+# 환경 변수 설정
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+ENV NEXT_PUBLIC_S3_URL=${NEXT_PUBLIC_S3_URL}
 ENV AUTH_SERVER_URL=${AUTH_SERVER_URL}
 ENV MEMBERS_SERVER_URL=${MEMBERS_SERVER_URL}
 ENV RESUMES_SERVER_URL=${RESUMES_SERVER_URL}
 ENV NOTIFICATIONS_SERVER_URL=${NOTIFICATIONS_SERVER_URL}
-ENV NODE_ENV=development
+
+# 의존성 설치 단계
+FROM base AS builder
+WORKDIR /app
 
 # 패키지 파일 복사
 COPY package*.json ./
 
 # 의존성 설치
-RUN npm ci --include=dev && \
-    npm install -D @tailwindcss/typography && \
+RUN npm ci && \
     npm cache clean --force
 
 # 소스 코드 복사
@@ -35,8 +37,6 @@ RUN CI=false npm run build
 # 프로덕션 이미지 생성
 FROM base AS runner
 WORKDIR /app
-
-ENV NODE_ENV=production
 
 # 시스템 의존성 설치 및 사용자 생성
 RUN addgroup -S -g 1001 nodejs && \
