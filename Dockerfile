@@ -9,7 +9,6 @@ ARG NODE_ENV
 ARG AUTH_SERVER_URL
 ARG MEMBERS_SERVER_URL
 ARG RESUMES_SERVER_URL
-ARG NOTIFICATIONS_SERVER_URL
 
 # Copy package files
 COPY package*.json ./
@@ -37,10 +36,6 @@ RUN echo "module.exports = {" > next.config.js && \
     echo "      {" >> next.config.js && \
     echo "        source: '/api/resumes/:path*'," >> next.config.js && \
     echo "        destination: '${RESUMES_SERVER_URL}/api/resumes/:path*'" >> next.config.js && \
-    echo "      }," >> next.config.js && \
-    echo "      {" >> next.config.js && \
-    echo "        source: '/api/notifications/:path*'," >> next.config.js && \
-    echo "        destination: '${NOTIFICATIONS_SERVER_URL}/api/notifications/:path*'" >> next.config.js && \
     echo "      }" >> next.config.js && \
     echo "    ]" >> next.config.js && \
     echo "  }" >> next.config.js && \
