@@ -49,6 +49,11 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ${{ secrets.DOCKER_REPO }}:dev
+          build-args: |
+            AUTH_SERVER_URL=${{ secrets.AUTH_SERVER_URL }}
+            MEMBERS_SERVER_URL=${{ secrets.MEMBERS_SERVER_URL }}
+            RESUMES_SERVER_URL=${{ secrets.RESUMES_SERVER_URL }}
+            NOTIFICATIONS_SERVER_URL=${{ secrets.NOTIFICATIONS_SERVER_URL }}
 
   deploy:
     needs: build
