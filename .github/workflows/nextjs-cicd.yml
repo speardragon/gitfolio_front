@@ -3,7 +3,7 @@ name: Next.js CI/CD Pipeline
 on:
   push:
     branches:
-      - develop
+      - feature/cicd
 
 jobs:
   build:
@@ -49,14 +49,6 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ${{ secrets.DOCKER_REPO }}:dev
-          build-args: |
-            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
-            NEXT_PUBLIC_S3_URL=${{ secrets.NEXT_PUBLIC_S3_URL }}
-            NODE_ENV=production
-            AUTH_SERVER_URL=${{ secrets.AUTH_SERVER_URL }}
-            MEMBERS_SERVER_URL=${{ secrets.MEMBERS_SERVER_URL }}
-            RESUMES_SERVER_URL=${{ secrets.RESUMES_SERVER_URL }}
-            NOTIFICATIONS_SERVER_URL=${{ secrets.NOTIFICATIONS_SERVER_URL }}
 
   deploy:
     needs: build
