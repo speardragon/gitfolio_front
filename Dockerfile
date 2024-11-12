@@ -14,8 +14,9 @@ ARG NOTIFICATIONS_SERVER_URL
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
+# Install dependencies including Tailwind Typography
 RUN npm ci && \
+    npm install -D @tailwindcss/typography && \
     npm cache clean --force
 
 # Copy source code
@@ -44,6 +45,9 @@ RUN echo "module.exports = {" > next.config.js && \
     echo "    ]" >> next.config.js && \
     echo "  }" >> next.config.js && \
     echo "}" >> next.config.js
+
+# Install sharp for image optimization (addressing the warning)
+RUN npm install sharp
 
 # Build the application
 RUN CI=false npm run build
