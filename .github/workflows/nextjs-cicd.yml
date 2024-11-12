@@ -26,11 +26,11 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_S3_URL: ${{ secrets.NEXT_PUBLIC_S3_URL }}
-          NODE_ENV: 'production'
           AUTH_SERVER_URL: ${{ secrets.AUTH_SERVER_URL }}
           MEMBERS_SERVER_URL: ${{ secrets.MEMBERS_SERVER_URL }}
           RESUMES_SERVER_URL: ${{ secrets.RESUMES_SERVER_URL }}
           NOTIFICATIONS_SERVER_URL: ${{ secrets.NOTIFICATIONS_SERVER_URL }}
+          NODE_ENV: 'production'
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
