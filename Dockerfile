@@ -1,49 +1,74 @@
-# 기본 Node.js 이미지 사용
-FROM node:20.4-alpine AS base
-
-# 의존성 설치 단계
-FROM base AS builder
+# Build stage
+FROM node:20.4-alpine as builder
 WORKDIR /app
 
-# 패키지 파일 복사
+# Environment variables for build time
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_S3_URL
+ARG NODE_ENV
+ARG AUTH_SERVER_URL
+ARG MEMBERS_SERVER_URL
+ARG RESUMES_SERVER_URL
+ARG NOTIFICATIONS_SERVER_URL
+
+# Copy package files
 COPY package*.json ./
 
-# 의존성 설치
+# Install dependencies
 RUN npm ci && \
     npm cache clean --force
 
-# 소스 코드 복사
+# Copy source code
 COPY . .
 
-# Next.js 빌드
+# Create next.config.js with rewrites configuration
+RUN echo "module.exports = {" > next.config.js && \
+    echo "  rewrites: async () => {" >> next.config.js && \
+    echo "    return [" >> next.config.js && \
+    echo "      {" >> next.config.js && \
+    echo "        source: '/api/auth/:path*'," >> next.config.js && \
+    echo "        destination: '${AUTH_SERVER_URL}/api/auth/:path*'" >> next.config.js && \
+    echo "      }," >> next.config.js && \
+    echo "      {" >> next.config.js && \
+    echo "        source: '/api/members/:path*'," >> next.config.js && \
+    echo "        destination: '${MEMBERS_SERVER_URL}/api/members/:path*'" >> next.config.js && \
+    echo "      }," >> next.config.js && \
+    echo "      {" >> next.config.js && \
+    echo "        source: '/api/resumes/:path*'," >> next.config.js && \
+    echo "        destination: '${RESUMES_SERVER_URL}/api/resumes/:path*'" >> next.config.js && \
+    echo "      }," >> next.config.js && \
+    echo "      {" >> next.config.js && \
+    echo "        source: '/api/notifications/:path*'," >> next.config.js && \
+    echo "        destination: '${NOTIFICATIONS_SERVER_URL}/api/notifications/:path*'" >> next.config.js && \
+    echo "      }" >> next.config.js && \
+    echo "    ]" >> next.config.js && \
+    echo "  }" >> next.config.js && \
+    echo "}" >> next.config.js
+
+# Build the application
 RUN CI=false npm run build
 
-# 프로덕션 이미지 생성
-FROM base AS runner
+# Production stage
+FROM node:20.4-alpine
 WORKDIR /app
 
-# 환경변수 설정
-ENV NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1 \
-    PORT=3000 \
-    HOST=0.0.0.0
-
-# 시스템 의존성 설치 및 사용자 생성
+# Create non-root user
 RUN addgroup -S -g 1001 nodejs && \
     adduser -S -u 1001 -G nodejs nextjs && \
     chown -R nextjs:nodejs /app
 
-# 빌드 파일 복사
-COPY --from=builder /app/public ./public
+# Copy built artifacts from builder stage
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./next.config.js
 
-# 사용자 전환
+# Switch to non-root user
 USER nextjs
 
-# 포트 설정
+# Expose port 3000
 EXPOSE 3000
 
-# 서버 실행
+# Start the application
 CMD ["npm", "start"]
