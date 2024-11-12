@@ -22,6 +22,8 @@ RUN CI=false npm run build
 FROM base AS runner
 WORKDIR /app
 
+ENV NODE_ENV=production
+
 # 시스템 의존성 설치 및 사용자 생성
 RUN addgroup -S -g 1001 nodejs && \
     adduser -S -u 1001 -G nodejs nextjs && \
