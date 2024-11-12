@@ -20,27 +20,7 @@ RUN npm ci && \
 
 # Copy source code
 COPY . .
-
-# Create next.config.js with rewrites configuration
-RUN echo "module.exports = {" > next.config.js && \
-    echo "  rewrites: async () => {" >> next.config.js && \
-    echo "    return [" >> next.config.js && \
-    echo "      {" >> next.config.js && \
-    echo "        source: '/api/auth/:path*'," >> next.config.js && \
-    echo "        destination: '${AUTH_SERVER_URL}/api/auth/:path*'" >> next.config.js && \
-    echo "      }," >> next.config.js && \
-    echo "      {" >> next.config.js && \
-    echo "        source: '/api/members/:path*'," >> next.config.js && \
-    echo "        destination: '${MEMBERS_SERVER_URL}/api/members/:path*'" >> next.config.js && \
-    echo "      }," >> next.config.js && \
-    echo "      {" >> next.config.js && \
-    echo "        source: '/api/resumes/:path*'," >> next.config.js && \
-    echo "        destination: '${RESUMES_SERVER_URL}/api/resumes/:path*'" >> next.config.js && \
-    echo "      }" >> next.config.js && \
-    echo "    ]" >> next.config.js && \
-    echo "  }" >> next.config.js && \
-    echo "}" >> next.config.js
-
+#이미 next.config.js 관련 파일이 있다.
 # Install sharp for image optimization (addressing the warning)
 RUN npm install sharp
 
