@@ -214,10 +214,7 @@ export default function Page({ params }: Props) {
             </div>
             <div className="relative w-[228px] h-[228px]">
               <Image
-                src={resume.result.avatarUrl.replace(
-                  "https://gitfolio.s3.amazonaws.com/https://",
-                  "https://",
-                )}
+                src={resume.result.avatarUrl}
                 alt="프로필 이미지"
                 priority
                 fill

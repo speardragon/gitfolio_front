@@ -266,10 +266,7 @@ export default function Community() {
                   </div>
                 </div>
                 <Image
-                  src={resume.avatarUrl.replace(
-                    "https://gitfolio.s3.amazonaws.com/https://",
-                    "https://",
-                  )}
+                  src={resume.avatarUrl}
                   alt="프로필 이미지"
                   width={300}
                   height={300}
