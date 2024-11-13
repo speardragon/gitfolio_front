@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/tooltip";
 import { debounce } from "lodash";
 import { useNotificationsQuery } from "../../_hooks/useNotificationQuery";
+import Markdown from "react-markdown";
 
 export default function Community() {
   const searchParams = useSearchParams();
@@ -265,7 +266,10 @@ export default function Community() {
                   </div>
                 </div>
                 <Image
-                  src={resume.avatarUrl}
+                  src={resume.avatarUrl.replace(
+                    "https://gitfolio.s3.amazonaws.com/https://",
+                    "https://",
+                  )}
                   alt="프로필 이미지"
                   width={300}
                   height={300}
@@ -300,7 +304,8 @@ export default function Community() {
                     </button>
                   </div>
                   <p className="mt-2 text-sm text-gray-600 whitespace-pre-line line-clamp-6">
-                    {resume.aboutMe}
+                    {/* {resume.aboutMe} */}
+                    {resume.aboutMe.replace(/\*/g, "")}
                   </p>
                 </div>
               </Link>
