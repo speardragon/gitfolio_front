@@ -89,7 +89,7 @@ jobs:
             --target "${{ steps.get-instance-id.outputs.instance_id }}" \
             --document-name AWS-StartInteractiveCommand \
             --parameters command="sudo -i && \
-              docker pull ${{ secrets.DOCKER_REPO }}:dev && \
+              docker pull gitfolio_front:dev && \
               docker stop gitfolio_front || true && \
               docker rm gitfolio_front || true && \
               docker run -d \
