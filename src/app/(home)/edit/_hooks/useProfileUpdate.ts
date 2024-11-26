@@ -1,3 +1,4 @@
+import customFetch from "@/app/api/customFetch";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -13,11 +14,8 @@ export function useProfileUpdate() {
   return useMutation({
     mutationKey: ["onboardingUpdate"],
     mutationFn: async ({ accessToken, data }: OnboardingRequest) => {
-      const response = await fetch(`/api/members/me`, {
+      const response = await customFetch(`/api/members/me`, {
         method: "PUT",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
         credentials: "include",
         body: data,
       });

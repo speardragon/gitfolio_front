@@ -20,11 +20,11 @@ export default function Page() {
   }
 
   return (
-    <div className="flex flex-col w-full space-y-2 h-full p-12 px-64 overflow-y-auto">
-      <div className="flex justify-between items-center mb-4">
+    <div className="flex flex-col w-full h-full p-12 px-64 space-y-2 overflow-y-auto">
+      <div className="flex items-center justify-between mb-4">
         <div className="text-2xl font-semibold">내 이력서 리스트</div>
         <Link
-          className="flex gap-2 pr-6 bg-blue-500 hover:bg-blue-600 text-white px-4 p-2 rounded-lg"
+          className="flex gap-2 p-2 px-4 pr-6 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
           href={"/myResume/create"}
         >
           <Plus />새 이력서 만들기
@@ -34,7 +34,7 @@ export default function Page() {
         <div
           key={resume.resumeId}
           onClick={() => router.push(`/myResume/${resume.resumeId}`)}
-          className="p-4 space-y-2 border border-gray-300 rounded-xl shadow-xl cursor-pointer transition-transform duration-500 ease-in-out transform hover:-translate-y-1"
+          className="p-4 space-y-2 transition-transform duration-500 ease-in-out transform border border-gray-300 shadow-xl cursor-pointer rounded-xl hover:-translate-y-1"
         >
           <Image
             src={resume.avatarUrl}
@@ -43,7 +43,7 @@ export default function Page() {
             alt="Avatar"
             className="w-16 h-16 rounded-full avatar"
           />
-          <div className="resume-info space-y-2">
+          <div className="space-y-2 resume-info">
             <h2 className="font-bold position">
               {positionTypeMap[resume.position as PositionType]}
             </h2>

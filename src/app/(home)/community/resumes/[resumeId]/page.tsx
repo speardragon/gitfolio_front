@@ -93,6 +93,7 @@ export default function Page({ params }: Props) {
                 alt="프로필 이미지"
                 priority
                 fill
+                sizes="228"
                 className="object-cover rounded-lg "
               />
             </div>

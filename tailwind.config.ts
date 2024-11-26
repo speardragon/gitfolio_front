@@ -1,4 +1,6 @@
 import type { Config } from "tailwindcss";
+import { PluginAPI } from "tailwindcss/types/config";
+const plugin = require("tailwindcss/plugin");
 
 const config: Config = {
   // darkMode: ["class"],
@@ -56,8 +58,45 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      animation: {
+        "fade-in-down": "fadeInDown 0.8s ease-out",
+        "flip-in": "flipIn 0.8s ease-out",
+      },
+      keyframes: {
+        fadeInDown: {
+          "0%": { opacity: "0", transform: "translateY(-20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        flipIn: {
+          "0%": {
+            transform: "rotateY(-180deg)",
+            opacity: "0",
+          },
+          "70%": {
+            transform: "rotateY(10deg)",
+            opacity: "0.7",
+          },
+          "100%": {
+            transform: "rotateY(0)",
+            opacity: "1",
+          },
+        },
+      },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+    plugin(function ({ addUtilities }: PluginAPI) {
+      addUtilities({
+        ".preserve-3d": {
+          transformStyle: "preserve-3d",
+        },
+        ".perspective": {
+          perspective: "1000px",
+        },
+      });
+    }),
+  ],
 };
 export default config;

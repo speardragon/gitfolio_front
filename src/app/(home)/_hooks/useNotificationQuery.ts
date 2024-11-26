@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/app/store/useAuthStore";
+import customFetch from "@/app/api/customFetch";
 import { useQuery } from "@tanstack/react-query";
 
 interface Notification {
@@ -18,27 +18,26 @@ export interface NotificationResponse {
   result: Notification[];
 }
 
-const getNotifications = async (accessToken: string) => {
-  const response = await fetch(`/api/notifications/me`, {
+const getNotifications = async () => {
+  const response = await customFetch(`/api/notifications/me`, {
     method: "GET",
     credentials: "include",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
   });
+
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    const errorData = await response.json();
+    throw new Error(errorData.message || "알림 데이터를 가져올 수 없습니다.");
   }
+
   const data: NotificationResponse = await response.json();
+
   return data;
 };
 
 export const useNotificationsQuery = () => {
-  const { accessToken } = useAuthStore((state) => state);
-
   return useQuery<NotificationResponse>({
     queryKey: ["notifications"],
-    queryFn: () => getNotifications(accessToken!),
+    queryFn: () => getNotifications(),
     refetchInterval: 60000, // 1분마다 polling
     retry: 0,
   });
