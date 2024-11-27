@@ -429,7 +429,7 @@ export default function Page({ params }: Props) {
               />
               <button
                 onClick={handleSend}
-                className="absolute p-2 px-4 text-sm text-white bg-blue-500 rounded-md right-2"
+                className="absolute right-0 p-2 px-4 text-sm text-white bg-blue-600 rounded-md"
               >
                 전송
               </button>

@@ -20,7 +20,7 @@ export default function Page() {
   }
 
   return (
-    <div className="flex flex-col w-full h-full p-12 px-64 space-y-2 overflow-y-auto">
+    <div className="flex flex-col w-full h-full p-12 space-y-2 overflow-y-auto lg:px-48">
       <div className="flex items-center justify-between mb-4">
         <div className="text-2xl font-semibold">내 이력서 리스트</div>
         <Link
@@ -58,12 +58,12 @@ export default function Page() {
                 </Badge>
               ))}
             </div>
-            <div className="text-sm">
+            <div className="text-sm text-gray-500">
               {moment(resume.updatedAt).isSame(moment(), "day")
                 ? moment(resume.updatedAt).fromNow()
                 : moment(resume.updatedAt).format("YYYY.MM.DD HH:mm")}
             </div>
-            <div className="text-xs text-gray-600 stats">
+            <div className="text-xs">
               <span>조회수: {resume.viewCount}</span> |{" "}
               <span>좋아요: {resume.likeCount}</span>
             </div>

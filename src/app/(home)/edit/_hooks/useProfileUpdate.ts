@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 type OnboardingRequest = {
-  accessToken: string;
   data: FormData;
 };
 
@@ -13,7 +12,8 @@ export function useProfileUpdate() {
 
   return useMutation({
     mutationKey: ["onboardingUpdate"],
-    mutationFn: async ({ accessToken, data }: OnboardingRequest) => {
+    mutationFn: async ({ data }: OnboardingRequest) => {
+      console.log(data);
       const response = await customFetch(`/api/members/me`, {
         method: "PUT",
         credentials: "include",
@@ -30,7 +30,8 @@ export function useProfileUpdate() {
       return response.json();
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      // queryClient.invalidateQueries({ queryKey: ["profile"] });
+      window.location.reload();
       toast.success("정보 변경에 성공하였습니다.");
     },
     onError: (error: any) => {

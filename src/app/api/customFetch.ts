@@ -31,8 +31,12 @@ const customFetch = async (url: string, options: RequestInit = {}) => {
   headers = {
     ...headers,
     Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
+    // "Content-Type": "application/json",
   };
+
+  if (!(options.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
 
   try {
     const response = await fetch(url, { ...options, headers });
