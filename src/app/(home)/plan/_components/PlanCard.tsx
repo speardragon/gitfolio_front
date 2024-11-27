@@ -1,5 +1,9 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import CheckIcon from "@/components/ui/CheckIcon";
+import { usePlanMutation } from "../_hooks/usePlanMutation";
+import { LoadingButton } from "@/components/ui/loading-button";
 
 export default function PlanCard({
   title,
@@ -18,6 +22,14 @@ export default function PlanCard({
   benefits: string[];
   animationDelay: string;
 }) {
+  const { mutate, isPending } = usePlanMutation();
+
+  const handleButtonClick = () => {
+    if (title === "Pro" && !buttonDisabled) {
+      mutate("PRO");
+    }
+  };
+
   return (
     <div
       className={`flex flex-col p-6 border border-gray-200 rounded-lg w-80 h-96
@@ -25,21 +37,23 @@ export default function PlanCard({
       style={{ animationDelay }}
     >
       <div className="text-3xl font-semibold">{title}</div>
-      <div className="text-sm mt-4">
+      <div className="mt-4 text-sm">
         <span className="text-4xl font-bold">{price}</span>원
-        <div className="text-sm text-gray-500 text-right">한 달 기준</div>
+        <div className="text-sm text-right text-gray-500">한 달 기준</div>
       </div>
       <div className="mt-4">{description}</div>
-      <Button
+      <LoadingButton
+        loading={isPending}
         className={`w-full mt-4 ${
           buttonDisabled
             ? "cursor-not-allowed bg-gray-100 hover:bg-gray-100 text-gray-400"
             : "bg-blue-500 hover:bg-blue-600 text-white"
         } rounded-full`}
+        onClick={handleButtonClick}
       >
         {buttonLabel}
-      </Button>
-      <ul className="list-none text-sm space-y-2 mt-4">
+      </LoadingButton>
+      <ul className="mt-4 space-y-2 text-sm list-none">
         {benefits.map((benefit, index) => (
           <li key={index} className="flex items-center">
             <CheckIcon />

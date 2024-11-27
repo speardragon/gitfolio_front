@@ -31,6 +31,7 @@ const customFetch = async (url: string, options: RequestInit = {}) => {
   headers = {
     ...headers,
     Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
   };
 
   try {

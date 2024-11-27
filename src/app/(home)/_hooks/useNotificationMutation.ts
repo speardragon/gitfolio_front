@@ -6,7 +6,7 @@ export function useNotificationMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ["onboardingUpdate"],
+    mutationKey: ["notificationMutate"],
     mutationFn: async (notificationId: number) => {
       const response = await customFetch(
         `/api/notifications/${notificationId}`,

@@ -7,7 +7,7 @@ export default function Plan() {
         <div></div>
         <div>플랜 업그레이드</div>
       </div>
-      <div className="flex w-full justify-center space-x-6">
+      <div className="flex justify-center w-full space-x-6">
         <PlanCard
           title="Free"
           price="0"
