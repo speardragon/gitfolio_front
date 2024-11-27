@@ -17,7 +17,7 @@ import {
 } from "@/app/types/type";
 import Tistory from "../../../../../public/tistory.svg";
 import Notion from "../../../../../public/notion.svg";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CornerDownRight } from "lucide-react";
 import PdfDownloadButton from "./_components/PdfDownloadButton";
 import Markdown from "react-markdown";
@@ -43,6 +43,8 @@ export default function Page({ params }: Props) {
   const [selectedText, setSelectedText] = useState<string>("");
   const [isPopOver, setIsPopOver] = useState<boolean>(false);
 
+  const popoverRef = useRef<HTMLDivElement>(null);
+
   const { visibility, handleToggleVisibility } = useVisibility(
     resume,
     resumeId,
@@ -63,11 +65,20 @@ export default function Page({ params }: Props) {
   };
 
   // 마우스를 떼었을 때 발생
-  const onMouseUp = useCallback(() => {
+  const onMouseUp = useCallback((event: MouseEvent) => {
+    // 이벤트가 팝오버 버튼 내부에서 발생했는지 확인
+    if (
+      popoverRef.current &&
+      popoverRef.current.contains(event.target as Node)
+    ) {
+      return;
+    }
+
     const activeSelection = document.getSelection();
     const text = activeSelection?.toString();
 
     if (!activeSelection || !text) {
+      setIsPopOver(false);
       return;
     }
 
@@ -77,7 +88,7 @@ export default function Page({ params }: Props) {
     setIsPopOver(true);
     setPosition({
       x: rect.left + rect.width / 2 - 44 / 2,
-      y: rect.top + window.scrollY - 100,
+      y: rect.top - 100,
       width: rect.width,
       height: rect.height,
     });
@@ -112,15 +123,14 @@ export default function Page({ params }: Props) {
   // min-h-[calc(100vh-4rem)]
   return (
     <div className="relative w-full h-full">
-      {/* {selection && position && ( */}
       {isPopOver && (
         <div
+          ref={popoverRef}
           style={{
             transform: `translate3d(${position?.x}px, ${position?.y}px, 0)`,
           }}
           className="absolute top-0 left-0 w-[44px] h-[30px] pencil-button-wrapper"
           onClick={handlePopover}
-          onMouseDown={(e) => e.preventDefault()}
         >
           <PencilLine className="flex items-center w-full h-full px-2 text-black bg-white border shadow-2xl rounded-3xl hover:bg-gray-100" />
         </div>
