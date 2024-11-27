@@ -49,7 +49,7 @@ const getResume = async (page: number, size: number, filters: ResumeFilter) => {
     `/api/resumes?page=${page - 1}&size=${size}&${filterParams.toString()}`,
     {
       method: "GET",
-      credentials: "include",
+      // credentials: "include",
     },
   );
 
@@ -144,7 +144,7 @@ export interface ResumeDetailResponse {
 const getOneResume = async (resumeId: string) => {
   const response = await customFetch(`/api/resumes/${resumeId}`, {
     method: "GET",
-    credentials: "include",
+    // credentials: "include",
   });
 
   if (!response.ok) {

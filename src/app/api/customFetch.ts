@@ -2,20 +2,36 @@ import { useAuthStore } from "@/app/store/useAuthStore";
 import * as Sentry from "@sentry/nextjs";
 
 const customFetch = async (url: string, options: RequestInit = {}) => {
-  const accessToken = useAuthStore.getState().accessToken; // zustand에서 현재 토큰 확인
-  // let headers = options.headers || {};
+  let accessToken = useAuthStore.getState().accessToken; // zustand에서 현재 토큰 확인
+
   let headers: Record<string, string> =
     options.headers instanceof Headers
       ? Object.fromEntries(options.headers.entries())
       : (options.headers as Record<string, string>) || {};
 
-  // Access Token이 있다면 Authorization 헤더 추가
-  if (accessToken) {
-    headers = {
-      ...headers,
-      Authorization: `Bearer ${accessToken}`,
-    };
+  if (!accessToken) {
+    const reissueResponse = await fetch("/api/auth/reissue", {
+      method: "POST",
+      credentials: "include",
+    });
+
+    if (reissueResponse.ok) {
+      const data = await reissueResponse.json();
+      accessToken = data.accessToken;
+      useAuthStore.setState({ accessToken });
+    } else {
+      // 인증 실패 처리
+      useAuthStore.setState({ authenticated: false });
+      window.location.href = "/login";
+      throw new Error("인증에 실패하였습니다.");
+    }
   }
+
+  // Access Token이 있다면 Authorization 헤더 추가
+  headers = {
+    ...headers,
+    Authorization: `Bearer ${accessToken}`,
+  };
 
   try {
     const response = await fetch(url, { ...options, headers });

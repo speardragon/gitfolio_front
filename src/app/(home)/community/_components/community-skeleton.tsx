@@ -1,4 +1,4 @@
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
   size?: number;
@@ -8,6 +8,16 @@ export default function CommunitySkeleton({ size = 12 }: Props) {
   return (
     <>
       <Skeleton className="w-full h-52 object-cover rounded-lg" />
+      <div className="flex flex-wrap items-center justify-between gap-2 p-4 bg-white rounded-lg shadow-lg">
+        <div className="flex flex-wrap items-center gap-2">
+          <Skeleton className="w-10 h-10 rounded-full" />
+          <Skeleton className="w-[120px] h-10 rounded-lg" />
+          <Skeleton className="w-[120px] h-10 rounded-lg" />
+          <Skeleton className="w-[120px] h-10 rounded-lg" />
+          <Skeleton className="w-[120px] h-10 rounded-lg" />
+        </div>
+        <Skeleton className="w-[200px] h-10 rounded-lg" />
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {Array.from({ length: size }).map((_, idx) => (
           <div

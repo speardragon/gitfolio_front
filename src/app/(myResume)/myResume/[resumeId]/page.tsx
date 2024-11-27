@@ -88,7 +88,8 @@ export default function Page({ params }: Props) {
     setIsPopOver(true);
     setPosition({
       x: rect.left + rect.width / 2 - 44 / 2,
-      y: rect.top - 100,
+      y: rect.top + window.scrollY - 100,
+      // y: rect.top + (mainRef.current?.scrollTop || 0),
       width: rect.width,
       height: rect.height,
     });
@@ -135,7 +136,6 @@ export default function Page({ params }: Props) {
           <PencilLine className="flex items-center w-full h-full px-2 text-black bg-white border shadow-2xl rounded-3xl hover:bg-gray-100" />
         </div>
       )}
-
       <div className="flex h-full">
         {/* 메인 콘텐츠 */}
         <main className="items-center justify-center flex-1 p-24 space-y-4 overflow-y-auto custom-scrollbar">
