@@ -106,7 +106,7 @@ export default function Page({ params }: Props) {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full p-24 space-y-4">
-      <div className="flex flex-col max-w-[982px] w-full mx-auto space-y-2  ">
+      <div className="flex flex-col max-w-[982px] w-full mx-auto space-y-2">
         <div className="flex items-center justify-between w-full">
           <div className="flex gap-4 font-semibold text-blue-500">
             {tags.map((tag, index) => (
@@ -147,14 +147,15 @@ export default function Page({ params }: Props) {
               {/* 기본정보 */}
               <div className="flex flex-row">
                 <div className="flex flex-col flex-grow">
-                  <div className="mb-4 text-5xl font-semibold">
+                  <div className="mb-4 text-3xl font-semibold">
                     {resume.result.memberName}
                   </div>
-                  <div className="text-2xl">
-                    {positionTypeMap[resume.result.position as PositionType]}
+                  <div className="text-xl">
+                    {positionTypeMap[resume.result.position as PositionType]}{" "}
+                    개발자
                   </div>
                 </div>
-                <div className="relative w-[228px] h-[228px] border border-gray-100 rounded-lg">
+                <div className="relative w-[128px] h-[128px] md:w-[180px] md:h-[180px] border border-gray-100 rounded-lg">
                   <Image
                     src={resume.result.avatarUrl}
                     alt="프로필 이미지"
