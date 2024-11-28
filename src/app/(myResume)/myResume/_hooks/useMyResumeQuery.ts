@@ -1,3 +1,4 @@
+import customFetch from "@/app/api/customFetch";
 import { useAuthStore } from "@/app/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 
@@ -30,25 +31,21 @@ interface MyResumeResponse {
   message: string;
   result: Pageable;
 }
-const getMyResume = async (accessToken: string) => {
-  const response = await fetch(`/api/resumes/me`, {
+const getMyResume = async () => {
+  const response = await customFetch(`/api/resumes/me`, {
     method: "GET",
     credentials: "include",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
   });
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
   const data: MyResumeResponse = await response.json();
-  return data || "";
+  return data;
 };
 export const useMyResumeQuery = () => {
   const { accessToken } = useAuthStore((state) => state);
   return useQuery<MyResumeResponse>({
     queryKey: ["resume", "me"],
-    queryFn: () => getMyResume(accessToken!),
-    enabled: !!accessToken,
+    queryFn: () => getMyResume(),
   });
 };
