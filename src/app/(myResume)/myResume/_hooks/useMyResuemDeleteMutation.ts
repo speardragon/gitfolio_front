@@ -1,21 +1,18 @@
 import customFetch from "@/app/api/customFetch";
+import { useAuthStore } from "@/app/store/useAuthStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export function useMyResumeVisibilityMutation(resumeId: string) {
+export function useMyResumeDeleteMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ["updateVisibility"],
-    mutationFn: async (visibility: string) => {
-      const response = await customFetch(
-        `/api/resumes/${resumeId}/visibility`,
-        {
-          method: "PATCH",
-          credentials: "include",
-          body: JSON.stringify({ visibility }),
-        },
-      );
+    mutationKey: ["deleteMyResume"],
+    mutationFn: async (resumeId: string) => {
+      const response = await customFetch(`/api/resumes/${resumeId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
       if (!response.ok) {
         const errorData = await response.json();
         throw {
@@ -27,7 +24,8 @@ export function useMyResumeVisibilityMutation(resumeId: string) {
       return response.json();
     },
     onSuccess: (data) => {
-      toast.success("이력서 공개 여부 설정이 바뀌었습니다.");
+      console.log("success");
+      toast.success("이력서가 삭제되었습니다.");
       queryClient.invalidateQueries({ queryKey: ["resume"] });
     },
     onError: (error: any) => {

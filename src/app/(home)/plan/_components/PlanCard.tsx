@@ -32,14 +32,14 @@ export default function PlanCard({
 
   return (
     <div
-      className={`flex flex-col p-6 border border-gray-200 rounded-lg w-80 h-96
+      className={`flex flex-col shadow-lg p-6 border border-gray-200 rounded-lg w-80 h-96
       animate-flip-in`}
       style={{ animationDelay }}
     >
       <div className="text-3xl font-semibold">{title}</div>
       <div className="mt-4 text-sm">
         <span className="text-4xl font-bold">{price}</span>원
-        <div className="text-sm text-right text-gray-500">한 달 기준</div>
+        <div className="text-sm text-right text-gray-400">한 달 기준</div>
       </div>
       <div className="mt-4">{description}</div>
       <LoadingButton
@@ -53,7 +53,7 @@ export default function PlanCard({
       >
         {buttonLabel}
       </LoadingButton>
-      <ul className="mt-4 space-y-2 text-sm list-none">
+      <ul className="mt-4 space-y-2 text-sm list-none font-semibold">
         {benefits.map((benefit, index) => (
           <li key={index} className="flex items-center">
             <CheckIcon />

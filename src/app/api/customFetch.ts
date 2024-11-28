@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/app/store/useAuthStore";
 import * as Sentry from "@sentry/nextjs";
+import { toast } from "sonner";
 
 const customFetch = async (url: string, options: RequestInit = {}) => {
   let accessToken = useAuthStore.getState().accessToken; // zustand에서 현재 토큰 확인
@@ -19,11 +20,12 @@ const customFetch = async (url: string, options: RequestInit = {}) => {
       const data = await reissueResponse.json();
       accessToken = data.accessToken;
       useAuthStore.setState({ accessToken });
+      useAuthStore.setState({ authenticated: true });
     } else {
       // 인증 실패 처리
       useAuthStore.setState({ authenticated: false });
-      window.location.href = "/login";
-      throw new Error("인증에 실패하였습니다.");
+      // window.location.href = "/login";
+      // throw new Error("인증에 실패하였습니다.");
     }
   }
 
@@ -66,6 +68,8 @@ const customFetch = async (url: string, options: RequestInit = {}) => {
       // 재발급 받은 토큰으로 동일 요청 재시도
       headers.Authorization = `Bearer ${accessToken}`;
       return fetch(url, { ...options, headers });
+    } else if (response.status === 404) {
+      window.location.href = "/community";
     }
 
     return response; // 정상 응답 반환

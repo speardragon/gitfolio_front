@@ -6,14 +6,22 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import MyResumeSkeleton from "./_components/my-resume-skeleton";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { PositionType, positionTypeMap } from "@/app/types/type";
 import moment from "moment";
 import "moment/locale/ko";
+import { useMyResumeDeleteMutation } from "./_hooks/useMyResuemDeleteMutation";
+import MyResumeDeleteModal from "./[resumeId]/hooks/MyResumeDeleteModal";
 
 export default function Page() {
-  const { data: myResume } = useMyResumeQuery();
   const router = useRouter();
+
+  const { data: myResume } = useMyResumeQuery();
+  const { mutate: deleteResume } = useMyResumeDeleteMutation();
+
+  const onDelete = (resumeId: string) => {
+    deleteResume(resumeId);
+  };
 
   if (!myResume) {
     return <MyResumeSkeleton />;
@@ -34,8 +42,9 @@ export default function Page() {
         <div
           key={resume.resumeId}
           onClick={() => router.push(`/myResume/${resume.resumeId}`)}
-          className="p-4 space-y-2 transition-transform duration-500 ease-in-out transform border border-gray-300 shadow-xl cursor-pointer rounded-xl hover:-translate-y-1"
+          className="relative p-4 space-y-2 transition-transform duration-500 ease-in-out transform border border-gray-300 shadow-xl cursor-pointer rounded-xl hover:-translate-y-1"
         >
+          <MyResumeDeleteModal onDelete={onDelete} resumeId={resume.resumeId} />
           <Image
             src={resume.avatarUrl}
             width={64}

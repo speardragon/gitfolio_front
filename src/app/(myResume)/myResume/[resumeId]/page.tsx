@@ -24,8 +24,11 @@ import Markdown from "react-markdown";
 import { Switch } from "@/components/ui/switch";
 import { useVisibility } from "./hooks/useVisibility";
 import { useResumeDetailQuery } from "@/app/(home)/community/_hooks/useResumeQuery";
-import ResumeSkeleton from "@/app/(home)/community/resumes/[resumeId]/_components/resume-skeleton";
 import ResumeComment from "@/app/(home)/community/resumes/[resumeId]/_components/resume-comment";
+import MyResumeDetailSkeleton from "./_components/MyResumeDetailSkeleton";
+import { useProfileQuery } from "@/app/(home)/onboarding/_hooks/useProfileQuery";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type Props = {
   params: { resumeId: string };
@@ -33,8 +36,10 @@ type Props = {
 
 export default function Page({ params }: Props) {
   const resumeId = params.resumeId;
+  const router = useRouter();
 
-  const { data: resume } = useResumeDetailQuery(resumeId);
+  const { data: resume, isLoading } = useResumeDetailQuery(resumeId);
+  const { data: userProfile } = useProfileQuery();
 
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState("");
@@ -103,6 +108,19 @@ export default function Page({ params }: Props) {
     };
   }, [onMouseUp]);
 
+  useEffect(() => {
+    if (resume && userProfile) {
+      const userId = userProfile.result.memberId;
+      const resumeOwnerId = resume.result.memberId;
+
+      if (userId !== resumeOwnerId) {
+        console.log("hi");
+        toast.error("잘못된 접근입니다.");
+        router.push("/community");
+      }
+    }
+  }, [resume, userProfile, router]);
+
   const handlePopover = () => {
     setIsPopOver(false);
     setSelectedText(selection); // 혹시 모를 경우를 대비해 기존 상태 사용
@@ -118,7 +136,7 @@ export default function Page({ params }: Props) {
   };
 
   if (!resume) {
-    return <ResumeSkeleton />;
+    return <MyResumeDetailSkeleton />;
   }
 
   // min-h-[calc(100vh-4rem)]
@@ -140,7 +158,7 @@ export default function Page({ params }: Props) {
         {/* 메인 콘텐츠 */}
         <main className="items-center justify-center flex-1 p-12 mx-auto overflow-y-auto custom-scrollbar">
           <div className="flex flex-col items-center justify-center w-full space-y-4">
-            <div className="flex justify-end w-full">
+            <div className="flex justify-end w-full max-w-[982px]">
               <PdfDownloadButton resume={resume} />
             </div>
             <div className="flex flex-row items-center max-w-[982px] w-full justify-between p-4 border rounded-lg">
@@ -156,7 +174,7 @@ export default function Page({ params }: Props) {
                 onCheckedChange={() => handleToggleVisibility()}
               />
             </div>
-            <div className="flex items-center justify-between max-w-[982px] w-full">
+            <div className="flex items-center justify-between max-w-[982px] w-full ">
               <div className="flex items-center justify-between gap-4 font-semibold text-blue-500 ">
                 {(resume.result.tags && resume.result.tags.length > 0
                   ? resume.result.tags
@@ -179,7 +197,7 @@ export default function Page({ params }: Props) {
               </div>
             </div>
 
-            <div className="px-20 space-y-10 border border-gray-300 p-14 max-w-[982px] w-full">
+            <div className="px-20 space-y-10 border border-gray-300 rounded-lg p-14 max-w-[982px] w-full">
               <div className="flex flex-row">
                 <div className="flex flex-col flex-grow">
                   <div className="mb-4 text-3xl font-semibold">

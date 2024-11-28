@@ -55,6 +55,8 @@ export interface ProfileResult {
   certificates: Certificate[];
   activities: Activity[];
   links: Link[];
+  paidPlan: string;
+  remainingCount: number;
 }
 
 interface ProfileApiResponse {

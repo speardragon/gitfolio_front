@@ -1,5 +1,5 @@
 import customFetch from "@/app/api/customFetch";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export interface PaymentResponse {
@@ -19,6 +19,8 @@ export interface PaymentResponse {
 }
 
 export function usePlanMutation() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ["planMutate"],
     mutationFn: async (paidPlan: string) => {
@@ -47,6 +49,7 @@ export function usePlanMutation() {
           "width=500,height=700,scrollbars=yes",
         );
       }
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
     onError: (error: any) => {
       toast.error(error.message);
