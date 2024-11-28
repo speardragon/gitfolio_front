@@ -155,7 +155,6 @@ export default function ProfileEdit({ userProfile }: Props) {
     };
 
     if (imageFile) {
-      console.log("hi");
       formData.append("imageFile", imageFile as Blob);
     }
     formData.append(

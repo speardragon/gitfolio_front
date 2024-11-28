@@ -5,6 +5,7 @@ interface Notification {
   notificationId: number;
   resumeId: string;
   senderId: number;
+  senderNickname: string;
   receiverId: number;
   type: string;
   isRead: boolean;

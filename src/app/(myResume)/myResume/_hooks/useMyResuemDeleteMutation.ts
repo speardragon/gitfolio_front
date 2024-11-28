@@ -23,8 +23,7 @@ export function useMyResumeDeleteMutation() {
 
       return response.json();
     },
-    onSuccess: (data) => {
-      console.log("success");
+    onSuccess: () => {
       toast.success("이력서가 삭제되었습니다.");
       queryClient.invalidateQueries({ queryKey: ["resume"] });
     },

@@ -114,7 +114,6 @@ export default function Page({ params }: Props) {
       const resumeOwnerId = resume.result.memberId;
 
       if (userId !== resumeOwnerId) {
-        console.log("hi");
         toast.error("잘못된 접근입니다.");
         router.push("/community");
       }

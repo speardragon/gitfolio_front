@@ -13,7 +13,6 @@ export function useProfileUpdate() {
   return useMutation({
     mutationKey: ["onboardingUpdate"],
     mutationFn: async ({ data }: OnboardingRequest) => {
-      console.log(data);
       const response = await customFetch(`/api/members/me`, {
         method: "PUT",
         credentials: "include",

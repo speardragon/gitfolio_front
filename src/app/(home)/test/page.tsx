@@ -56,7 +56,6 @@ export default function Page({ params }: Props) {
   }, []);
 
   const handlePopover = useCallback(() => {
-    console.log(selection);
     setSelectedText(selection as string); // `selection`이 있을 때만 `selectedText`를 설정
   }, [selection]);
 
