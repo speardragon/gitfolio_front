@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import customFetch from "@/app/api/customFetch";
 
 type OnboardingRequest = {
-  accessToken: string;
   data: {
     selectedRepo: string[];
     requirements: string;
@@ -48,11 +47,11 @@ export function useResumeMutation() {
         success: (success: any) => {
           queryClient.invalidateQueries({ queryKey: ["resume"] });
           return (
-            <div className="flex justify-between items-center w-full">
+            <div className="flex items-center justify-between w-full">
               <div className="font-bold">이력서 등록에 성공하였습니다.</div>
               <button
                 onClick={() => router.push(`/myResume/${success.result}`)}
-                className="ml-4 px-2 py-1 border hover:bg-green-200 border-green-500 text-green-700 rounded-lg"
+                className="px-2 py-1 ml-4 text-green-700 border border-green-500 rounded-lg hover:bg-green-200"
               >
                 보러가기
               </button>

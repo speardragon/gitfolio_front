@@ -68,6 +68,9 @@ export const useResumeQuery = (page: number, size: number, filters: any) => {
   });
 };
 
+/**
+ * 커뮤니티 이력서 상세 정보
+ */
 interface WorkExperience {
   companyName: string;
   departmentName: string;
@@ -142,9 +145,8 @@ export interface ResumeDetailResponse {
   result: ResumeDetail;
 }
 const getOneResume = async (resumeId: string) => {
-  const response = await customFetch(`/api/resumes/${resumeId}`, {
+  const response = await customFetch(`/api/resumes/${resumeId}/community`, {
     method: "GET",
-    // credentials: "include",
   });
 
   if (!response.ok) {
@@ -159,5 +161,29 @@ export const useResumeDetailQuery = (resumeId: string) => {
   return useQuery<ResumeDetailResponse>({
     queryKey: ["resumes", resumeId],
     queryFn: () => getOneResume(resumeId),
+  });
+};
+
+/** 내 이력서 상세 정보 */
+export interface MyResumeDetailResponse extends ResumeDetailResponse {
+  template: string;
+}
+const getMyResumeDetail = async (resumeId: string) => {
+  const response = await customFetch(`/api/resumes/${resumeId}/myResume`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "이력서 데이터를 가져올 수 없습니다.");
+  }
+
+  const data: MyResumeDetailResponse = await response.json();
+  return data;
+};
+export const useMyResumeDetailQuery = (resumeId: string) => {
+  return useQuery<MyResumeDetailResponse>({
+    queryKey: ["resumes", resumeId],
+    queryFn: () => getMyResumeDetail(resumeId),
   });
 };
