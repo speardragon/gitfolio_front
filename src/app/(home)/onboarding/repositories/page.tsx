@@ -2,7 +2,7 @@ import Repository from "./_components/repository";
 
 export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center w-full bg-red-50">
+    <div className="flex flex-col items-center justify-center w-full ">
       <Repository />
     </div>
   );
