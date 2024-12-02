@@ -53,6 +53,11 @@ const nextConfig = {
         destination: `${process.env.NOTIFICATIONS_SERVER_URL}/api/notifications/:path*`,
         // destination: 'http://10.0.105.75/api/resumes/:path*',
       },
+      {
+        source: "/api/payments/:path*",
+        destination: `${process.env.PAYMENTS_SERVER_URL}/api/payments/:path*`,
+        // destination: 'http://10.0.105.75/api/resumes/:path*',
+      },
     ];
   },
 };

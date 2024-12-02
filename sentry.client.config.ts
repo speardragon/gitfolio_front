@@ -18,7 +18,7 @@ Sentry.init({
     }),
   ],
 
-  tracePropagationTargets: ["localhost"],
+  tracePropagationTargets: ["www.gitfolio.site"],
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
   // 0에서 1 사이의 숫자로 주어진 트랜잭션이 Sentry로 전송 될 확률을 제어

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import * as Sentry from "@sentry/nextjs";
+import customFetch from "@/app/api/customFetch";
 
 type OnboardingRequest = {
   accessToken: string;
@@ -18,27 +18,21 @@ export function useResumeMutation() {
 
   return useMutation({
     mutationKey: ["createResume"],
-    mutationFn: async ({ accessToken, data }: OnboardingRequest) => {
-      const promise = fetch(`/api/resumes`, {
+    mutationFn: async ({ data }: OnboardingRequest) => {
+      const promise = customFetch(`/api/resumes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
         },
         credentials: "include",
         body: JSON.stringify(data),
-      })
-        .then(async (response) => {
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message ?? "에러가 발생했습니다.");
-          }
-          return response.json();
-        })
-        .catch((errorData) => {
-          Sentry.captureException(errorData);
+      }).then(async (response) => {
+        if (!response.ok) {
+          const errorData = await response.json();
           throw new Error(errorData.message ?? "에러가 발생했습니다.");
-        });
+        }
+        return response.json();
+      });
 
       // const promise = () =>
       //   new Promise((resolve) =>
@@ -72,7 +66,7 @@ export function useResumeMutation() {
         className: "bg-blue-50 text-blue-500 mt-10",
       });
     },
-    onSuccess: (data) => {},
+    onSuccess: () => {},
     onError: (error: any) => {
       toast.error(error.message);
     },
