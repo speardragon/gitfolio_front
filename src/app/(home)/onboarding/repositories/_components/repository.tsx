@@ -25,7 +25,7 @@ export default function Repository() {
   const [value, setValue] = useState<Option[]>([]);
   const [requirements, setRequirements] = useState<string>("");
   const [visibility, setVisibility] = useState<boolean>(false);
-  const [selectedTemplate, setSelectedTemplate] = useState<string>("template1");
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("BASIC");
 
   const { data: repositories } = useRepositoryQuery();
   const { mutate } = useResumeMutation();
@@ -116,7 +116,7 @@ export default function Repository() {
         <div className="space-y-4 ">
           <div className="text-base font-medium">이력서 템플릿 선택</div>
           <div className="grid grid-cols-3 gap-2 justify-items-center">
-            {["template1", "template2", "template3"].map((template, index) => (
+            {["BASIC", "STAR", "GITFOLIO"].map((template, index) => (
               <label
                 key={template}
                 className="flex flex-col items-center justify-center w-full p-2 space-y-2 border rounded-lg cursor-pointer aspect-square"
