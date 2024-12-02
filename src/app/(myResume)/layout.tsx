@@ -2,7 +2,6 @@
 
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
-import { useReissue } from "../(home)/_hooks/useReissue";
 import Header from "../(home)/_components/header";
 config.autoAddCss = false;
 
@@ -11,12 +10,12 @@ export default function MainLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  useReissue();
-
   return (
     <div className="flex flex-col h-screen">
       <Header />
-      <div className="h-full pt-16">{children}</div>
+      <div className="flex flex-col pt-16 overflow-y-auto flex-1">
+        {children}
+      </div>
     </div>
   );
 }
