@@ -23,12 +23,9 @@ import PdfDownloadButton from "./_components/PdfDownloadButton";
 import Markdown from "react-markdown";
 import { Switch } from "@/components/ui/switch";
 import { useVisibility } from "./hooks/useVisibility";
-import { useResumeDetailQuery } from "@/app/(home)/community/_hooks/useResumeQuery";
+import { useMyResumeDetailQuery } from "@/app/(home)/community/_hooks/useResumeQuery";
 import ResumeComment from "@/app/(home)/community/resumes/[resumeId]/_components/resume-comment";
 import MyResumeDetailSkeleton from "./_components/MyResumeDetailSkeleton";
-import { useProfileQuery } from "@/app/(home)/onboarding/_hooks/useProfileQuery";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 type Props = {
   params: { resumeId: string };
@@ -36,10 +33,8 @@ type Props = {
 
 export default function Page({ params }: Props) {
   const resumeId = params.resumeId;
-  const router = useRouter();
 
-  const { data: resume, isLoading } = useResumeDetailQuery(resumeId);
-  const { data: userProfile } = useProfileQuery();
+  const { data: resume } = useMyResumeDetailQuery(resumeId);
 
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState("");
@@ -107,18 +102,6 @@ export default function Page({ params }: Props) {
       document.removeEventListener("mouseup", onMouseUp);
     };
   }, [onMouseUp]);
-
-  useEffect(() => {
-    if (resume && userProfile) {
-      const userId = userProfile.result.memberId;
-      const resumeOwnerId = resume.result.memberId;
-
-      if (userId !== resumeOwnerId) {
-        toast.error("잘못된 접근입니다.");
-        router.push("/community");
-      }
-    }
-  }, [resume, userProfile, router]);
 
   const handlePopover = () => {
     setIsPopOver(false);

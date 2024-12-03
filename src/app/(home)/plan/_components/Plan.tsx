@@ -20,14 +20,14 @@ function BackgroundBlur() {
       <Image
         src={imgGreenBlur}
         alt="Blur effect image 1"
-        className="absolute -bottom-48 -left-40 w-1/3"
+        className="absolute w-1/3 -bottom-48 -left-40"
         width={916}
         height={916}
       />
       <Image
         src={imgVioletBlur}
         alt="Blur effect image 2"
-        className="absolute -top-10 -right-40 w-1/3"
+        className="absolute w-1/3 -top-10 -right-40"
         width={916}
         height={916}
       />
@@ -38,11 +38,11 @@ function BackgroundBlur() {
 // FAQ 섹션 컴포넌트
 function FAQSection() {
   return (
-    <div className="flex flex-col justify-center items-center w-full px-14 py-20 z-20 bg-white">
-      <div className="text-2xl font-extrabold text-blue-950 mb-4">
+    <div className="z-20 flex flex-col items-center justify-center w-full py-20 bg-white px-14">
+      <div className="mb-4 text-2xl font-extrabold text-blue-950">
         사용권 활용 및 환불안내
       </div>
-      <div className="w-full min-w text-blue-950">
+      <div className="w-full px-20 text-blue-950">
         <Accordion
           defaultValue={FAQ_ITEMS.map((item) => item.id)}
           type="multiple"
@@ -54,7 +54,7 @@ function FAQSection() {
                 <div className="text-blue-600">Q.</div>
                 <div>{question}</div>
               </AccordionTrigger>
-              <AccordionContent className="text-gray-600 font-medium">
+              <AccordionContent className="font-medium text-gray-600">
                 {answer}
               </AccordionContent>
             </AccordionItem>
@@ -70,7 +70,7 @@ export default function Plan() {
 
   return (
     <>
-      <div className="relative flex flex-col w-full p-10 bg-gradient-to-br z-10 overflow-hidden">
+      <div className="relative z-10 flex flex-col w-full p-10 overflow-hidden bg-gradient-to-br">
         <BackgroundBlur />
         <div className="text-2xl font-bold grid grid-cols-[1fr_auto_1fr] px-6 py-4 md:pb-10 md:pt-[4.5rem]">
           <div></div>
@@ -79,7 +79,7 @@ export default function Plan() {
             의 더 다양한 기능을 이용해보세요!
           </div>
         </div>
-        <div className="flex justify-center w-full space-x-6">
+        <div className="flex flex-col items-center justify-center w-full md:flex-row md:space-x-6">
           {PLANS.map((plan) => {
             const isProPlan = plan.title === "Pro";
             const isFreePlan = plan.title === "Free";
