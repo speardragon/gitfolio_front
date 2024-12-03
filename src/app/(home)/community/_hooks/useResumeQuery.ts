@@ -161,6 +161,7 @@ export const useResumeDetailQuery = (resumeId: string) => {
   return useQuery<ResumeDetailResponse>({
     queryKey: ["resumes", resumeId],
     queryFn: () => getOneResume(resumeId),
+    retry: 0,
   });
 };
 
