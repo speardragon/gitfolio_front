@@ -26,6 +26,8 @@ import { useVisibility } from "./hooks/useVisibility";
 import { useMyResumeDetailQuery } from "@/app/(home)/community/_hooks/useResumeQuery";
 import ResumeComment from "@/app/(home)/community/resumes/[resumeId]/_components/resume-comment";
 import MyResumeDetailSkeleton from "./_components/MyResumeDetailSkeleton";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type Props = {
   params: { resumeId: string };
@@ -34,7 +36,9 @@ type Props = {
 export default function Page({ params }: Props) {
   const resumeId = params.resumeId;
 
-  const { data: resume } = useMyResumeDetailQuery(resumeId);
+  const router = useRouter();
+
+  const { data: resume, error } = useMyResumeDetailQuery(resumeId);
 
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState("");
@@ -102,6 +106,13 @@ export default function Page({ params }: Props) {
       document.removeEventListener("mouseup", onMouseUp);
     };
   }, [onMouseUp]);
+
+  useEffect(() => {
+    if (error && (error as any).status === 403) {
+      toast.error("접근 권한이 없습니다."); // Display error message
+      router.push("/community"); // Redirect to /community
+    }
+  }, [error, router]);
 
   const handlePopover = () => {
     setIsPopOver(false);
