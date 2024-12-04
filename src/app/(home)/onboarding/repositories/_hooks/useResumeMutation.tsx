@@ -45,7 +45,7 @@ export function useResumeMutation() {
       return toast.promise(promise, {
         loading: "이력서 생성 중...",
         success: (success: any) => {
-          queryClient.invalidateQueries({ queryKey: ["resume"] });
+          queryClient.invalidateQueries({ queryKey: ["resumes"] });
           return (
             <div className="flex items-center justify-between w-full">
               <div className="font-bold">이력서 등록에 성공하였습니다.</div>

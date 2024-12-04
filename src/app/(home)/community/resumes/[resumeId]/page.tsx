@@ -23,6 +23,8 @@ import ResumeSkeleton from "./_components/resume-skeleton";
 import Markdown from "react-markdown";
 import { useCallback, useEffect, useState } from "react";
 import { generateTabItems } from "./_lib/util";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type Props = {
   params: { resumeId: string };
@@ -30,9 +32,11 @@ type Props = {
 
 export default function Page({ params }: Props) {
   const resumeId = params.resumeId;
-  const [activeTab, setActiveTab] = useState<string>("selfIntroduction");
+  const [activeTab, setActiveTab] = useState<string>("aboutMe");
 
-  const { data: resume } = useResumeDetailQuery(resumeId);
+  const router = useRouter();
+
+  const { data: resume, error } = useResumeDetailQuery(resumeId);
 
   const handleIconChange = (url: string) => {
     if (url.includes("github.com")) {
@@ -95,6 +99,13 @@ export default function Page({ params }: Props) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
+
+  useEffect(() => {
+    if (error && (error as any).status === 403) {
+      toast.error("접근 권한이 없습니다."); // Display error message
+      router.push("/community"); // Redirect to /community
+    }
+  }, [error, router]);
 
   if (!resume) {
     return <ResumeSkeleton />;
@@ -169,7 +180,7 @@ export default function Page({ params }: Props) {
 
               {/* 자기소개 */}
               <Separator className="bg-black" />
-              <div id="selfIntroduction" className="space-y-4">
+              <div id="aboutMe" className="space-y-4">
                 <div className="text-2xl font-semibold">자기소개</div>
                 {/* <div className="whitespace-pre-line">{resume.result.aboutMe}</div> */}
                 <Markdown className="prose break-words prose-p:leading-relaxed prose-pre:p-0">
