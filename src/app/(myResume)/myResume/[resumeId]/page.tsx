@@ -28,6 +28,8 @@ import ResumeComment from "@/app/(home)/community/resumes/[resumeId]/_components
 import MyResumeDetailSkeleton from "./_components/MyResumeDetailSkeleton";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useResumeAIPatchMutation } from "./hooks/useResumeAIPatchMutation";
+import { LoadingButton } from "@/components/ui/loading-button";
 
 type Props = {
   params: { resumeId: string };
@@ -41,7 +43,7 @@ export default function Page({ params }: Props) {
   const { data: resume, error } = useMyResumeDetailQuery(resumeId);
 
   const [messages, setMessages] = useState<string[]>([]);
-  const [input, setInput] = useState("");
+  const [requirement, setRequirement] = useState("");
   const [selection, setSelection] = useState<string>(""); // getSelection을 위한 상태
   const [position, setPosition] = useState<Record<string, number>>();
   const [selectedText, setSelectedText] = useState<string>("");
@@ -53,6 +55,8 @@ export default function Page({ params }: Props) {
     resume,
     resumeId,
   );
+
+  const { mutate, isPending } = useResumeAIPatchMutation(resumeId);
 
   const handleIconChange = (url: string) => {
     if (url.includes("github.com")) {
@@ -120,12 +124,29 @@ export default function Page({ params }: Props) {
   };
 
   const handleSend = () => {
-    if (input.trim()) {
-      setMessages((prevMessages) => [...prevMessages, input]);
-      setInput("");
-      setSelection("");
-      setSelectedText("");
+    if (!requirement.trim()) {
+      toast.error("요구사항은 반드시 입력해야 합니다", {
+        position: "top-right",
+      });
+      return;
     }
+
+    const data = {
+      selectedText,
+      requirement,
+    };
+
+    // toast.message("You submitted the following values:", {
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+    //     </pre>
+    //   ),
+    // });
+
+    mutate(data);
+    setSelectedText("");
+    setRequirement("");
   };
 
   if (!resume) {
@@ -433,17 +454,18 @@ export default function Page({ params }: Props) {
             <div className="relative flex items-center w-full">
               <input
                 type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
+                value={requirement}
+                onChange={(e) => setRequirement(e.target.value)}
                 placeholder="메시지를 입력하세요..."
                 className="flex-grow h-8 p-2 bg-gray-100 border border-gray-300 border-none rounded-full focus-visible:outline-none"
               />
-              <button
+              <LoadingButton
+                loading={isPending}
                 onClick={handleSend}
                 className="absolute right-0 p-2 px-4 text-sm text-white bg-blue-600 rounded-md"
               >
                 전송
-              </button>
+              </LoadingButton>
             </div>
           </div>
         </aside>
