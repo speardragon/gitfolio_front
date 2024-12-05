@@ -189,7 +189,7 @@ export default function Page() {
   }
 
   return (
-    <div className="max-w-3xl p-4 mx-auto space-y-6">
+    <div className="w-full min-w-[400px] p-4 mx-auto space-y-6 px-10 md:px-48">
       <div className="text-center text-2xl font-bold">
         기본 정보(필수) / 추가 정보(선택) 입력
       </div>

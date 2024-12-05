@@ -164,6 +164,17 @@ export default function Community() {
         <Image className="" src={MAIN_BANNER} alt="sdf" priority />
       </div>
       <div className="container items-center px-4 py-8 mx-auto space-y-8">
+        <div className="flex w-full justify-end">
+          <Button
+            className="pr-6 py-6 z-30 right-4 bg-blue-500 text-white gap-2 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none"
+            onClick={() => {
+              router.push("/myResume/create");
+            }}
+          >
+            <Plus />
+            <div className="text-base">새 이력서 만들기</div>
+          </Button>
+        </div>
         <div className="flex flex-wrap items-center justify-between gap-2 p-4 bg-white rounded-lg shadow-lg">
           <div className="flex flex-wrap items-center gap-2">
             <Button

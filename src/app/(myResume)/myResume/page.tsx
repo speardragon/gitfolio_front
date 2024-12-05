@@ -46,7 +46,7 @@ export default function Page() {
             <div
               key={resume.resumeId}
               onClick={() => router.push(`/myResume/${resume.resumeId}`)}
-              className="relative p-4 space-y-2 transition-transform duration-500 ease-in-out transform border border-gray-300 shadow-xl cursor-pointer rounded-xl hover:-translate-y-1"
+              className="relative flex flex-col justify-center p-4 space-y-2 transition-transform duration-500 ease-in-out transform border border-gray-300 shadow-xl cursor-pointer rounded-xl hover:-translate-y-1"
             >
               <MyResumeDeleteModal
                 onDelete={onDelete}
@@ -59,7 +59,7 @@ export default function Page() {
                 alt="Avatar"
                 className="w-16 h-16 rounded-full avatar"
               />
-              <div className="space-y-2 resume-info">
+              <div className="space-y-2">
                 <h2 className="font-bold position">
                   {positionTypeMap[resume.position as PositionType]}
                 </h2>

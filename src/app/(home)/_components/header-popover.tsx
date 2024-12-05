@@ -10,8 +10,7 @@ import Link from "next/link";
 import { useLogout } from "../_hooks/useLogout";
 import { BadgeDollarSign, LogOut, PencilLine } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { useRef, useState } from "react";
-import useOnClickOutside from "../_hooks/useOnClickOutside";
+import { useState } from "react";
 
 type Props = {
   avatarUrl: string;
