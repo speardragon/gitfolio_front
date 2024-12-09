@@ -11,7 +11,7 @@ import { PositionType, positionTypeMap } from "@/app/types/type";
 import moment from "moment";
 import "moment/locale/ko";
 import { useMyResumeDeleteMutation } from "./_hooks/useMyResuemDeleteMutation";
-import MyResumeDeleteModal from "./[resumeId]/hooks/MyResumeDeleteModal";
+import MyResumeDeleteModal from "./[resumeId]/_components/MyResumeDeleteModal";
 
 export default function Page() {
   const router = useRouter();
