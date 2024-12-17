@@ -38,13 +38,12 @@ export function useResumeMutation() {
       //   new Promise((resolve) =>
       //     setTimeout(
       //       () => resolve({ resumeId: "67297a9eb654bc508be40d3d" }),
-      //       2000,
+      //       200000,
       //     ),
       //   );
       router.push("/community");
 
       return toast.promise(promise, {
-        // loading: "이력서 생성 중...",
         loading: <RotatingLoading />,
         success: (success: any) => {
           queryClient.invalidateQueries({ queryKey: ["resumes"] });

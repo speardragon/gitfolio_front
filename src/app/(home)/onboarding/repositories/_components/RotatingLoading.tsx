@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, ClipboardCheck, Pencil } from "lucide-react";
+import { Search, ClipboardCheck, Pencil, Loader2 } from "lucide-react";
 
 export default function RotatingLoading() {
   const steps = [
@@ -9,9 +9,12 @@ export default function RotatingLoading() {
     },
     {
       message: "프로젝트 검토 중",
-      icon: <ClipboardCheck className="text-green-500" />,
+      icon: <ClipboardCheck className="text-blue-500" />,
     },
-    { message: "이력서 작성 중", icon: <Pencil className="text-orange-500" /> },
+    {
+      message: "이력서 작성 중",
+      icon: <Pencil size={18} className="text-blue-500" />,
+    },
   ];
 
   const [index, setIndex] = useState(0);
@@ -35,8 +38,11 @@ export default function RotatingLoading() {
 
   return (
     <div className="flex items-center justify-between w-full">
-      <span>{message}</span>
-      <span>{icon}</span>
+      <div className="flex items-center space-x-2">
+        <span>{icon}</span>
+        <span>{message}</span>
+      </div>
+      <Loader2 className="w-6 h-6 ml-2 animate-spin" />
     </div>
   );
 }
