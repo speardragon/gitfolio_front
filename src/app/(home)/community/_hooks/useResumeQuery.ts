@@ -10,7 +10,7 @@ export interface ResumeFilter {
   sortOrder: string;
   liked: string;
 }
-interface Resume {
+export interface Resume {
   resumeId: string;
   memberId: number;
   avatarUrl: string;
@@ -117,7 +117,7 @@ interface Project {
   repoLink: string;
 }
 
-interface ResumeDetail {
+export interface ResumeDetail {
   resumeId: string;
   memberId: number;
   memberName: string;

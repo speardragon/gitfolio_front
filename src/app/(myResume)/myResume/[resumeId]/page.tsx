@@ -30,6 +30,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useResumeAIPatchMutation } from "./hooks/useResumeAIPatchMutation";
 import { LoadingButton } from "@/components/ui/loading-button";
+import AIResumePatchDialog from "./_components/AIResumePatchDialog";
+import useOpenDialogStore from "@/app/store/useDialogOpenStore";
 
 type Props = {
   params: { resumeId: string };
@@ -48,6 +50,9 @@ export default function Page({ params }: Props) {
   const [position, setPosition] = useState<Record<string, number>>();
   const [selectedText, setSelectedText] = useState<string>("");
   const [isPopOver, setIsPopOver] = useState<boolean>(false);
+  // const [dialogOpen, setDialogOpen] = useState<boolean>(true);
+  const [modifiedResume, setModifiedResume] = useState<any>(null);
+  const { open, setOpen } = useOpenDialogStore((state) => state);
 
   const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -144,7 +149,15 @@ export default function Page({ params }: Props) {
     //   ),
     // });
 
-    mutate(data);
+    mutate(data, {
+      onSuccess: (result) => {
+        console.log("성공!");
+        console.log(result);
+        setModifiedResume(result.result);
+        setOpen(true);
+      },
+    });
+
     setSelectedText("");
     setRequirement("");
   };
@@ -156,6 +169,11 @@ export default function Page({ params }: Props) {
   // min-h-[calc(100vh-4rem)]
   return (
     <div className="relative w-full h-full">
+      <AIResumePatchDialog
+        open={open}
+        setOpen={setOpen}
+        resume={modifiedResume}
+      />
       {isPopOver && (
         <div
           ref={popoverRef}
@@ -211,6 +229,7 @@ export default function Page({ params }: Props) {
               </div>
             </div>
 
+            {/* 이력서 내용 */}
             <div className="px-20 space-y-10 border border-gray-300 rounded-lg p-14 max-w-[982px] w-full">
               <div className="flex flex-row">
                 <div className="flex flex-col flex-grow">

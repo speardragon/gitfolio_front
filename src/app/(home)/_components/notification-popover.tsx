@@ -6,8 +6,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Bell } from "lucide-react";
-import { useState } from "react";
-import moment from "moment";
 import { useNotificationsQuery } from "../_hooks/useNotificationQuery";
 import { useRouter } from "next/navigation";
 import { useNotificationMutation } from "../_hooks/useNotificationMutation";
