@@ -189,7 +189,7 @@ export default function Page() {
   }
 
   return (
-    <div className="w-full min-w-[400px] p-4 mx-auto space-y-6 px-10 md:px-48">
+    <div className="flex flex-col w-full max-w-[800px] p-4 mx-auto space-y-6 px-10">
       <div className="text-center text-2xl font-bold">
         기본 정보(필수) / 추가 정보(선택) 입력
       </div>

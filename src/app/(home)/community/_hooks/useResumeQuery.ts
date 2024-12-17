@@ -1,6 +1,6 @@
 import customFetch from "@/app/api/customFetch";
 import { useAuthStore } from "@/app/store/useAuthStore";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export interface ResumeFilter {
   tags?: string[];
@@ -65,6 +65,7 @@ export const useResumeQuery = (page: number, size: number, filters: any) => {
   return useQuery<ResumeResponse>({
     queryKey: ["resumes", page, size, filters],
     queryFn: () => getResume(page, size, filters),
+    placeholderData: keepPreviousData,
   });
 };
 

@@ -67,7 +67,7 @@ export default function ResumeComment({ resumeId }: Props) {
                       <p className="text-sm font-semibold">
                         {comment.nickname}
                       </p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-xs text-muted-foreground">
                         {format(
                           new Date(comment.updatedAt),
                           "yyyy. MM. dd. HH:mm",

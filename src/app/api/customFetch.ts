@@ -80,6 +80,7 @@ const customFetch = async (url: string, options: RequestInit = {}) => {
     return response; // 정상 응답 반환
   } catch (error) {
     Sentry.captureException(error);
+    window.location.href = "/community";
     throw error;
   }
 };
