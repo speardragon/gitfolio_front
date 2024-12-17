@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import customFetch from "@/app/api/customFetch";
+import RotatingLoading from "../_components/RotatingLoading";
 
 type OnboardingRequest = {
   data: {
@@ -43,7 +44,8 @@ export function useResumeMutation() {
       router.push("/community");
 
       return toast.promise(promise, {
-        loading: "이력서 생성 중...",
+        // loading: "이력서 생성 중...",
+        loading: <RotatingLoading />,
         success: (success: any) => {
           queryClient.invalidateQueries({ queryKey: ["resumes"] });
           return (

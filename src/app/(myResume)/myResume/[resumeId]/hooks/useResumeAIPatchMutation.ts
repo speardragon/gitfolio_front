@@ -13,6 +13,9 @@ export function useResumeAIPatchMutation(resumeId: string) {
   return useMutation({
     mutationKey: ["resumeAIPatch"],
     mutationFn: async (data: AIPatchBody) => {
+      toast.info("AI가 이력서를 수정하기 시작했어요!", {
+        position: "top-right",
+      });
       const response = await customFetch(`/api/resumes/${resumeId}`, {
         method: "POST",
         credentials: "include",
