@@ -1,7 +1,7 @@
-# 기본 Node.js 이미지 사용
-FROM node:20.4-alpine AS base
+# 기본 Node.js 이미지 사용 - Alpine 기반으로 가벼운 이미지 구성
+FROM node:20.4.0-alpine3.18 AS base
 
- # 빌드 시간 변수 선언
+# 빌드 시간 변수 선언
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_S3_URL
 ARG AUTH_SERVER_URL
@@ -12,61 +12,66 @@ ARG PAYMENTS_SERVER_URL
 
 # 환경 변수 설정
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL} \
- NEXT_PUBLIC_S3_URL=${NEXT_PUBLIC_S3_URL} \
- AUTH_SERVER_URL=${AUTH_SERVER_URL} \
- MEMBERS_SERVER_URL=${MEMBERS_SERVER_URL} \
- RESUMES_SERVER_URL=${RESUMES_SERVER_URL} \
- NOTIFICATIONS_SERVER_URL=${NOTIFICATIONS_SERVER_URL} \
- PAYMENTS_SERVER_URL=${PAYMENTS_SERVER_URL}
+    NEXT_PUBLIC_S3_URL=${NEXT_PUBLIC_S3_URL} \
+    AUTH_SERVER_URL=${AUTH_SERVER_URL} \
+    MEMBERS_SERVER_URL=${MEMBERS_SERVER_URL} \
+    RESUMES_SERVER_URL=${RESUMES_SERVER_URL} \
+    NOTIFICATIONS_SERVER_URL=${NOTIFICATIONS_SERVER_URL} \
+    PAYMENTS_SERVER_URL=${PAYMENTS_SERVER_URL} \
+    NEXT_TELEMETRY_DISABLED=1
 
-# Build stage
-FROM base AS builder
+# 의존성 설치 단계
+FROM base AS dependencies
 
 WORKDIR /app
 
-# Copy package files
+# package.json 파일 복사
 COPY package*.json ./
 
-# Install dependencies including Tailwind Typography & shar
+# 프로덕션 의존성 설치 및 Tailwind 관련 패키지 설치
 RUN npm ci && \
     npm install -D @tailwindcss/typography && \
     npm install sharp && \
     npm cache clean --force
 
-# 소스 코드 복사
+# 빌드 단계
+FROM base AS builder
+
+WORKDIR /app
+
+# 의존성 복사
+COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
 
-# Next.js 빌드
-RUN CI=false npm run build
+# Next.js standalone 모드로 빌드
+RUN npm run build
 
-# Production stage
+# 실행 단계
 FROM base AS runner
 
 WORKDIR /app
 
-# 시스템 의존성 설치 및 사용자 생성
+# 프로덕션 환경 설정
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    HOSTNAME="0.0.0.0"
+
+# 보안을 위한 비루트 사용자 설정
 RUN addgroup -S -g 1001 nodejs && \
     adduser -S -u 1001 -G nodejs nextjs && \
     chown -R nextjs:nodejs /app
 
-# Copy built artifacts from builder stage
-
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nextjs:nodejs /app/package*.json ./
+# standalone 모드 결과물 복사
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/next.config.mjs ./
+RUN mkdir .next
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# 프로덕션 의존성 설치
-# 실행에 필요한 dependencies만 설치되어 이미지 크기 감소
-RUN npm ci --omit=dev && \
-    npm cache clean --force
-
-# Switch to non-root user
+# 비루트 사용자로 전환
 USER nextjs
 
 # 포트 설정
 EXPOSE 3000
 
 # 서버 실행
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
