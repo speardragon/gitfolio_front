@@ -9,7 +9,7 @@ import { Bell } from "lucide-react";
 import { useNotificationsQuery } from "../_hooks/useNotificationQuery";
 import { useRouter } from "next/navigation";
 import { useNotificationMutation } from "../_hooks/useNotificationMutation";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 export default function NotificationPopover() {
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function NotificationPopover() {
       <PopoverTrigger asChild>
         <div className="relative w-7 h-7 cursor-pointer">
           <Bell className="w-full h-full" />
-          {notifications?.result.length !== 0 && (
+          {notifications?.result.length! > 0 && (
             <span className="absolute top-0 -right-1 h-2 w-2 bg-red-500 rounded-full" />
           )}
         </div>
