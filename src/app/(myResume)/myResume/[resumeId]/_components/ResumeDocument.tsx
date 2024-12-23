@@ -55,7 +55,7 @@ function getIconForLink(url: string) {
   if (url.includes("github.com")) {
     return `${process.env.NEXT_PUBLIC_SERVICE_URL}/images/github-mark.png`;
   } else if (url.includes("linkedin.com")) {
-    return "${process.env.NEXT_PUBLIC_SERVICE_URL}/images/linkedin.png";
+    return `${process.env.NEXT_PUBLIC_SERVICE_URL}/images/linkedin.png`;
   } else if (url.includes("notion.site")) {
     return `${process.env.NEXT_PUBLIC_SERVICE_URL}/images/notion.png`;
   } else if (url.includes("tistory.com")) {
