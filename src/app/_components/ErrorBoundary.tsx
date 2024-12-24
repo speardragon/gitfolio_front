@@ -3,6 +3,7 @@
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { handleApiError } from "../api/errorHandler";
+import * as Sentry from "@sentry/nextjs";
 
 interface ErrorFallbackProps {
   error: Error;
@@ -39,7 +40,15 @@ export const QueryErrorBoundary: React.FC<QueryErrorBoundaryProps> = ({
   return (
     <ErrorBoundary
       FallbackComponent={ErrorFallback}
-      onError={(error) => handleApiError(error as any)}
+      // 예상치 못한 런타임 에러
+      onError={(error, errorInfo) => {
+        // Sentry 로깅
+        Sentry.captureException(error, {
+          level: "error",
+        });
+        // 그 외 API에러로 간주될 여지가 있다면 handleApiError
+        handleApiError(error as any);
+      }}
     >
       {children}
     </ErrorBoundary>

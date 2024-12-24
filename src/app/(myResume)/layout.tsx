@@ -7,6 +7,7 @@ import Header from "../(home)/_components/header";
 import { Onborda, OnbordaProvider } from "onborda";
 import { steps } from "./_lib/steps";
 import CustomCard from "./_components/CustomCard";
+import { QueryErrorBoundary } from "../_components/ErrorBoundary";
 config.autoAddCss = false;
 
 export default function MainLayout({
@@ -27,7 +28,7 @@ export default function MainLayout({
             cardComponent={CustomCard}
             cardTransition={{ duration: 1, type: "tween" }}
           >
-            {children}
+            <QueryErrorBoundary>{children}</QueryErrorBoundary>
           </Onborda>
         </OnbordaProvider>
       </div>
