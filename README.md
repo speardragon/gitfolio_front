@@ -20,9 +20,9 @@
 
 ## Gitfolio 배포 사이트
 
-[비품인(현재 내려간 상태)](https://www.gitfolio.site)
+[깃트폴리오(현재 내려간 상태)](https://www.gitfolio.site)
 
-## 비품인 시연 영상
+## 깃트폴리오 시연 영상
 
 🖥️ [깃트폴리오 시연영상(2분)](https://www.youtube.com/watch?v=Y-kImm8S-58)
 
