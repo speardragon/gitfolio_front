@@ -7,6 +7,20 @@ const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
+const normalizeEnvUrl = (value) => {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const normalized = value.trim();
+
+  if (!normalized || normalized === "undefined" || normalized === "null") {
+    return null;
+  }
+
+  return normalized.replace(/\/$/, "");
+};
+
 const nextConfig = {
   output: "standalone", // standalone 모드 활성화
   webpack: (config) => {
@@ -40,33 +54,30 @@ const nextConfig = {
     ],
   },
   async rewrites() {
-    return [
-      {
-        source: "/api/auth/:path*",
-        destination: `${process.env.AUTH_SERVER_URL}/api/auth/:path*`,
-        // destination: 'http://10.0.105.44/api/auth/:path*',
-      },
-      {
-        source: "/api/members/:path*",
-        destination: `${process.env.MEMBERS_SERVER_URL}/api/members/:path*`,
-        // destination: 'http://10.0.105.44:81/api/members/:path*',
-      },
-      {
-        source: "/api/resumes/:path*",
-        destination: `${process.env.RESUMES_SERVER_URL}/api/resumes/:path*`,
-        // destination: 'http://10.0.105.75/api/resumes/:path*',
-      },
-      {
-        source: "/api/notifications/:path*",
-        destination: `${process.env.NOTIFICATIONS_SERVER_URL}/api/notifications/:path*`,
-        // destination: 'http://10.0.105.75/api/resumes/:path*',
-      },
-      {
-        source: "/api/payments/:path*",
-        destination: `${process.env.PAYMENTS_SERVER_URL}/api/payments/:path*`,
-        // destination: 'http://10.0.105.75/api/resumes/:path*',
-      },
+    if (process.env.NEXT_PUBLIC_ENABLE_MSW === "true") {
+      return [];
+    }
+
+    const routes = [
+      ["/api/auth/:path*", normalizeEnvUrl(process.env.AUTH_SERVER_URL)],
+      ["/api/members/:path*", normalizeEnvUrl(process.env.MEMBERS_SERVER_URL)],
+      ["/api/resumes/:path*", normalizeEnvUrl(process.env.RESUMES_SERVER_URL)],
+      [
+        "/api/notifications/:path*",
+        normalizeEnvUrl(process.env.NOTIFICATIONS_SERVER_URL),
+      ],
+      [
+        "/api/payments/:path*",
+        normalizeEnvUrl(process.env.PAYMENTS_SERVER_URL),
+      ],
     ];
+
+    return routes
+      .filter(([, destination]) => destination)
+      .map(([source, destination]) => ({
+        source,
+        destination: `${destination}${source}`,
+      }));
   },
 };
 // export default bundleAnalyzer(nextConfig);

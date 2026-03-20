@@ -1,6 +1,12 @@
 import Image from "next/image";
 import GITFOLIO_LOGO from "../../../../public/images/gitfolio-logo.png";
 
+const serviceUrl = process.env.NEXT_PUBLIC_SERVICE_URL?.trim();
+const termsUrl =
+  serviceUrl && serviceUrl !== "undefined" && serviceUrl !== "null"
+    ? `${serviceUrl}/terms-of-service`
+    : null;
+
 export function Footer() {
   return (
     <footer className="flex flex-col justify-center items-center border-t border-border/40 py-6 dark:border-border md:px-8 md:py-2">
@@ -32,14 +38,16 @@ export function Footer() {
               GitHub
             </a>
             .
-            <a
-              href={`${process.env.NEXT_PUBLIC_SERVICE_URL}/terms-of-service`}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              이용 약관
-            </a>
+            {termsUrl ? (
+              <a
+                href={termsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="font-medium underline underline-offset-4"
+              >
+                이용 약관
+              </a>
+            ) : null}
           </p>
         </div>
       </div>
