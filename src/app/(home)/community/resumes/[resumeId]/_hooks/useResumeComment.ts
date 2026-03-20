@@ -1,5 +1,4 @@
 import customFetch from "@/app/api/customFetch";
-import { useAuthStore } from "@/app/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 
 interface Result {
@@ -20,16 +19,13 @@ interface ResumeCommentResponse {
   message: string;
   result: Result[];
 }
-const getResumeComment = async (accessToken: string, resumeId: string) => {
+const getResumeComment = async (resumeId: string) => {
   const response = await customFetch(
     `/api/resumes/${resumeId}/comments`,
     // `${process.env.NEXT_PUBLIC_RESUMES_SERVER_URL}/api/resumes/${resumeId}/comments`,
     {
       method: "GET",
       credentials: "include",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
     },
   );
 
@@ -43,10 +39,8 @@ const getResumeComment = async (accessToken: string, resumeId: string) => {
   return data;
 };
 export const useResumeCommentQuery = (resumeId: string) => {
-  const { accessToken } = useAuthStore((state) => state);
   return useQuery<ResumeCommentResponse>({
     queryKey: ["resumes", resumeId, "comments"],
-    queryFn: () => getResumeComment(accessToken!, resumeId),
-    enabled: !!accessToken,
+    queryFn: () => getResumeComment(resumeId),
   });
 };

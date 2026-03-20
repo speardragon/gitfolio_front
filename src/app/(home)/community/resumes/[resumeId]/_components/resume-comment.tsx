@@ -9,10 +9,9 @@ import { useResumeCommentCreate } from "../_hooks/useResumeCommentCreate";
 import { useState } from "react";
 import { useResumeCommentDelete } from "../_hooks/useResumeCommentDelete";
 import CommentDeleteModal from "./comment-delete-modal";
-import { Button } from "@/components/ui/button";
-import { useProfileQuery } from "@/app/(home)/onboarding/_hooks/useProfileQuery";
 import ResumeCommentSkeleton from "./ResumeCommentSkeleton";
 import { LoadingButton } from "@/components/ui/loading-button";
+import { useAuthStore } from "@/app/store/useAuthStore";
 
 type Props = {
   resumeId: string;
@@ -24,7 +23,7 @@ export default function ResumeComment({ resumeId }: Props) {
   const { data: comments, isLoading } = useResumeCommentQuery(resumeId);
   const { mutate, isPending } = useResumeCommentCreate(resumeId);
   const { mutate: deleteComment } = useResumeCommentDelete(resumeId);
-  const { data: userProfile } = useProfileQuery();
+  const user = useAuthStore((state) => state.user);
 
   const onSubmit = () => {
     const data = {
@@ -76,7 +75,7 @@ export default function ResumeComment({ resumeId }: Props) {
                     </div>
                     <p className="text-sm text-foreground">{comment.content}</p>
                   </div>
-                  {userProfile?.result.memberId === comment.memberId && (
+                  {user?.memberId === comment.memberId && (
                     <CommentDeleteModal
                       onDelete={onDelete}
                       commentId={comment.id}
@@ -90,6 +89,7 @@ export default function ResumeComment({ resumeId }: Props) {
         </div>
         <div className="flex items-center justify-between p-2 px-10 py-6 space-x-2">
           <Input
+            name="resume-comment"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="댓글을 남겨주세요!"

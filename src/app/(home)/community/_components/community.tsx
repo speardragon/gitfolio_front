@@ -255,26 +255,27 @@ export default function Community() {
                 key={resume.resumeId}
                 className="overflow-hidden transition-transform duration-500 ease-in-out transform border rounded-lg shadow-lg cursor-pointer hover:-translate-y-1"
               >
-                <div className="flex justify-between items-center p-2">
-                  <div className="flex items-center space-x-2 text-xs text-gray-500">
+                <div className="flex items-start justify-between gap-2 p-2">
+                  <div className="flex min-w-0 flex-1 flex-wrap gap-1 text-xs text-gray-500">
                     {(resume.tags && resume.tags.length > 0
                       ? resume.tags
                       : ["#기타"]
                     ).map((tag, index) => (
                       <span
                         key={index}
-                        className="p-1 px-2 text-gray-600 bg-gray-100 rounded-lg"
+                        className="max-w-full truncate rounded-lg bg-gray-100 px-2 py-1 text-gray-600"
+                        title={tag}
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
-                  <div className="flex gap-2 text-xs">
-                    <div className="flex items-center gap-1 p-1 px-2 border border-gray-300 rounded-full">
+                  <div className="flex shrink-0 gap-2 text-xs">
+                    <div className="flex items-center gap-1 rounded-full border border-gray-300 px-2 py-1">
                       <FontAwesomeIcon color="gray" icon={faHeart} />
                       <div>{resume.likeCount}</div>
                     </div>
-                    <div className="flex items-center gap-1 p-1 px-2 border rounded-full border-gray-3000">
+                    <div className="flex items-center gap-1 rounded-full border border-gray-300 px-2 py-1">
                       <FontAwesomeIcon color="gray" icon={faEye} />
                       <div>{resume.viewCount}</div>
                     </div>

@@ -3,8 +3,10 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
 import ReactQueryProviders from "./_components/ReactQueryProvider";
+import MSWProvider from "./_components/MSWProvider";
 import * as Sentry from "@sentry/nextjs";
 import Error from "./error";
+import Script from "next/dist/client/script";
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",
@@ -23,22 +25,26 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  if (process.env.NODE_ENV === "development") {
-    if (typeof window !== "undefined") {
-      const { worker } = require("../mocks/browser");
-      worker.start();
-    }
-  }
-
   return (
     <html lang="en" className={`${pretendard.variable}`}>
+      <head>
+        {process.env.NODE_ENV === "development" && (
+          <Script
+            src="//unpkg.com/react-grab/dist/index.global.js"
+            crossOrigin="anonymous"
+            strategy="beforeInteractive"
+          />
+        )}
+      </head>
       <body className={`${pretendard.className} antialiased`}>
-        <Toaster richColors />
-        <ReactQueryProviders>
-          <Sentry.ErrorBoundary fallback={<Error />}>
-            {children}
-          </Sentry.ErrorBoundary>
-        </ReactQueryProviders>
+        <MSWProvider>
+          <Toaster richColors />
+          <ReactQueryProviders>
+            <Sentry.ErrorBoundary fallback={<Error />}>
+              {children}
+            </Sentry.ErrorBoundary>
+          </ReactQueryProviders>
+        </MSWProvider>
       </body>
     </html>
   );
