@@ -1,39 +1,19 @@
 "use client";
 
 import PlanCard from "./PlanCard";
-import Image from "next/image";
-import imgGreenBlur from "../../../../../public/images/imgGreenBlur.png";
-import imgVioletBlur from "../../../../../public/images/imgVioletBlur.png";
 import { PLANS } from "../_constants/constans";
 import { useProfileQuery } from "../../onboarding/_hooks/useProfileQuery";
 import FAQSection from "./FAQSection";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import confetti from "canvas-confetti";
+import { CheckCircle2, Crown, Sparkles } from "lucide-react";
 
-// 블러 이미지
-function BackgroundBlur() {
-  return (
-    <>
-      <Image
-        src={imgGreenBlur}
-        priority
-        alt="Blur effect image 1"
-        className="absolute w-1/3 -bottom-48 -left-40"
-        width={916}
-        height={916}
-      />
-      <Image
-        src={imgVioletBlur}
-        priority
-        alt="Blur effect image 2"
-        className="absolute w-1/3 -top-10 -right-40"
-        width={916}
-        height={916}
-      />
-    </>
-  );
-}
+const benefitHighlights = [
+  "생성과 수정 횟수 제한 없이 반복 개선",
+  "프로젝트별 템플릿 선택과 PDF 활용",
+  "커뮤니티 공개 전 빠른 초안 반복",
+];
 
 export default function Plan() {
   const searchParams = useSearchParams();
@@ -50,41 +30,93 @@ export default function Plan() {
   }, [isSuccess]);
 
   const { data: userProfile } = useProfileQuery();
+  const isCurrentPlanPro = userProfile?.result?.paidPlan === "PRO";
 
   return (
-    <>
-      <div className="relative z-10 flex flex-col w-full p-10 overflow-hidden bg-gradient-to-br">
-        <BackgroundBlur />
-        <div className="text-2xl font-bold grid grid-cols-[1fr_auto_1fr] px-6 py-4 md:pb-10 md:pt-[4.5rem]">
-          <div></div>
-          <div>
-            플랜 업그레이드로 <span className="text-blue-600">깃트폴리오</span>
-            의 더 다양한 기능을 이용해보세요!
+    <div className="relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.08),_transparent_24%),radial-gradient(circle_at_80%_15%,_rgba(148,163,184,0.14),_transparent_22%),linear-gradient(180deg,_rgba(255,255,255,0.92),_rgba(245,247,251,0.98))]" />
+
+      <section className="relative mx-auto max-w-7xl px-4 pb-16 pt-10 sm:px-6 lg:px-8">
+        <div className="rounded-[34px] border border-slate-200/80 bg-white/92 p-6 shadow-[0_32px_90px_-50px_rgba(15,23,42,0.45)] backdrop-blur sm:p-8 lg:p-10">
+          <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700">
+                <Sparkles className="h-4 w-4" />
+                Premium plans
+              </div>
+              <h1 className="mt-5 text-4xl font-semibold leading-[1.06] tracking-[-0.05em] text-slate-950 sm:text-5xl">
+                더 자주 만들고,
+                <br />
+                더 깊게 다듬는 이력서 작업 공간
+              </h1>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
+                무료 플랜으로 흐름을 익히고, 필요할 때 Pro로 확장할 수
+                있습니다. 사용량보다 중요한 건 반복 편집과 완성도이기 때문에,
+                업그레이드 화면도 과장 없이 기능 중심으로 정리했습니다.
+              </p>
+
+              <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                {benefitHighlights.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-[24px] border border-slate-200/80 bg-slate-50/70 px-5 py-5"
+                  >
+                    <CheckCircle2 className="h-5 w-5 text-blue-600" />
+                    <p className="mt-3 text-sm leading-6 text-slate-600">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 rounded-[28px] border border-slate-200/80 bg-slate-950 px-5 py-5 text-white">
+                <div className="flex items-start gap-3">
+                  <div className="rounded-2xl bg-white/10 p-3">
+                    <Crown className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <div className="text-lg font-semibold">
+                      현재 계정 상태
+                    </div>
+                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                      {isCurrentPlanPro
+                        ? "이미 Pro 플랜을 사용 중입니다. 현재 상태에서 무제한 생성과 수정 기능을 계속 사용할 수 있습니다."
+                        : "현재는 Free 플랜입니다. 더 자주 생성하고 수정해야 한다면 Pro 전환이 작업 효율에 유리합니다."}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid gap-5 md:grid-cols-2">
+              {PLANS.map((plan) => {
+                const isProPlan = plan.title === "Pro";
+                const isFreePlan = plan.title === "Free";
+
+                return (
+                  <PlanCard
+                    key={plan.title}
+                    {...plan}
+                    buttonLabel={
+                      isFreePlan
+                        ? "무료 플랜"
+                        : isProPlan && isCurrentPlanPro
+                          ? "현재 나의 플랜"
+                          : plan.buttonLabel
+                    }
+                    buttonDisabled={
+                      isFreePlan || (isProPlan && isCurrentPlanPro)
+                    }
+                    isCurrentPlan={isProPlan && isCurrentPlanPro}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center w-full md:flex-row md:space-x-6">
-          {PLANS.map((plan) => {
-            const isProPlan = plan.title === "Pro";
-            const isFreePlan = plan.title === "Free";
-            const isCurrentPlanPro = userProfile?.result?.paidPlan === "PRO";
-            return (
-              <PlanCard
-                key={plan.title}
-                {...plan}
-                buttonLabel={
-                  isFreePlan
-                    ? "무료 플랜"
-                    : isProPlan && isCurrentPlanPro
-                    ? "현재 나의 플랜"
-                    : plan.buttonLabel
-                }
-                buttonDisabled={isFreePlan || (isProPlan && isCurrentPlanPro)}
-              />
-            );
-          })}
-        </div>
-      </div>
+      </section>
+
       <FAQSection />
-    </>
+    </div>
   );
 }
