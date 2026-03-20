@@ -21,12 +21,14 @@ export interface Resume {
   viewCount: number;
   liked: boolean;
   isLiked: boolean;
+  visibility: "PUBLIC" | "PRIVATE";
+  updatedAt: string;
 }
 interface ResumeResult {
   currentPage: number;
   totalPages: number;
   totalElements: number;
-  size: 10;
+  size: number;
   content: Resume[];
 }
 export interface ResumeResponse {
@@ -63,7 +65,11 @@ const getResume = async (page: number, size: number, filters: ResumeFilter) => {
   const data: ResumeResponse = await response.json();
   return data;
 };
-export const useResumeQuery = (page: number, size: number, filters: any) => {
+export const useResumeQuery = (
+  page: number,
+  size: number,
+  filters: ResumeFilter,
+) => {
   return useQuery<ResumeResponse>({
     queryKey: ["resumes", page, size, filters],
     queryFn: () => getResume(page, size, filters),

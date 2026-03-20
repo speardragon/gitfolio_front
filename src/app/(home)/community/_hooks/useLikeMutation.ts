@@ -1,4 +1,3 @@
-import { useAuthStore } from "@/app/store/useAuthStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ResumeFilter } from "./useResumeQuery";
 import customFetch from "@/app/api/customFetch";
@@ -8,7 +7,6 @@ export function useLikeMutation(
   size: number,
   filters: ResumeFilter,
 ) {
-  const { accessToken } = useAuthStore((state) => state);
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -39,13 +37,23 @@ export function useLikeMutation(
       ]);
 
       queryClient.setQueryData(["resumes", page, size, filters], (old: any) => {
+        if (!old?.result?.content) {
+          return old;
+        }
+
         return {
           ...old,
           result: {
             ...old.result,
             content: old.result.content.map((resume: any) =>
               resume.resumeId === resumeId
-                ? { ...resume, isLiked: !resume.isLiked }
+                ? {
+                    ...resume,
+                    isLiked: !resume.isLiked,
+                    liked: !resume.isLiked,
+                    likeCount:
+                      resume.likeCount + (resume.isLiked ? -1 : 1),
+                  }
                 : resume,
             ),
           },
