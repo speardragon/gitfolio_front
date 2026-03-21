@@ -50,7 +50,7 @@ type Props = {
 // 섹션 id를 찾는 헬퍼 함수
 function findSectionId(element: Node | null): string {
   let current: HTMLElement | null =
-    element instanceof HTMLElement ? element : element?.parentElement ?? null;
+    element instanceof HTMLElement ? element : (element?.parentElement ?? null);
   while (current && current !== document.body) {
     if (current.id) return current.id;
     current = current.parentElement;
@@ -250,7 +250,7 @@ export default function Page({ params }: Props) {
           className="absolute left-0 top-0 z-50 flex w-[320px] flex-col space-y-3 rounded-[24px] border border-slate-200/80 bg-white p-4 shadow-[0_28px_80px_-40px_rgba(15,23,42,0.45)]"
         >
           {selectedText && (
-            <div className="relative flex w-full items-center rounded-2xl bg-slate-100 px-4 py-3 text-slate-500">
+            <div className="relative flex items-center w-full px-4 py-3 rounded-2xl bg-slate-100 text-slate-500">
               <span className="flex-grow text-sm leading-6 line-clamp-2">{`"${selectedText}"`}</span>
             </div>
           )}
@@ -266,13 +266,13 @@ export default function Page({ params }: Props) {
                   handleSend();
                 }
               }}
-              className="flex w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 pr-12 text-sm shadow-none transition-colors placeholder:text-slate-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex w-full px-4 py-3 pr-12 text-sm transition-colors bg-white border shadow-none rounded-2xl border-slate-200 placeholder:text-slate-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             />
             <LoadingButton
               loading={isPending}
               disabled={!requirement}
               onClick={handleSend}
-              className="absolute right-2 h-9 w-9 rounded-full bg-slate-950 text-sm text-white hover:bg-slate-800 disabled:bg-slate-300"
+              className="absolute text-sm text-white rounded-full right-2 h-9 w-9 bg-slate-950 hover:bg-slate-800 disabled:bg-slate-300"
             >
               <ArrowUp size={20} className="absolute" />
             </LoadingButton>
@@ -280,19 +280,19 @@ export default function Page({ params }: Props) {
         </div>
       )}
 
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
+      <div className="flex flex-col w-full gap-6 px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <section className="overflow-hidden rounded-[34px] border border-slate-200/80 bg-white shadow-[0_32px_90px_-54px_rgba(15,23,42,0.35)]">
           <div className="grid gap-6 px-6 py-7 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10 lg:px-8">
             <div>
               <button
                 onClick={() => router.push("/myResume")}
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-950"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold transition bg-white border rounded-full border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-950"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowLeft className="w-4 h-4" />
                 목록으로
               </button>
-              <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700">
-                <Sparkles className="h-4 w-4" />
+              <div className="inline-flex items-center px-4 py-2 mt-5 ml-2 text-sm font-medium text-blue-700 border border-blue-100 rounded-full bg-blue-50">
+                <Sparkles className="w-4 h-4" />
                 Resume Editor Preview
               </div>
               <h1 className="mt-4 text-3xl font-semibold tracking-[-0.05em] text-slate-950 sm:text-4xl">
@@ -300,17 +300,17 @@ export default function Page({ params }: Props) {
                 <br />
                 공개 상태와 문장을 함께 다듬는 작업 공간
               </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-                선택한 문장을 AI로 다듬고, 공개 여부를 조정하고, 완성된
-                버전은 PDF로 저장할 수 있습니다. 현재 화면은 실제 공개 전에
-                마지막으로 검토하는 preview canvas 역할을 합니다.
+              <p className="max-w-2xl mt-4 text-sm leading-7 text-slate-600 sm:text-base">
+                선택한 문장을 AI로 다듬고, 공개 여부를 조정하고, 완성된 버전은
+                PDF로 저장할 수 있습니다. 현재 화면은 실제 공개 전에 마지막으로
+                검토하는 preview canvas 역할을 합니다.
               </p>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
               <div className="rounded-[26px] border border-slate-200 bg-slate-950 px-5 py-5 text-white">
                 <div className="text-sm text-slate-300">공개 상태</div>
-                <div className="mt-2 flex items-center justify-between">
+                <div className="flex items-center justify-between mt-2">
                   <div className="text-xl font-semibold">
                     {visibility ? "공개 중" : "비공개"}
                   </div>
@@ -326,7 +326,7 @@ export default function Page({ params }: Props) {
               </div>
               <div className="rounded-[26px] border border-slate-200 bg-slate-50 px-5 py-5">
                 <div className="text-sm text-slate-500">반응 지표</div>
-                <div className="mt-3 flex items-center gap-4 text-sm font-semibold text-slate-800">
+                <div className="flex items-center gap-4 mt-3 text-sm font-semibold text-slate-800">
                   <span className="inline-flex items-center gap-1.5">
                     <FontAwesomeIcon color="currentColor" icon={faHeart} />
                     {resume.result.likeCount}
@@ -337,19 +337,20 @@ export default function Page({ params }: Props) {
                   </span>
                 </div>
                 <div className="mt-3 text-sm text-slate-500">
-                  마지막 업데이트 {moment(resume.result.updatedAt).format("YYYY.MM.DD HH:mm")}
+                  마지막 업데이트{" "}
+                  {moment(resume.result.updatedAt).format("YYYY.MM.DD HH:mm")}
                 </div>
               </div>
               <div className="rounded-[26px] border border-slate-200 bg-blue-50 px-5 py-5">
                 <div className="text-sm text-blue-700">태그</div>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mt-3">
                   {(resume.result.tags && resume.result.tags.length > 0
                     ? resume.result.tags
                     : ["기타"]
                   ).map((tag, index) => (
                     <span
                       key={index}
-                      className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-blue-700"
+                      className="px-3 py-1 text-xs font-semibold text-blue-700 bg-white rounded-full"
                     >
                       #{tag}
                     </span>
@@ -381,8 +382,8 @@ export default function Page({ params }: Props) {
                 바로 실행
               </div>
               <p className="mt-3 text-sm leading-6 text-slate-300">
-                이력서 저장, 편집, 삭제 같은 주요 작업을 여기서 빠르게
-                처리할 수 있습니다.
+                이력서 저장, 편집, 삭제 같은 주요 작업을 여기서 빠르게 처리할 수
+                있습니다.
               </p>
             </div>
 
@@ -396,7 +397,7 @@ export default function Page({ params }: Props) {
                 className="h-12 w-full justify-between rounded-[20px] bg-blue-600 px-4 text-sm font-semibold text-white hover:bg-blue-700"
               >
                 직접 수정
-                <Pencil className="h-4 w-4" />
+                <Pencil className="w-4 h-4" />
               </Button>
 
               <DropdownMenu>
@@ -406,7 +407,7 @@ export default function Page({ params }: Props) {
                     className="h-12 w-full justify-between rounded-[20px] border-slate-200 px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                   >
                     추가 작업
-                    <EllipsisVertical className="h-4 w-4" />
+                    <EllipsisVertical className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-60 rounded-2xl">
@@ -437,8 +438,8 @@ export default function Page({ params }: Props) {
 
               <div className="rounded-[26px] border border-blue-100 bg-blue-50 p-4">
                 <div className="flex items-start gap-3">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-sm">
-                    <Sparkles className="h-4 w-4" />
+                  <span className="inline-flex items-center justify-center w-10 h-10 text-blue-600 bg-white shadow-sm rounded-2xl">
+                    <Sparkles className="w-4 h-4" />
                   </span>
                   <div>
                     <div className="text-sm font-semibold text-slate-900">
