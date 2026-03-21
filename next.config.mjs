@@ -1,5 +1,4 @@
 import { withSentryConfig } from "@sentry/nextjs";
-/** @type {import('next').NextConfig} */
 
 import withBundleAnalyzer from "@next/bundle-analyzer";
 
@@ -7,21 +6,27 @@ const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone", // standalone 모드 활성화
+  /** @param {import('webpack').Configuration} config */
   webpack: (config) => {
+    config.module ??= { rules: [] };
+    config.module.rules ??= [];
+
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
-      use: ["@svgr/webpack"],
+      use: [
+        {
+          loader: "@svgr/webpack",
+          options: {
+            icon: true,
+          },
+        },
+      ],
     });
     return config;
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  experimental: {
-    proxyTimeout: 300000,
   },
   images: {
     remotePatterns: [

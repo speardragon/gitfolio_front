@@ -34,7 +34,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CommunitySkeleton from "../_components/community-skeleton";
 import { useLikeMutation } from "../_hooks/useLikeMutation";
 import { Resume, ResumeFilter, useResumeQuery } from "../_hooks/useResumeQuery";
@@ -290,26 +290,21 @@ export default function Community() {
   const [page, setPage] = useState<number>(initialPage);
   const [size] = useState(12);
   const debouncedTechStack = useDebounce(techStackInput, 400);
+  const resolvedFilters = useMemo(
+    () => ({
+      ...filters,
+      techStack: debouncedTechStack,
+    }),
+    [debouncedTechStack, filters],
+  );
 
   const accessToken = useAuthStore((state) => state.accessToken);
-  const { data: resumes } = useResumeQuery(page, size, filters);
-  const { mutate } = useLikeMutation(page, size, filters);
+  const { data: resumes } = useResumeQuery(page, size, resolvedFilters);
+  const { mutate } = useLikeMutation(page, size, resolvedFilters);
 
   useEffect(() => {
-    router.replace(buildCommunityHref(filters, page), { scroll: false });
-  }, [filters, page, router]);
-
-  useEffect(() => {
-    if (filters.techStack === debouncedTechStack) {
-      return;
-    }
-
-    setFilters((prev) => ({
-      ...prev,
-      techStack: debouncedTechStack,
-    }));
-    setPage(1);
-  }, [debouncedTechStack, filters.techStack]);
+    router.replace(buildCommunityHref(resolvedFilters, page), { scroll: false });
+  }, [page, resolvedFilters, router]);
 
   const resetFilter = () => {
     setFilters({
@@ -339,10 +334,10 @@ export default function Community() {
     return <CommunitySkeleton size={size} />;
   }
 
-  const hasActiveFilters = Object.entries(filters).some(
+  const hasActiveFilters = Object.entries(resolvedFilters).some(
     ([key, value]) => value && !(key === "liked" && value === "false"),
   );
-  const filterSummary = getFilterSummary(filters);
+  const filterSummary = getFilterSummary(resolvedFilters);
   const pageNumbers = generatePageNumbers(page, resumes.result.totalPages);
   const resultLabel = hasActiveFilters ? "검색 결과" : "공개 이력서";
 
@@ -522,7 +517,7 @@ export default function Community() {
                 {filterSummary.length > 0 ? (
                   filterSummary.map((summary) => (
                     <Badge
-                      key={summary}
+                  key={summary}
                       variant="secondary"
                       className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600"
                     >
@@ -598,7 +593,7 @@ export default function Community() {
             <Pagination>
               <PaginationContent>
                 <PaginationPrevious
-                  href={buildCommunityHref(filters, Math.max(page - 1, 1))}
+                  href={buildCommunityHref(resolvedFilters, Math.max(page - 1, 1))}
                   onClick={() => handlePageChange(Math.max(page - 1, 1))}
                   className={cn(
                     "rounded-full border border-slate-200 bg-white",
@@ -613,7 +608,10 @@ export default function Community() {
                   return (
                     <PaginationItem key={pageNum}>
                       <PaginationLink
-                        href={buildCommunityHref(filters, pageNum as number)}
+                        href={buildCommunityHref(
+                          resolvedFilters,
+                          pageNum as number,
+                        )}
                         onClick={() => handlePageChange(pageNum as number)}
                         isActive={pageNum === page}
                         className={cn(
@@ -630,7 +628,7 @@ export default function Community() {
                 })}
                 <PaginationNext
                   href={buildCommunityHref(
-                    filters,
+                    resolvedFilters,
                     Math.min(page + 1, resumes.result.totalPages),
                   )}
                   onClick={() =>

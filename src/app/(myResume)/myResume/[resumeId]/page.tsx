@@ -18,7 +18,7 @@ import { useVisibility } from "./hooks/useVisibility";
 import { useMyResumeDetailQuery } from "@/app/(home)/community/_hooks/useResumeQuery";
 import ResumeComment from "@/app/(home)/community/resumes/[resumeId]/_components/resume-comment";
 import MyResumeDetailSkeleton from "./_components/MyResumeDetailSkeleton";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useResumeAIPatchMutation } from "./hooks/useResumeAIPatchMutation";
 import { LoadingButton } from "@/components/ui/loading-button";
@@ -43,10 +43,6 @@ import MyResumeDeleteModal from "./_components/MyResumeDeleteModal";
 import moment from "moment";
 import "moment/locale/ko";
 
-type Props = {
-  params: { resumeId: string };
-};
-
 // 섹션 id를 찾는 헬퍼 함수
 function findSectionId(element: Node | null): string {
   let current: HTMLElement | null =
@@ -58,8 +54,8 @@ function findSectionId(element: Node | null): string {
   return "";
 }
 
-export default function Page({ params }: Props) {
-  const resumeId = params.resumeId;
+export default function Page() {
+  const { resumeId } = useParams<{ resumeId: string }>();
 
   const router = useRouter();
 

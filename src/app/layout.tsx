@@ -25,7 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${pretendard.variable}`}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${pretendard.variable}`}
+    >
       <head>
         {process.env.NODE_ENV === "development" && (
           <Script

@@ -21,16 +21,12 @@ import Markdown from "react-markdown";
 import { useCallback, useEffect, useState } from "react";
 import { generateTabItems } from "./_lib/util";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { handleIconChange } from "@/app/_lib/util";
 import { ResumeDetailContent } from "@/app/(home)/_components/ResumeDetailContent";
 
-type Props = {
-  params: { resumeId: string };
-};
-
-export default function Page({ params }: Props) {
-  const resumeId = params.resumeId;
+export default function Page() {
+  const { resumeId } = useParams<{ resumeId: string }>();
   const [activeTab, setActiveTab] = useState<string>("aboutMe");
 
   const router = useRouter();

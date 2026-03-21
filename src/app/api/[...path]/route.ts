@@ -4,13 +4,16 @@ import { NextRequest } from "next/server";
 export const dynamic = "force-dynamic";
 
 type RouteContext = {
-  params: {
+  params: Promise<{
     path?: string[];
-  };
+  }>;
 };
 
-const handler = async (request: NextRequest, context: RouteContext) =>
-  handleMockApi(request, context.params.path ?? []);
+const handler = async (request: NextRequest, context: RouteContext) => {
+  const { path } = await context.params;
+
+  return handleMockApi(request, path ?? []);
+};
 
 export const GET = handler;
 export const POST = handler;

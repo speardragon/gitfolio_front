@@ -1,21 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMyResumeVisibilityMutation } from "../../_hooks/useMyResumeVisibilityMutation";
 
 export const useVisibility = (resume: any, resumeId: string) => {
-  const [visibility, setVisibility] = useState<boolean>(false);
+  const [visibilityOverride, setVisibilityOverride] = useState<boolean | null>(
+    null,
+  );
   const { mutate } = useMyResumeVisibilityMutation(resumeId);
-
-  useEffect(() => {
-    if (resume) {
-      setVisibility(resume.result.visibility === "PUBLIC");
-    }
-  }, [resume]);
+  const visibility =
+    visibilityOverride ?? (resume?.result.visibility === "PUBLIC");
 
   const handleToggleVisibility = () => {
-    setVisibility((prev) => {
-      const newVisibility = !prev; // 상태를 먼저 바꾼다
-      mutate(newVisibility ? "PUBLIC" : "PRIVATE"); // 업데이트된 상태를 기반으로 요청을 보냄
-      return newVisibility;
+    const newVisibility = !visibility;
+
+    setVisibilityOverride(newVisibility);
+    mutate(newVisibility ? "PUBLIC" : "PRIVATE", {
+      onError: () => {
+        setVisibilityOverride(null);
+      },
+      onSuccess: () => {
+        setVisibilityOverride(null);
+      },
     });
   };
 
