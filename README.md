@@ -42,6 +42,9 @@ pnpm dev
 
 [깃트폴리오(현재 내려간 상태)](https://www.gitfolio.site)
 
+- 미리보기 배포: [https://gitfolio.changdragon.com](https://gitfolio.changdragon.com)
+- 위 미리보기 링크는 백엔드가 연결되지 않은 프론트엔드 전용 페이지입니다.
+
 ## 깃트폴리오 시연 영상
 
 🖥️ [깃트폴리오 시연영상(2분)](https://www.youtube.com/watch?v=Y-kImm8S-58)
