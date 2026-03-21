@@ -9,26 +9,29 @@ const termsUrl =
 
 export function Footer() {
   return (
-    <footer className="flex flex-col justify-center items-center border-t border-border/40 py-6 dark:border-border md:px-8 md:py-2">
-      <div className="container flex flex-col gap-2 md:h-auto">
-        <div className=" flex flex-col text-left p-4">
-          <p className="flex justify-center gap-1 text-balance text-sm leading-loose text-muted-foreground">
+    <footer className="border-t border-border/40 px-4 py-8 dark:border-border sm:px-6 md:px-8">
+      <div className="container mx-auto flex flex-col gap-6">
+        <div className="flex flex-col items-center gap-4 text-center sm:items-start sm:text-left">
+          <div className="flex justify-center sm:justify-start">
             <Image
-              className="w-36 object-contain mr-4"
+              className="h-auto w-32 object-contain sm:w-36"
               src={GITFOLIO_LOGO}
               alt="logo"
             />
-            Built by{" "}
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm leading-6 text-muted-foreground sm:justify-start">
+            <span>Built by</span>
             <a
               href={"/#"}
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4"
             >
-              {" "}
               gitfolio
             </a>
-            . The source code is available on{" "}
+            <span>·</span>
+            <span>The source code is available on</span>
             <a
               href={"https://github.com/KTB-Sixmen"}
               target="_blank"
@@ -37,7 +40,6 @@ export function Footer() {
             >
               GitHub
             </a>
-            .
             {termsUrl ? (
               <a
                 href={termsUrl}
@@ -48,16 +50,19 @@ export function Footer() {
                 이용 약관
               </a>
             ) : null}
-          </p>
+          </div>
         </div>
-      </div>
-      <div className="container mt-6 text-center text-xs leading-loose text-muted-foreground ">
-        <p>
-          깃트폴리오 | 대표 : 강창룡 | 개인정보보호책임자 : 김윤섭 |
-          사업자등록번호 : 000-00-0000
-        </p>
-        <p>경기도 성남시 분당구 판교로660 유스페이스1 4층</p>
-        <p>@Gitfolio. All rights reserved.</p>
+
+        <div className="border-t border-border/60 pt-4 text-center text-xs leading-6 text-muted-foreground sm:text-left">
+          <p className="break-keep">
+            깃트폴리오 | 대표 : 강창룡 | 개인정보보호책임자 : 김윤섭 |
+            사업자등록번호 : 000-00-0000
+          </p>
+          <p className="mt-1 break-keep">
+            경기도 성남시 분당구 판교로660 유스페이스1 4층
+          </p>
+          <p className="mt-1">@Gitfolio. All rights reserved.</p>
+        </div>
       </div>
     </footer>
   );

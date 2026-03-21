@@ -67,7 +67,7 @@ export default function Header() {
         <div className="flex min-w-0 items-center gap-3 md:gap-5">
           <Link
             href="/community"
-            className="flex items-center gap-3 rounded-full border border-slate-200/80 bg-white/80 px-3 py-2 transition hover:border-slate-300"
+            className="flex shrink-0 items-center gap-3 rounded-full border border-slate-200/80 bg-white/80 px-3 py-2 transition hover:border-slate-300"
           >
             <Image
               alt="github_white_logo"
@@ -81,7 +81,7 @@ export default function Header() {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-2 md:flex">
+          <nav className="hidden min-w-0 items-center gap-2 md:flex">
             {navItems.map(({ href, label, icon: Icon }) => {
               const active =
                 href === "/community"
@@ -95,14 +95,14 @@ export default function Header() {
                   key={href}
                   href={href}
                   className={cn(
-                    "inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition",
+                    "inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold whitespace-nowrap transition md:w-11 md:px-0 xl:w-auto xl:px-4",
                     active
                       ? "bg-slate-950 text-white shadow-[0_16px_30px_-20px_rgba(15,23,42,0.9)]"
                       : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
                   )}
                 >
                   <Icon className="h-4 w-4" />
-                  {label}
+                  <span className="hidden xl:inline">{label}</span>
                 </Link>
               );
             })}
@@ -123,12 +123,15 @@ export default function Header() {
             <>
               <Link
                 href="/community"
-                className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950 sm:inline-flex"
+                className="hidden h-11 shrink-0 items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold whitespace-nowrap text-slate-700 transition hover:border-slate-300 hover:text-slate-950 xl:inline-flex"
               >
                 먼저 둘러보기
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <GithubButton className="h-11 px-5 text-sm" />
+              <GithubButton
+                className="h-11 w-11 px-0 text-sm sm:w-auto sm:px-5"
+                labelClassName="hidden sm:inline"
+              />
             </>
           )}
         </div>

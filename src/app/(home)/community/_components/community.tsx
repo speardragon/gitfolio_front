@@ -45,6 +45,7 @@ import {
   schoolTypeMap,
   SchoolType,
 } from "@/app/types/type";
+import { useDebounce } from "@/components/ui/multi-selector";
 
 const sortOrderLabelMap = {
   recent: "최신순",
@@ -285,8 +286,10 @@ export default function Community() {
   const initialPage = parseInt(searchParams.get("page") || "1", 10);
 
   const [filters, setFilters] = useState<ResumeFilter>(initialFilters);
+  const [techStackInput, setTechStackInput] = useState(initialFilters.techStack);
   const [page, setPage] = useState<number>(initialPage);
   const [size] = useState(12);
+  const debouncedTechStack = useDebounce(techStackInput, 400);
 
   const accessToken = useAuthStore((state) => state.accessToken);
   const { data: resumes } = useResumeQuery(page, size, filters);
@@ -296,6 +299,18 @@ export default function Community() {
     router.replace(buildCommunityHref(filters, page), { scroll: false });
   }, [filters, page, router]);
 
+  useEffect(() => {
+    if (filters.techStack === debouncedTechStack) {
+      return;
+    }
+
+    setFilters((prev) => ({
+      ...prev,
+      techStack: debouncedTechStack,
+    }));
+    setPage(1);
+  }, [debouncedTechStack, filters.techStack]);
+
   const resetFilter = () => {
     setFilters({
       position: "",
@@ -304,6 +319,7 @@ export default function Community() {
       sortOrder: "",
       liked: "false",
     });
+    setTechStackInput("");
     setPage(1);
   };
 
@@ -471,10 +487,8 @@ export default function Community() {
               <div className="relative">
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <Input
-                  value={filters.techStack}
-                  onChange={(event) =>
-                    handleFilterChange("techStack", event.target.value)
-                  }
+                  value={techStackInput}
+                  onChange={(event) => setTechStackInput(event.target.value)}
                   className="h-11 rounded-2xl border-slate-200 bg-white pl-11 pr-4 placeholder:text-slate-400"
                   placeholder="기술 스택 검색"
                 />
