@@ -109,7 +109,7 @@ export default function Repository() {
   };
 
   return (
-    <div className="grid gap-8 xl:grid-cols-[1.02fr_0.98fr]">
+    <div className="flex flex-col gap-8">
       <section className={cn(surfaceClass, "p-4 sm:p-6 lg:p-8")}>
         <div className="rounded-[28px] border border-slate-200/80 bg-white/90 px-5 py-5 sm:px-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -257,65 +257,175 @@ export default function Repository() {
                 </div>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500">
-                우측 미리보기에서 확대해 볼 수 있습니다.
+                선택 즉시 오른쪽 미리보기에서 결과를 확인할 수 있습니다.
               </div>
             </div>
 
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {(["BASIC", "STAR", "GITFOLIO"] as const).map((template) => {
-                const selected = selectedTemplate === template;
+            <div className="mt-6">
+              <div className={cn(surfaceClass, "overflow-hidden p-5 sm:p-6")}>
+                <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700">
+                  <Wand2 className="h-4 w-4" />
+                  Live preview
+                </div>
+                <h3 className="mt-5 text-2xl font-semibold tracking-[-0.04em] text-slate-950">
+                  선택 결과를 바로 보면서
+                  <br />
+                  템플릿 방향을 조정합니다
+                </h3>
+                <p className="mt-4 text-sm leading-7 text-slate-600">
+                  선택한 템플릿이 실제로 어떻게 보이는지 바로 확인할 수
+                  있습니다. 마우스를 올리면 세부 구성을 확대해 볼 수 있습니다.
+                </p>
 
-                return (
-                  <button
-                    key={template}
-                    type="button"
-                    onClick={() => setSelectedTemplate(template)}
-                    className={cn(
-                      "group rounded-[26px] border px-4 py-4 text-left transition duration-200",
-                      selected
-                        ? "border-slate-950 bg-slate-950 text-white shadow-[0_28px_70px_-45px_rgba(15,23,42,0.9)]"
-                        : "border-slate-200 bg-slate-50/70 text-slate-950 hover:-translate-y-1 hover:border-slate-300 hover:bg-white",
-                    )}
-                  >
-                    <div className="overflow-hidden rounded-[20px] border border-slate-200/70 bg-white">
-                      <Image
-                        src={templateImages[template]}
-                        alt={template}
-                        className="h-44 w-full object-cover object-top transition duration-300 group-hover:scale-[1.02]"
-                      />
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-[20px] border border-slate-200/80 bg-white/90 px-4 py-3">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+                      Selected repos
                     </div>
-                    <div className="mt-4 flex items-start justify-between gap-3">
-                      <div>
-                        <div className="text-lg font-semibold tracking-[-0.03em]">
-                          {templateMeta[template].title}
+                    <div className="mt-2 text-lg font-semibold tracking-[-0.03em] text-slate-950">
+                      {value.length}
+                    </div>
+                  </div>
+                  <div className="rounded-[20px] border border-slate-200/80 bg-white/90 px-4 py-3">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+                      Visibility
+                    </div>
+                    <div className="mt-2 text-lg font-semibold tracking-[-0.03em] text-slate-950">
+                      {visibility ? "PUBLIC" : "PRIVATE"}
+                    </div>
+                  </div>
+                  <div className="rounded-[20px] border border-slate-200/80 bg-white/90 px-4 py-3">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+                      Template
+                    </div>
+                    <div className="mt-2 text-lg font-semibold tracking-[-0.03em] text-slate-950">
+                      {selectedTemplate}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 rounded-[28px] border border-slate-200/80 bg-slate-950 px-5 py-5 text-white">
+                  <div className="flex items-start gap-3">
+                    <div className="rounded-2xl bg-white/10 p-3">
+                      <MousePointerClick className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="text-lg font-semibold">미리보기 사용 팁</div>
+                      <div className="mt-2 space-y-2 text-sm leading-6 text-slate-300">
+                        <div className="flex items-start gap-2">
+                          <Eye className="mt-1 h-4 w-4 shrink-0 text-blue-300" />
+                          <span>마우스를 올리면 상세 구성을 확대해서 볼 수 있습니다.</span>
                         </div>
-                        <p
-                          className={cn(
-                            "mt-2 text-sm leading-6",
-                            selected ? "text-slate-300" : "text-slate-600",
-                          )}
-                        >
-                          {templateMeta[template].summary}
-                        </p>
+                        <div className="flex items-start gap-2">
+                          <Globe2 className="mt-1 h-4 w-4 shrink-0 text-blue-300" />
+                          <span>공개 저장 시 커뮤니티 카드에도 같은 톤이 반영됩니다.</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <LockKeyhole className="mt-1 h-4 w-4 shrink-0 text-blue-300" />
+                          <span>비공개 저장 후 나중에 공개 전환도 가능합니다.</span>
+                        </div>
                       </div>
-                      <div
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 grid gap-4 md:grid-cols-3">
+                  {(["BASIC", "STAR", "GITFOLIO"] as const).map((template) => {
+                    const selected = selectedTemplate === template;
+
+                    return (
+                      <button
+                        key={template}
+                        type="button"
+                        onClick={() => setSelectedTemplate(template)}
                         className={cn(
-                          "mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border",
+                          "group rounded-[24px] border px-3 py-3 text-left transition duration-200",
                           selected
-                            ? "border-white/20 bg-white/10"
-                            : "border-slate-300 bg-white",
+                            ? "border-slate-950 bg-slate-950 text-white shadow-[0_28px_70px_-45px_rgba(15,23,42,0.9)]"
+                            : "border-slate-200 bg-slate-50/70 text-slate-950 hover:-translate-y-1 hover:border-slate-300 hover:bg-white",
                         )}
                       >
-                        {selected ? (
-                          <CheckCircle2 className="h-4 w-4" />
-                        ) : (
-                          <div className="h-2.5 w-2.5 rounded-full bg-slate-300" />
-                        )}
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
+                        <div className="overflow-hidden rounded-[18px] border border-slate-200/70 bg-white">
+                          <Image
+                            src={templateImages[template]}
+                            alt={template}
+                            className="h-36 w-full object-cover object-top transition duration-300 group-hover:scale-[1.02]"
+                          />
+                        </div>
+                        <div className="mt-3 flex items-start justify-between gap-3">
+                          <div>
+                            <div className="text-base font-semibold tracking-[-0.03em]">
+                              {templateMeta[template].title}
+                            </div>
+                            <p
+                              className={cn(
+                                "mt-1.5 text-sm leading-5",
+                                selected ? "text-slate-300" : "text-slate-600",
+                              )}
+                            >
+                              {templateMeta[template].summary}
+                            </p>
+                          </div>
+                          <div
+                            className={cn(
+                              "mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border",
+                              selected
+                                ? "border-white/20 bg-white/10"
+                                : "border-slate-300 bg-white",
+                            )}
+                          >
+                            {selected ? (
+                              <CheckCircle2 className="h-4 w-4" />
+                            ) : (
+                              <div className="h-2.5 w-2.5 rounded-full bg-slate-300" />
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-6 flex justify-center rounded-[32px] border border-slate-200/80 bg-white p-3 shadow-[0_40px_100px_-50px_rgba(15,23,42,0.55)]">
+                  <div
+                    ref={containerRef}
+                    className="relative aspect-[3/4] w-full max-w-[520px] overflow-hidden rounded-[26px] border border-slate-200 bg-slate-50"
+                    onMouseEnter={() => setIsHovering(true)}
+                    onMouseLeave={() => setIsHovering(false)}
+                    onMouseMove={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      setMousePosition({
+                        x: e.clientX - rect.left,
+                        y: e.clientY - rect.top,
+                      });
+                    }}
+                  >
+                    <Image
+                      className="absolute inset-0 h-full w-full object-contain object-top"
+                      src={templateImages[selectedTemplate]}
+                      alt={selectedTemplate}
+                      fill
+                    />
+                    {isHovering && (
+                      <div
+                        className="absolute pointer-events-none rounded-[24px] border border-slate-300 bg-white/40 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.55)] backdrop-blur-sm"
+                        style={{
+                          width: magnifierSize,
+                          height: magnifierSize,
+                          top: mousePosition.y - magnifierSize / 2,
+                          left: mousePosition.x - magnifierSize / 2,
+                          backgroundImage: `url(${templateImages[selectedTemplate].src})`,
+                          backgroundRepeat: "no-repeat",
+                          backgroundSize: `${520 * zoomLevel}px auto`,
+                          backgroundPosition: `-${
+                            mousePosition.x * zoomLevel - magnifierSize / 2
+                          }px -${mousePosition.y * zoomLevel - magnifierSize / 2 - 40}px`,
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -362,125 +472,6 @@ export default function Repository() {
           </div>
         </div>
       </section>
-
-      <aside className="xl:sticky xl:top-24 xl:self-start">
-        <div className={cn(surfaceClass, "overflow-hidden p-6 sm:p-8")}>
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700">
-            <Wand2 className="h-4 w-4" />
-            Live preview
-          </div>
-          <h2 className="mt-5 text-3xl font-semibold tracking-[-0.04em] text-slate-950">
-            선택 결과를 미리 확인하면서
-            <br />
-            생성 품질을 조정합니다
-          </h2>
-          <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base">
-            오른쪽 미리보기는 실제 템플릿 비율을 기준으로 보여줍니다.
-            마우스를 올리면 세부 구성을 확대해서 확인할 수 있습니다.
-          </p>
-
-          <div className="mt-8 grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
-            <div className="rounded-[24px] border border-slate-200/80 bg-white/90 px-5 py-5">
-              <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
-                Selected repos
-              </div>
-              <div className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-slate-950">
-                {value.length}
-              </div>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                가장 대표성이 높은 프로젝트 조합을 고르는 것이 좋습니다.
-              </p>
-            </div>
-            <div className="rounded-[24px] border border-slate-200/80 bg-white/90 px-5 py-5">
-              <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
-                Visibility
-              </div>
-              <div className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-slate-950">
-                {visibility ? "PUBLIC" : "PRIVATE"}
-              </div>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                커뮤니티 피드백을 받고 싶다면 공개 저장이 적합합니다.
-              </p>
-            </div>
-            <div className="rounded-[24px] border border-slate-200/80 bg-white/90 px-5 py-5">
-              <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
-                Template
-              </div>
-              <div className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-slate-950">
-                {selectedTemplate}
-              </div>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                선택한 구조에 맞춰 표현 방식과 흐름이 달라집니다.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-8 rounded-[28px] border border-slate-200/80 bg-slate-950 px-5 py-5 text-white">
-            <div className="flex items-start gap-3">
-              <div className="rounded-2xl bg-white/10 p-3">
-                <MousePointerClick className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="text-lg font-semibold">미리보기 사용 팁</div>
-                <div className="mt-2 space-y-2 text-sm leading-6 text-slate-300">
-                  <div className="flex items-start gap-2">
-                    <Eye className="mt-1 h-4 w-4 shrink-0 text-blue-300" />
-                    <span>마우스를 올리면 상세 구성을 확대해서 볼 수 있습니다.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Globe2 className="mt-1 h-4 w-4 shrink-0 text-blue-300" />
-                    <span>공개 저장 시 커뮤니티 카드에도 같은 톤이 반영됩니다.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <LockKeyhole className="mt-1 h-4 w-4 shrink-0 text-blue-300" />
-                    <span>비공개 저장 후 나중에 공개 전환도 가능합니다.</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 flex justify-center rounded-[32px] border border-slate-200/80 bg-white p-3 shadow-[0_40px_100px_-50px_rgba(15,23,42,0.55)]">
-            <div
-              ref={containerRef}
-              className="relative aspect-[3/4] w-full max-w-[520px] overflow-hidden rounded-[26px] border border-slate-200 bg-slate-50"
-              onMouseEnter={() => setIsHovering(true)}
-              onMouseLeave={() => setIsHovering(false)}
-              onMouseMove={(e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                setMousePosition({
-                  x: e.clientX - rect.left,
-                  y: e.clientY - rect.top,
-                });
-              }}
-            >
-              <Image
-                className="absolute inset-0 h-full w-full object-contain object-top"
-                src={templateImages[selectedTemplate]}
-                alt={selectedTemplate}
-                fill
-              />
-              {isHovering && (
-                <div
-                  className="absolute pointer-events-none rounded-[24px] border border-slate-300 bg-white/40 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.55)] backdrop-blur-sm"
-                  style={{
-                    width: magnifierSize,
-                    height: magnifierSize,
-                    top: mousePosition.y - magnifierSize / 2,
-                    left: mousePosition.x - magnifierSize / 2,
-                    backgroundImage: `url(${templateImages[selectedTemplate].src})`,
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: `${520 * zoomLevel}px auto`,
-                    backgroundPosition: `-${
-                      mousePosition.x * zoomLevel - magnifierSize / 2
-                    }px -${mousePosition.y * zoomLevel - magnifierSize / 2 - 40}px`,
-                  }}
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      </aside>
     </div>
   );
 }

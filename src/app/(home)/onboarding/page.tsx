@@ -335,8 +335,8 @@ export default function Page() {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-[linear-gradient(rgba(15,23,42,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.035)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:linear-gradient(to_bottom,black,transparent)]" />
 
       <div className="relative mx-auto w-full max-w-7xl px-4 pb-20 pt-8 sm:px-6 lg:px-8">
-        <div className="grid gap-8 xl:grid-cols-[0.92fr_1.08fr]">
-          <aside className="xl:sticky xl:top-24 xl:self-start">
+        <div className="flex flex-col gap-8">
+          <aside>
             <div className={cn(surfaceClass, "overflow-hidden p-6 sm:p-8")}>
               <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700">
                 <Sparkles className="h-4 w-4" />

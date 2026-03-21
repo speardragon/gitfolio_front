@@ -19,11 +19,11 @@ const PdfDownloadButton = ({ resume }: Props) => {
 
   return (
     <Button
-      className="flex justify-between w-full gap-2 p-0 border-none shadow-none bg-white text-black font-normal hover:bg-gray-100"
+      className="h-12 w-full justify-between rounded-[20px] bg-white px-4 text-sm font-semibold text-slate-700 shadow-none hover:bg-slate-100"
       onClick={downloadPdf}
     >
-      <div className="text-left">pdf로 저장</div>
-      <Download size={18} color="blue" />
+      <div className="text-left">PDF로 저장</div>
+      <Download size={18} className="text-blue-600" />
     </Button>
   );
 };

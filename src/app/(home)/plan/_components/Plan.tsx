@@ -7,7 +7,7 @@ import FAQSection from "./FAQSection";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import confetti from "canvas-confetti";
-import { CheckCircle2, Crown, Sparkles } from "lucide-react";
+import { CheckCircle2, Sparkles } from "lucide-react";
 
 const benefitHighlights = [
   "생성과 수정 횟수 제한 없이 반복 개선",
@@ -67,24 +67,6 @@ export default function Plan() {
                     </p>
                   </div>
                 ))}
-              </div>
-
-              <div className="mt-8 rounded-[28px] border border-slate-200/80 bg-slate-950 px-5 py-5 text-white">
-                <div className="flex items-start gap-3">
-                  <div className="rounded-2xl bg-white/10 p-3">
-                    <Crown className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="text-lg font-semibold">
-                      현재 계정 상태
-                    </div>
-                    <p className="mt-2 text-sm leading-6 text-slate-300">
-                      {isCurrentPlanPro
-                        ? "이미 Pro 플랜을 사용 중입니다. 현재 상태에서 무제한 생성과 수정 기능을 계속 사용할 수 있습니다."
-                        : "현재는 Free 플랜입니다. 더 자주 생성하고 수정해야 한다면 Pro 전환이 작업 효율에 유리합니다."}
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
 

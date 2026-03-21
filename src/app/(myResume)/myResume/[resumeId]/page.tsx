@@ -2,7 +2,14 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faHeart } from "@fortawesome/free-solid-svg-icons";
-import { ArrowUp, EllipsisVertical, Pencil, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUp,
+  EllipsisVertical,
+  Pencil,
+  Sparkles,
+  Trash2,
+} from "lucide-react";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import PdfDownloadButton from "./_components/PdfDownloadButton";
@@ -32,6 +39,9 @@ import { useMyResumeDeleteMutation } from "../_hooks/useMyResuemDeleteMutation";
 import { useOnborda } from "onborda";
 import { ResumeDetailContent } from "@/app/(home)/_components/ResumeDetailContent";
 import Goorm from "./_components/Goorm";
+import MyResumeDeleteModal from "./_components/MyResumeDeleteModal";
+import moment from "moment";
+import "moment/locale/ko";
 
 type Props = {
   params: { resumeId: string };
@@ -70,6 +80,7 @@ export default function Page({ params }: Props) {
   const [isPopOver, setIsPopOver] = useState<boolean>(false);
   const [modifiedResume, setModifiedResume] = useState<any>(null);
   const [position, setPosition] = useState<Record<string, number>>();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const { open, setOpen } = useOpenDialogStore((state) => state);
 
@@ -208,7 +219,7 @@ export default function Page({ params }: Props) {
   }
 
   return (
-    <div className="relative flex justify-center w-full h-full p-24">
+    <div className="relative min-h-full bg-[#f5f7fb]">
       {position && isPending && (
         <div
           className="z-50"
@@ -224,17 +235,23 @@ export default function Page({ params }: Props) {
         setOpen={setOpen}
         resume={modifiedResume}
       />
+      <MyResumeDeleteModal
+        onDelete={handleDelete}
+        resumeId={resumeId}
+        open={deleteModalOpen}
+        onOpenChange={setDeleteModalOpen}
+      />
       {isPopOver && (
         <div
           ref={popoverRef}
           style={{
             transform: `translate3d(${position?.x}px, ${position?.y}px, 0)`,
           }}
-          className="absolute top-0 left-0 p-4 w-[300px] flex flex-col space-y-2 bg-white border border-gray-300 rounded-lg shadow-xl"
+          className="absolute left-0 top-0 z-50 flex w-[320px] flex-col space-y-3 rounded-[24px] border border-slate-200/80 bg-white p-4 shadow-[0_28px_80px_-40px_rgba(15,23,42,0.45)]"
         >
           {selectedText && (
-            <div className="relative flex items-center w-full mb-4 p-2 px-4 text-gray-500 bg-gray-100 rounded-lg">
-              <span className="flex-grow text-sm line-clamp-2">{`"${selectedText}"`}</span>
+            <div className="relative flex w-full items-center rounded-2xl bg-slate-100 px-4 py-3 text-slate-500">
+              <span className="flex-grow text-sm leading-6 line-clamp-2">{`"${selectedText}"`}</span>
             </div>
           )}
           <div className="relative flex items-center w-full">
@@ -249,13 +266,13 @@ export default function Page({ params }: Props) {
                   handleSend();
                 }
               }}
-              className="flex w-full text-sm shadow-none transition-colors bg-transparent rounded-md placeholder:text-gray-400 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 pr-12 text-sm shadow-none transition-colors placeholder:text-slate-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             />
             <LoadingButton
               loading={isPending}
               disabled={!requirement}
               onClick={handleSend}
-              className="absolute w-6 h-8 right-0 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-full disabled:bg-gray-400"
+              className="absolute right-2 h-9 w-9 rounded-full bg-slate-950 text-sm text-white hover:bg-slate-800 disabled:bg-slate-300"
             >
               <ArrowUp size={20} className="absolute" />
             </LoadingButton>
@@ -263,95 +280,92 @@ export default function Page({ params }: Props) {
         </div>
       )}
 
-      <div className="flex flex-col max-w-[982px] w-full h-full">
-        {/* 메인 콘텐츠 */}
-        <main className="w-full items-center justify-center mx-auto">
-          <div className="flex flex-col items-center justify-center w-full space-y-4">
-            <div className="flex justify-end w-full">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">
-                    <EllipsisVertical size={20} />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
-                  <DropdownMenuLabel>내 이력서 관리</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                      <PdfDownloadButton resume={resume} />
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => router.push(`/myResume/${resumeId}/edit`)}
-                      className="py-3"
-                    >
-                      직접 수정
-                      <DropdownMenuShortcut>
-                        <Pencil size={18} color="green" />
-                      </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="py-3"
-                      onClick={() => {
-                        const userConfirmed =
-                          confirm("내 이력서를 삭제하시겠습니까?");
-                        if (userConfirmed) {
-                          handleDelete(resumeId); // 삭제 처리
-                        }
-                      }}
-                    >
-                      내 이력서 삭제
-                      <DropdownMenuShortcut>
-                        <Trash2 size={18} color="red" />
-                      </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
+        <section className="overflow-hidden rounded-[34px] border border-slate-200/80 bg-white shadow-[0_32px_90px_-54px_rgba(15,23,42,0.35)]">
+          <div className="grid gap-6 px-6 py-7 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10 lg:px-8">
+            <div>
+              <button
+                onClick={() => router.push("/myResume")}
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-950"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                목록으로
+              </button>
+              <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700">
+                <Sparkles className="h-4 w-4" />
+                Resume Editor Preview
+              </div>
+              <h1 className="mt-4 text-3xl font-semibold tracking-[-0.05em] text-slate-950 sm:text-4xl">
+                {resume.result.memberName}님의 이력서
+                <br />
+                공개 상태와 문장을 함께 다듬는 작업 공간
+              </h1>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
+                선택한 문장을 AI로 다듬고, 공개 여부를 조정하고, 완성된
+                버전은 PDF로 저장할 수 있습니다. 현재 화면은 실제 공개 전에
+                마지막으로 검토하는 preview canvas 역할을 합니다.
+              </p>
             </div>
 
-            <div
-              id="tour1-step1"
-              className="flex flex-row items-center w-full justify-between p-4 border rounded-lg"
-            >
-              <div className="space-y-0.5">
-                <div className="text-base">공개 여부 설정</div>
-                <div className="text-sm text-gray-400">
-                  공개 여부에 체크하시면 커뮤니티에 회원님의 이력서가
-                  공개됩니다!
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              <div className="rounded-[26px] border border-slate-200 bg-slate-950 px-5 py-5 text-white">
+                <div className="text-sm text-slate-300">공개 상태</div>
+                <div className="mt-2 flex items-center justify-between">
+                  <div className="text-xl font-semibold">
+                    {visibility ? "공개 중" : "비공개"}
+                  </div>
+                  <Switch
+                    checked={visibility}
+                    onCheckedChange={() => handleToggleVisibility()}
+                    id="tour1-step1"
+                  />
+                </div>
+                <div className="mt-3 text-sm text-slate-300">
+                  공개로 전환하면 커뮤니티에서 바로 노출됩니다.
                 </div>
               </div>
-              <Switch
-                checked={visibility}
-                onCheckedChange={() => handleToggleVisibility()}
-              />
-            </div>
-            <div className="flex items-center justify-between w-full ">
-              <div className="flex items-center justify-between gap-4 font-semibold text-blue-500 ">
-                {(resume.result.tags && resume.result.tags.length > 0
-                  ? resume.result.tags
-                  : ["#기타"]
-                ).map((tag, index) => (
-                  <span key={index} className="font-bold text-blue-500">
-                    {tag}
+              <div className="rounded-[26px] border border-slate-200 bg-slate-50 px-5 py-5">
+                <div className="text-sm text-slate-500">반응 지표</div>
+                <div className="mt-3 flex items-center gap-4 text-sm font-semibold text-slate-800">
+                  <span className="inline-flex items-center gap-1.5">
+                    <FontAwesomeIcon color="currentColor" icon={faHeart} />
+                    {resume.result.likeCount}
                   </span>
-                ))}
-              </div>
-              <div className="flex gap-2 text-sm">
-                <div className="flex items-center gap-1 p-2 border border-gray-300 rounded-full">
-                  <FontAwesomeIcon color="gray" icon={faHeart} />
-                  <div>{resume.result.likeCount}</div>
+                  <span className="inline-flex items-center gap-1.5">
+                    <FontAwesomeIcon color="currentColor" icon={faEye} />
+                    {resume.result.viewCount}
+                  </span>
                 </div>
-                <div className="flex items-center gap-1 p-2 border rounded-full border-gray-3000">
-                  <FontAwesomeIcon color="gray" icon={faEye} />
-                  <div>{resume.result.viewCount}</div>
+                <div className="mt-3 text-sm text-slate-500">
+                  마지막 업데이트 {moment(resume.result.updatedAt).format("YYYY.MM.DD HH:mm")}
+                </div>
+              </div>
+              <div className="rounded-[26px] border border-slate-200 bg-blue-50 px-5 py-5">
+                <div className="text-sm text-blue-700">태그</div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {(resume.result.tags && resume.result.tags.length > 0
+                    ? resume.result.tags
+                    : ["기타"]
+                  ).map((tag, index) => (
+                    <span
+                      key={index}
+                      className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-blue-700"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
+          </div>
+        </section>
 
-            {/* 이력서 내용 */}
-            {/* <ResumeDetailContent resume={resume.result} /> */}
-            <div id="resumeContent">
+        <main className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="space-y-6">
+            <div
+              id="resumeContent"
+              className="overflow-hidden rounded-[34px] border border-slate-200/80 bg-white shadow-[0_28px_80px_-52px_rgba(15,23,42,0.35)]"
+            >
               <ResumeDetailContent resume={resume.result} />
             </div>
 
@@ -359,6 +373,86 @@ export default function Page({ params }: Props) {
               <ResumeComment resumeId={resumeId} />
             </div>
           </div>
+
+          <aside className="h-fit rounded-[34px] border border-slate-200/80 bg-white p-4 shadow-[0_28px_80px_-52px_rgba(15,23,42,0.35)] xl:sticky xl:top-28">
+            <div className="rounded-[28px] bg-slate-950 px-5 py-5 text-white">
+              <div className="text-sm text-slate-300">Workspace Actions</div>
+              <div className="mt-2 text-2xl font-semibold tracking-[-0.04em]">
+                바로 실행
+              </div>
+              <p className="mt-3 text-sm leading-6 text-slate-300">
+                이력서 저장, 편집, 삭제 같은 주요 작업을 여기서 빠르게
+                처리할 수 있습니다.
+              </p>
+            </div>
+
+            <div className="mt-4 space-y-3">
+              <div className="rounded-[26px] border border-slate-200 bg-slate-50 p-3">
+                <PdfDownloadButton resume={resume} />
+              </div>
+
+              <Button
+                onClick={() => router.push(`/myResume/${resumeId}/edit`)}
+                className="h-12 w-full justify-between rounded-[20px] bg-blue-600 px-4 text-sm font-semibold text-white hover:bg-blue-700"
+              >
+                직접 수정
+                <Pencil className="h-4 w-4" />
+              </Button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="h-12 w-full justify-between rounded-[20px] border-slate-200 px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                  >
+                    추가 작업
+                    <EllipsisVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-60 rounded-2xl">
+                  <DropdownMenuLabel>내 이력서 관리</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem
+                      onClick={() => router.push(`/myResume/${resumeId}/edit`)}
+                      className="py-3"
+                    >
+                      직접 수정
+                      <DropdownMenuShortcut>
+                        <Pencil size={16} />
+                      </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="py-3 text-rose-500 focus:text-rose-500"
+                      onClick={() => setDeleteModalOpen(true)}
+                    >
+                      내 이력서 삭제
+                      <DropdownMenuShortcut>
+                        <Trash2 size={16} />
+                      </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <div className="rounded-[26px] border border-blue-100 bg-blue-50 p-4">
+                <div className="flex items-start gap-3">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-sm">
+                    <Sparkles className="h-4 w-4" />
+                  </span>
+                  <div>
+                    <div className="text-sm font-semibold text-slate-900">
+                      AI 수정 팁
+                    </div>
+                    <p className="mt-1 text-sm leading-6 text-slate-600">
+                      한 섹션 안에서 문장을 드래그한 뒤, 어떤 방향으로 고치고
+                      싶은지 짧게 요청하면 preview 결과를 확인할 수 있습니다.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
         </main>
       </div>
     </div>
