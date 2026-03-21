@@ -3,102 +3,155 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MyResumeDetailSkeleton() {
   return (
-    <div className="flex flex-col w-full h-full justify-center items-center p-24">
-      <div className="flex justify-center max-w-[982px] w-full  h-full">
-        {/* 메인 콘텐츠 */}
-        <main className="items-center justify-center flex-1 mx-auto overflow-y-auto custom-scrollbar">
-          <div className="flex flex-col items-center justify-center w-full space-y-4">
-            <div className="flex justify-end w-full ">
-              <Skeleton className="h-10 w-12" />
-            </div>
-            <div className="flex flex-row items-center w-full justify-between p-4 border rounded-lg">
-              <div className="space-y-0.5 w-2/3">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-4 w-64" />
-              </div>
-              <Skeleton className="h-8 w-12 rounded-full" />
-            </div>
-            <div className="flex items-center justify-betweenw-full ">
-              <Skeleton className="h-6 w-1/4" />
-              <div className="flex gap-2">
-                <Skeleton className="h-6 w-10 rounded-full" />
-                <Skeleton className="h-6 w-10 rounded-full" />
-              </div>
+    <div className="relative min-h-full bg-white">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
+        <section className="overflow-hidden rounded-[34px] border border-slate-200/80 bg-white shadow-[0_32px_90px_-54px_rgba(15,23,42,0.35)]">
+          <div className="grid gap-6 px-6 py-7 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10 lg:px-8">
+            <div>
+              <Skeleton className="h-10 w-28 rounded-full" />
+              <Skeleton className="mt-5 h-10 w-48 rounded-full" />
+              <Skeleton className="mt-4 h-12 w-4/5 rounded-2xl" />
+              <Skeleton className="mt-3 h-12 w-3/4 rounded-2xl" />
+              <Skeleton className="mt-4 h-5 w-full rounded" />
+              <Skeleton className="mt-2 h-5 w-4/5 rounded" />
+              <Skeleton className="mt-2 h-5 w-3/5 rounded" />
             </div>
 
-            <div className="px-20 space-y-10 border border-gray-300 rounded-lg p-14 w-full">
-              <div className="flex flex-row">
-                <div className="flex flex-col flex-grow">
-                  <Skeleton className="h-10 w-1/2 mb-4" />
-                  <Skeleton className="h-8 w-1/3" />
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              <div className="rounded-[26px] border border-slate-200 bg-slate-950 px-5 py-5">
+                <Skeleton className="h-4 w-20 bg-white/20" />
+                <div className="mt-3 flex items-center justify-between">
+                  <Skeleton className="h-7 w-24 bg-white/20" />
+                  <Skeleton className="h-7 w-12 rounded-full bg-white/20" />
                 </div>
-                <Skeleton className="w-[128px] h-[128px] md:w-[180px] md:h-[180px] rounded-lg" />
+                <Skeleton className="mt-3 h-4 w-full bg-white/15" />
+                <Skeleton className="mt-2 h-4 w-3/4 bg-white/15" />
               </div>
 
-              {/* 자기소개 */}
-              <Separator className="bg-black" />
-              <div className="space-y-4">
-                <Skeleton className="h-6 w-1/4" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-3/4" />
+              <div className="rounded-[26px] border border-slate-200 bg-slate-50 px-5 py-5">
+                <Skeleton className="h-4 w-20" />
+                <div className="mt-3 flex gap-3">
+                  <Skeleton className="h-5 w-14 rounded-full" />
+                  <Skeleton className="h-5 w-14 rounded-full" />
+                </div>
+                <Skeleton className="mt-3 h-4 w-2/3" />
               </div>
 
-              {/* 경력 */}
-              <Separator className="bg-black" />
-              <div className="space-y-4">
-                <Skeleton className="h-6 w-1/4" />
-                <Skeleton className="h-5 w-1/2" />
-                <Skeleton className="h-4 w-full" />
-              </div>
-
-              {/* 프로젝트 */}
-              <Separator className="bg-black" />
-              <div className="space-y-4">
-                <Skeleton className="h-6 w-1/4" />
-                <Skeleton className="h-5 w-1/2" />
-                <Skeleton className="h-4 w-full" />
-              </div>
-
-              {/* 기술스택 */}
-              <Separator className="bg-black" />
-              <div className="space-y-4">
-                <Skeleton className="h-6 w-1/4" />
-                <Skeleton className="h-4 w-2/3" />
-              </div>
-
-              {/* 개인 링크 */}
-              <Separator className="bg-black" />
-              <div className="space-y-4">
-                <Skeleton className="h-6 w-1/4" />
-                <Skeleton className="h-4 w-full" />
+              <div className="rounded-[26px] border border-slate-200 bg-blue-50 px-5 py-5">
+                <Skeleton className="h-4 w-12 bg-white/80" />
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Skeleton className="h-6 w-14 rounded-full bg-white" />
+                  <Skeleton className="h-6 w-16 rounded-full bg-white" />
+                  <Skeleton className="h-6 w-12 rounded-full bg-white" />
+                </div>
               </div>
             </div>
           </div>
-        </main>
+        </section>
 
-        {/* 사이드바 */}
-        {/* <aside className="hidden lg:flex flex-col justify-between w-[300px] h-full p-4 border-l bg-white border-gray-300 shadow-lg">
-          <div>
-            <div className="mb-4 text-lg font-bold text-center">
-              <Skeleton className="h-4 w-40 mx-auto" />
+        <main className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="space-y-6">
+            <div className="overflow-hidden rounded-[34px] border border-slate-200/80 bg-white shadow-[0_28px_80px_-52px_rgba(15,23,42,0.35)]">
+              <div className="px-20 space-y-10 border border-gray-300 rounded-lg p-14 w-full">
+                <div className="flex flex-row">
+                  <div className="flex flex-col flex-grow">
+                    <Skeleton className="mb-4 h-10 w-1/2" />
+                    <Skeleton className="h-8 w-1/3" />
+                  </div>
+                  <Skeleton className="h-[128px] w-[128px] rounded-lg md:h-[180px] md:w-[180px]" />
+                </div>
+
+                <Separator className="bg-black" />
+                <div className="space-y-4">
+                  <Skeleton className="h-6 w-1/4" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                </div>
+
+                <Separator className="bg-black" />
+                <div className="space-y-4">
+                  <Skeleton className="h-6 w-1/4" />
+                  <Skeleton className="h-5 w-1/2" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+
+                <Separator className="bg-black" />
+                <div className="space-y-4">
+                  <Skeleton className="h-6 w-1/4" />
+                  <Skeleton className="h-5 w-1/2" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+
+                <Separator className="bg-black" />
+                <div className="space-y-4">
+                  <Skeleton className="h-6 w-1/4" />
+                  <Skeleton className="h-4 w-2/3" />
+                </div>
+
+                <Separator className="bg-black" />
+                <div className="space-y-4">
+                  <Skeleton className="h-6 w-1/4" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+              </div>
             </div>
-            <div className="flex-grow space-y-2 overflow-y-auto">
-              {Array(4)
-                .fill(0)
-                .map((_, index) => (
-                  <Skeleton
-                    key={index}
-                    className="p-2 bg-gray-200 rounded-lg w-full"
-                  />
+
+            <div className="rounded-[28px] border border-slate-200 bg-white shadow-[0_24px_75px_-52px_rgba(15,23,42,0.35)]">
+              <div className="rounded-t-[28px] border-b border-slate-200 bg-white px-10 py-5">
+                <Skeleton className="h-7 w-16" />
+              </div>
+              <div className="space-y-6 px-10 py-6">
+                {[...Array(3)].map((_, index) => (
+                  <div key={index} className="space-y-4">
+                    <div className="flex items-start gap-3 p-4">
+                      <Skeleton className="h-12 w-12 rounded-full" />
+                      <div className="flex-1 space-y-2">
+                        <Skeleton className="h-4 w-28" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-2/3" />
+                      </div>
+                    </div>
+                    {index < 2 && <Separator />}
+                  </div>
                 ))}
+
+                <div className="flex items-center gap-2 pt-2">
+                  <Skeleton className="h-10 flex-1 rounded-full" />
+                  <Skeleton className="h-10 w-16 rounded-full" />
+                </div>
+              </div>
             </div>
           </div>
-          <div className="flex flex-col items-center p-2 mt-2 space-y-2 bg-gray-100 rounded-lg">
-            <Skeleton className="h-8 w-full" />
-            <Skeleton className="h-8 w-2/3" />
-          </div>
-        </aside> */}
+
+          <aside className="h-fit rounded-[34px] border border-slate-200/80 bg-white p-4 shadow-[0_28px_80px_-52px_rgba(15,23,42,0.35)] xl:sticky xl:top-28">
+            <div className="rounded-[28px] bg-slate-950 px-5 py-5">
+              <Skeleton className="h-4 w-28 bg-white/20" />
+              <Skeleton className="mt-3 h-8 w-24 bg-white/20" />
+              <Skeleton className="mt-3 h-4 w-full bg-white/15" />
+              <Skeleton className="mt-2 h-4 w-4/5 bg-white/15" />
+            </div>
+
+            <div className="mt-4 space-y-3">
+              <div className="rounded-[26px] border border-slate-200 bg-slate-50 p-3">
+                <Skeleton className="h-12 w-full rounded-[20px]" />
+              </div>
+              <Skeleton className="h-12 w-full rounded-[20px]" />
+              <Skeleton className="h-12 w-full rounded-[20px]" />
+
+              <div className="rounded-[26px] border border-blue-100 bg-blue-50 p-4">
+                <div className="flex items-start gap-3">
+                  <Skeleton className="h-10 w-10 rounded-2xl bg-white" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-20 bg-white/80" />
+                    <Skeleton className="h-4 w-full bg-white/80" />
+                    <Skeleton className="h-4 w-4/5 bg-white/80" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </main>
       </div>
     </div>
   );

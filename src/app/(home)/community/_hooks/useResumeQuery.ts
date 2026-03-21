@@ -162,6 +162,7 @@ export interface ResumeDetail {
   visibility: "PUBLIC" | "PRIVATE";
   likeCount: number;
   viewCount: number;
+  updatedAt: string;
 }
 export interface ResumeDetailResponse {
   time: string;

@@ -1,6 +1,7 @@
 import customFetch from "@/app/api/customFetch";
 import { useAuthStore } from "@/app/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 interface WorkExperience {
   companyName: string;
@@ -80,13 +81,24 @@ const getUserProfile = async () => {
     throw new Error("Network response was not ok");
   }
   const data: ProfileApiResponse = await response.json();
-  useAuthStore.setState({ user: data.result });
-  useAuthStore.setState({ authenticated: true });
   return data || "";
 };
 export const useProfileQuery = () => {
-  return useQuery<ProfileApiResponse>({
+  const authenticated = useAuthStore((state) => state.authenticated);
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const setUser = useAuthStore((state) => state.setUser);
+
+  const query = useQuery<ProfileApiResponse>({
     queryKey: ["profile"],
     queryFn: () => getUserProfile(),
+    enabled: authenticated || Boolean(accessToken),
   });
+
+  useEffect(() => {
+    if (query.data?.result) {
+      setUser(query.data.result);
+    }
+  }, [query.data, setUser]);
+
+  return query;
 };

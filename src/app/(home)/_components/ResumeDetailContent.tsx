@@ -22,7 +22,7 @@ interface ResumeDetailContentProps {
 
 export function ResumeDetailContent({ resume }: ResumeDetailContentProps) {
   return (
-    <div className="px-20 space-y-10 border border-gray-300 rounded-lg p-14 w-full">
+    <div className="px-20 space-y-10 border border-gray-300 rounded-lg p-14 w-full bg-white">
       <div className="flex flex-row">
         <div className="flex flex-col flex-grow">
           <div className="mb-4 text-3xl font-semibold">{resume.memberName}</div>

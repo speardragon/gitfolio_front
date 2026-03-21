@@ -21,16 +21,12 @@ import Markdown from "react-markdown";
 import { useCallback, useEffect, useState } from "react";
 import { generateTabItems } from "./_lib/util";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { handleIconChange } from "@/app/_lib/util";
 import { ResumeDetailContent } from "@/app/(home)/_components/ResumeDetailContent";
 
-type Props = {
-  params: { resumeId: string };
-};
-
-export default function Page({ params }: Props) {
-  const resumeId = params.resumeId;
+export default function Page() {
+  const { resumeId } = useParams<{ resumeId: string }>();
   const [activeTab, setActiveTab] = useState<string>("aboutMe");
 
   const router = useRouter();
@@ -121,7 +117,7 @@ export default function Page({ params }: Props) {
 
         <div className="relative flex flex-col border rounded-md w-full border-gray-300 ">
           <div className="flex flex-col">
-            <nav className="sticky z-10 flex justify-center w-full gap-4 pt-5 bg-white shadow-lg top-16">
+            <nav className="sticky top-0 z-10 flex justify-center pt-5 w-full gap-4 bg-white shadow-lg">
               {TAB_ITEMS.map((item) => (
                 <button
                   key={item.target}

@@ -44,10 +44,6 @@ const getMyResume = async ({ pageParam = 0 }): Promise<MyResumeResponse> => {
     },
   );
 
-  if (pageParam !== 0) {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  }
-
   if (!response.ok) {
     throw new Error("내 이력서 불러오기 실패");
   }

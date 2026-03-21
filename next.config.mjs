@@ -1,5 +1,4 @@
 import { withSentryConfig } from "@sentry/nextjs";
-/** @type {import('next').NextConfig} */
 
 import withBundleAnalyzer from "@next/bundle-analyzer";
 
@@ -7,35 +6,27 @@ const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-const normalizeEnvUrl = (value) => {
-  if (typeof value !== "string") {
-    return null;
-  }
-
-  const normalized = value.trim();
-
-  if (!normalized || normalized === "undefined" || normalized === "null") {
-    return null;
-  }
-
-  return normalized.replace(/\/$/, "");
-};
-
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone", // standalone 모드 활성화
+  /** @param {import('webpack').Configuration} config */
   webpack: (config) => {
+    config.module ??= { rules: [] };
+    config.module.rules ??= [];
+
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
-      use: ["@svgr/webpack"],
+      use: [
+        {
+          loader: "@svgr/webpack",
+          options: {
+            icon: true,
+          },
+        },
+      ],
     });
     return config;
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  experimental: {
-    proxyTimeout: 300000,
   },
   images: {
     remotePatterns: [
@@ -52,32 +43,6 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
-  },
-  async rewrites() {
-    if (process.env.NEXT_PUBLIC_ENABLE_MSW === "true") {
-      return [];
-    }
-
-    const routes = [
-      ["/api/auth/:path*", normalizeEnvUrl(process.env.AUTH_SERVER_URL)],
-      ["/api/members/:path*", normalizeEnvUrl(process.env.MEMBERS_SERVER_URL)],
-      ["/api/resumes/:path*", normalizeEnvUrl(process.env.RESUMES_SERVER_URL)],
-      [
-        "/api/notifications/:path*",
-        normalizeEnvUrl(process.env.NOTIFICATIONS_SERVER_URL),
-      ],
-      [
-        "/api/payments/:path*",
-        normalizeEnvUrl(process.env.PAYMENTS_SERVER_URL),
-      ],
-    ];
-
-    return routes
-      .filter(([, destination]) => destination)
-      .map(([source, destination]) => ({
-        source,
-        destination: `${destination}${source}`,
-      }));
   },
 };
 // export default bundleAnalyzer(nextConfig);

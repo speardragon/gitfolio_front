@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export function useMemberDeleteMutation() {
-  const { resetAuth } = useAuthStore((state) => state);
+  const resetAuth = useAuthStore((state) => state.resetAuth);
 
   const router = useRouter();
 

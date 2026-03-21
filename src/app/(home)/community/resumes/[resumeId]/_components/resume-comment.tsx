@@ -41,8 +41,8 @@ export default function ResumeComment({ resumeId }: Props) {
   }
 
   return (
-    <div className="flex flex-col w-full h-full border rounded-lg">
-      <div className="p-4 px-10 text-lg font-semibold text-white rounded-t-lg bg-gradient-to-r from-blue-500 to-blue-200">
+    <div className="flex h-full w-full flex-col rounded-[28px] border border-slate-200 bg-white shadow-[0_24px_75px_-52px_rgba(15,23,42,0.35)]">
+      <div className="rounded-t-[28px] border-b border-slate-200 bg-white px-10 py-5 text-lg font-semibold text-slate-950">
         댓글
       </div>
       <div className="flex flex-col w-full h-full">

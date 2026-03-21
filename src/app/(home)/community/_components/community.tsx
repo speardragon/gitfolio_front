@@ -34,7 +34,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CommunitySkeleton from "../_components/community-skeleton";
 import { useLikeMutation } from "../_hooks/useLikeMutation";
 import { Resume, ResumeFilter, useResumeQuery } from "../_hooks/useResumeQuery";
@@ -45,6 +45,7 @@ import {
   schoolTypeMap,
   SchoolType,
 } from "@/app/types/type";
+import { useDebounce } from "@/components/ui/multi-selector";
 
 const sortOrderLabelMap = {
   recent: "최신순",
@@ -285,16 +286,25 @@ export default function Community() {
   const initialPage = parseInt(searchParams.get("page") || "1", 10);
 
   const [filters, setFilters] = useState<ResumeFilter>(initialFilters);
+  const [techStackInput, setTechStackInput] = useState(initialFilters.techStack);
   const [page, setPage] = useState<number>(initialPage);
   const [size] = useState(12);
+  const debouncedTechStack = useDebounce(techStackInput, 400);
+  const resolvedFilters = useMemo(
+    () => ({
+      ...filters,
+      techStack: debouncedTechStack,
+    }),
+    [debouncedTechStack, filters],
+  );
 
-  const { accessToken } = useAuthStore((state) => state);
-  const { data: resumes } = useResumeQuery(page, size, filters);
-  const { mutate } = useLikeMutation(page, size, filters);
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const { data: resumes } = useResumeQuery(page, size, resolvedFilters);
+  const { mutate } = useLikeMutation(page, size, resolvedFilters);
 
   useEffect(() => {
-    router.replace(buildCommunityHref(filters, page), { scroll: false });
-  }, [filters, page, router]);
+    router.replace(buildCommunityHref(resolvedFilters, page), { scroll: false });
+  }, [page, resolvedFilters, router]);
 
   const resetFilter = () => {
     setFilters({
@@ -304,6 +314,7 @@ export default function Community() {
       sortOrder: "",
       liked: "false",
     });
+    setTechStackInput("");
     setPage(1);
   };
 
@@ -323,10 +334,10 @@ export default function Community() {
     return <CommunitySkeleton size={size} />;
   }
 
-  const hasActiveFilters = Object.entries(filters).some(
+  const hasActiveFilters = Object.entries(resolvedFilters).some(
     ([key, value]) => value && !(key === "liked" && value === "false"),
   );
-  const filterSummary = getFilterSummary(filters);
+  const filterSummary = getFilterSummary(resolvedFilters);
   const pageNumbers = generatePageNumbers(page, resumes.result.totalPages);
   const resultLabel = hasActiveFilters ? "검색 결과" : "공개 이력서";
 
@@ -471,10 +482,8 @@ export default function Community() {
               <div className="relative">
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <Input
-                  value={filters.techStack}
-                  onChange={(event) =>
-                    handleFilterChange("techStack", event.target.value)
-                  }
+                  value={techStackInput}
+                  onChange={(event) => setTechStackInput(event.target.value)}
                   className="h-11 rounded-2xl border-slate-200 bg-white pl-11 pr-4 placeholder:text-slate-400"
                   placeholder="기술 스택 검색"
                 />
@@ -508,7 +517,7 @@ export default function Community() {
                 {filterSummary.length > 0 ? (
                   filterSummary.map((summary) => (
                     <Badge
-                      key={summary}
+                  key={summary}
                       variant="secondary"
                       className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600"
                     >
@@ -584,7 +593,7 @@ export default function Community() {
             <Pagination>
               <PaginationContent>
                 <PaginationPrevious
-                  href={buildCommunityHref(filters, Math.max(page - 1, 1))}
+                  href={buildCommunityHref(resolvedFilters, Math.max(page - 1, 1))}
                   onClick={() => handlePageChange(Math.max(page - 1, 1))}
                   className={cn(
                     "rounded-full border border-slate-200 bg-white",
@@ -599,7 +608,10 @@ export default function Community() {
                   return (
                     <PaginationItem key={pageNum}>
                       <PaginationLink
-                        href={buildCommunityHref(filters, pageNum as number)}
+                        href={buildCommunityHref(
+                          resolvedFilters,
+                          pageNum as number,
+                        )}
                         onClick={() => handlePageChange(pageNum as number)}
                         isActive={pageNum === page}
                         className={cn(
@@ -616,7 +628,7 @@ export default function Community() {
                 })}
                 <PaginationNext
                   href={buildCommunityHref(
-                    filters,
+                    resolvedFilters,
                     Math.min(page + 1, resumes.result.totalPages),
                   )}
                   onClick={() =>

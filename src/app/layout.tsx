@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
 import ReactQueryProviders from "./_components/ReactQueryProvider";
-import MSWProvider from "./_components/MSWProvider";
 import * as Sentry from "@sentry/nextjs";
 import Error from "./error";
 import Script from "next/dist/client/script";
@@ -26,7 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${pretendard.variable}`}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${pretendard.variable}`}
+    >
       <head>
         {process.env.NODE_ENV === "development" && (
           <Script
@@ -37,14 +40,12 @@ export default function RootLayout({
         )}
       </head>
       <body className={`${pretendard.className} antialiased`}>
-        <MSWProvider>
-          <Toaster richColors />
-          <ReactQueryProviders>
-            <Sentry.ErrorBoundary fallback={<Error />}>
-              {children}
-            </Sentry.ErrorBoundary>
-          </ReactQueryProviders>
-        </MSWProvider>
+        <Toaster richColors />
+        <ReactQueryProviders>
+          <Sentry.ErrorBoundary fallback={<Error />}>
+            {children}
+          </Sentry.ErrorBoundary>
+        </ReactQueryProviders>
       </body>
     </html>
   );

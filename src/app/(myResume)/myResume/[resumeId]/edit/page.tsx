@@ -25,16 +25,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type FormValues = z.infer<typeof formSchema>;
 
-type Props = {
-  params: { resumeId: string };
-};
-
-export default function Page({ params }: Props) {
-  const resumeId = params.resumeId;
+export default function Page() {
+  const { resumeId } = useParams<{ resumeId: string }>();
   const router = useRouter();
 
   const { data: resume, error, refetch } = useMyResumeDetailQuery(resumeId);
