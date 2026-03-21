@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
 import ReactQueryProviders from "./_components/ReactQueryProvider";
-import MSWProvider from "./_components/MSWProvider";
 import * as Sentry from "@sentry/nextjs";
 import Error from "./error";
 import Script from "next/dist/client/script";
@@ -37,14 +36,12 @@ export default function RootLayout({
         )}
       </head>
       <body className={`${pretendard.className} antialiased`}>
-        <MSWProvider>
-          <Toaster richColors />
-          <ReactQueryProviders>
-            <Sentry.ErrorBoundary fallback={<Error />}>
-              {children}
-            </Sentry.ErrorBoundary>
-          </ReactQueryProviders>
-        </MSWProvider>
+        <Toaster richColors />
+        <ReactQueryProviders>
+          <Sentry.ErrorBoundary fallback={<Error />}>
+            {children}
+          </Sentry.ErrorBoundary>
+        </ReactQueryProviders>
       </body>
     </html>
   );

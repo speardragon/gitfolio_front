@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export function useLogout() {
-  const { setAccessToken, setAuthenticated } = useAuthStore((state) => state);
+  const resetAuth = useAuthStore((state) => state.resetAuth);
 
   const router = useRouter(); // router 사용 설정
 
@@ -31,8 +31,7 @@ export function useLogout() {
       return null;
     },
     onSuccess: () => {
-      setAccessToken("");
-      setAuthenticated(false);
+      resetAuth();
       toast.info("로그아웃에 성공했습니다.");
       router.push("/");
     },

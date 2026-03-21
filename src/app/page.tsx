@@ -87,7 +87,7 @@ const templateCards = [
 ];
 
 export default function Home() {
-  const { authenticated } = useAuthStore((state) => state);
+  const authenticated = useAuthStore((state) => state.authenticated);
   const router = useRouter();
 
   useEffect(() => {

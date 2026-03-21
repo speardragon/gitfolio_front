@@ -288,7 +288,7 @@ export default function Community() {
   const [page, setPage] = useState<number>(initialPage);
   const [size] = useState(12);
 
-  const { accessToken } = useAuthStore((state) => state);
+  const accessToken = useAuthStore((state) => state.accessToken);
   const { data: resumes } = useResumeQuery(page, size, filters);
   const { mutate } = useLikeMutation(page, size, filters);
 

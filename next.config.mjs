@@ -7,20 +7,6 @@ const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-const normalizeEnvUrl = (value) => {
-  if (typeof value !== "string") {
-    return null;
-  }
-
-  const normalized = value.trim();
-
-  if (!normalized || normalized === "undefined" || normalized === "null") {
-    return null;
-  }
-
-  return normalized.replace(/\/$/, "");
-};
-
 const nextConfig = {
   output: "standalone", // standalone 모드 활성화
   webpack: (config) => {
@@ -52,32 +38,6 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
-  },
-  async rewrites() {
-    if (process.env.NEXT_PUBLIC_ENABLE_MSW === "true") {
-      return [];
-    }
-
-    const routes = [
-      ["/api/auth/:path*", normalizeEnvUrl(process.env.AUTH_SERVER_URL)],
-      ["/api/members/:path*", normalizeEnvUrl(process.env.MEMBERS_SERVER_URL)],
-      ["/api/resumes/:path*", normalizeEnvUrl(process.env.RESUMES_SERVER_URL)],
-      [
-        "/api/notifications/:path*",
-        normalizeEnvUrl(process.env.NOTIFICATIONS_SERVER_URL),
-      ],
-      [
-        "/api/payments/:path*",
-        normalizeEnvUrl(process.env.PAYMENTS_SERVER_URL),
-      ],
-    ];
-
-    return routes
-      .filter(([, destination]) => destination)
-      .map(([source, destination]) => ({
-        source,
-        destination: `${destination}${source}`,
-      }));
   },
 };
 // export default bundleAnalyzer(nextConfig);

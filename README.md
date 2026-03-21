@@ -18,21 +18,15 @@
 |                                                       Cloud                                                       |                                                      AI                                                       |                                                    AI                                                     |
 | 쿠버네티스 클러스터링 <br>Terraform, Ansible을 통한 인프라 관리 자동화<br/> SSM을 ㅌ오한 더 안전하 서버 접속 설정 |                     멀티프로세싱 적용 <br/>이력서 생성 데이터 처리 파이프 라인 구축 <br/>                     |                           AI 이력서 수정 정형화 로직 <br>LLM Prompt Engineering                           |
 
-## Mock Mode (포트폴리오 / 데모용)
+## Mock API Mode (포트폴리오 / 데모용)
 
-실제 백엔드 없이 프론트엔드만 실행하려면 mock mode를 켜면 됩니다.
-
-### 환경변수
-
-```bash
-NEXT_PUBLIC_ENABLE_MSW=true
-```
+실제 백엔드 없이 프론트엔드만 실행해도, Next.js API Route가 동일한 `/api/*` 경로에서 mock 응답을 반환합니다.
 
 ### 실행
 
 ```bash
 pnpm install
-NEXT_PUBLIC_ENABLE_MSW=true pnpm dev
+pnpm dev
 ```
 
 ### 용도
@@ -41,8 +35,8 @@ NEXT_PUBLIC_ENABLE_MSW=true pnpm dev
 
 ### 참고
 - mock mode에서는 GitHub 로그인 버튼이 실제 OAuth로 가지 않고 데모 흐름으로 진입합니다.
-- MSW worker는 `public/mockServiceWorker.js` 를 사용합니다.
-- 목 데이터는 `src/mocks/handlers.ts` 에서 관리합니다.
+- mock 응답은 Next.js App Router의 `/api/*` route handler에서 반환합니다.
+- 정적 mock 데이터는 `src/server/mock/data.ts` 에서 관리합니다.
 
 ## Gitfolio 배포 사이트
 

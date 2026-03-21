@@ -14,7 +14,7 @@ export default function MainLayout({
   return (
     <div className="flex flex-col h-screen">
       <Header />
-      <div className="flex flex-col flex-1 pt-16">{children}</div>
+      <div className="flex flex-col flex-1 pt-24">{children}</div>
       <Footer />
     </div>
   );

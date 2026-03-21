@@ -5,7 +5,6 @@ import { toast } from "sonner";
 
 export function useResumeCommentDelete(resumeId: string) {
   const queryClient = useQueryClient();
-  const { accessToken } = useAuthStore((state) => state);
 
   return useMutation({
     mutationKey: ["resuemCommentCreate"],

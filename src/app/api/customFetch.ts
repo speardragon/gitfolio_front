@@ -10,7 +10,12 @@ const customFetch = async (
     return fetch(url, options);
   }
 
-  let accessToken = useAuthStore.getState().accessToken;
+  const authState = useAuthStore.getState();
+  const shouldReissue = authState.authenticated;
+  let accessToken = authState.accessToken;
+
+  const readAccessToken = (payload: any) =>
+    payload?.result?.accessToken ?? payload?.accessToken ?? null;
 
   const headers: Record<string, string> = {
     ...((options.headers instanceof Headers
@@ -19,7 +24,7 @@ const customFetch = async (
   };
 
   // 1) 토큰이 없으면 재발급 시도
-  if (!accessToken) {
+  if (!accessToken && shouldReissue) {
     const reissueResponse = await fetch(
       `/api/auth/reissue`,
       // `${process.env.NEXT_PUBLIC_AUTH_SERVER_URL}/api/auth/reissue`,
@@ -31,15 +36,23 @@ const customFetch = async (
 
     if (reissueResponse.ok) {
       const data = await reissueResponse.json();
-      accessToken = data.accessToken;
-      useAuthStore.setState({ accessToken, authenticated: true });
+      accessToken = readAccessToken(data);
+      if (accessToken) {
+        useAuthStore.setState({ accessToken, authenticated: true });
+      } else {
+        useAuthStore.getState().resetAuth();
+      }
     } else {
       useAuthStore.getState().resetAuth();
     }
   }
 
   // 2) Authorization 헤더 세팅
-  headers.Authorization = `Bearer ${accessToken}`;
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  } else {
+    delete headers.Authorization;
+  }
 
   // 3) JSON 요청시 Content-Type 헤더 세팅
   if (!(options.body instanceof FormData)) {
@@ -50,7 +63,7 @@ const customFetch = async (
     const response = await fetch(url, { ...options, headers });
 
     // 4) 401 → 재발급 로직
-    if (response.status === 401) {
+    if (response.status === 401 && useAuthStore.getState().authenticated) {
       // 토큰 재발급 요청
       const reissueResponse = await fetch(
         `/api/auth/reissue`,
@@ -74,8 +87,17 @@ const customFetch = async (
       }
 
       // 재발급 성공
-      const { accessToken: newAccessToken } = await reissueResponse.json();
-      useAuthStore.setState({ accessToken: newAccessToken });
+      const reissuePayload = await reissueResponse.json();
+      const newAccessToken = readAccessToken(reissuePayload);
+      if (!newAccessToken) {
+        useAuthStore.getState().resetAuth();
+        throw new Error("인증 토큰을 복구할 수 없습니다.");
+      }
+
+      useAuthStore.setState({
+        accessToken: newAccessToken,
+        authenticated: true,
+      });
       headers.Authorization = `Bearer ${newAccessToken}`;
 
       // 동일 요청 재시도

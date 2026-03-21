@@ -1,9 +1,10 @@
+"use client";
+
 import GITHUB_WHITE_LOGO from "../../../public/images/github-mark-white.png";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-
-const apiUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
+import { useAuthStore } from "../store/useAuthStore";
 
 type GithubButtonProps = {
   className?: string;
@@ -14,18 +15,11 @@ export default function GithubButton({
   className,
   label = "깃허브로 로그인하기",
 }: GithubButtonProps) {
+  const login = useAuthStore((state) => state.login);
+
   const handleGithubLogin = () => {
-    if (process.env.NEXT_PUBLIC_ENABLE_MSW === "true") {
-      window.location.href = "/community";
-      return;
-    }
-
-    if (!apiUrl || apiUrl === "undefined" || apiUrl === "null") {
-      console.error("NEXT_PUBLIC_API_URL is not configured.");
-      return;
-    }
-
-    window.location.href = `${apiUrl}/oauth2/authorization/github`;
+    login("mock-access-token");
+    window.location.href = "/community";
   };
 
   return (
