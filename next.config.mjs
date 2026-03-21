@@ -8,7 +8,7 @@ const bundleAnalyzer = withBundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone", // standalone 모드 활성화
+  output: "standalone",
   /** @param {import('webpack').Configuration} config */
   webpack: (config) => {
     config.module ??= { rules: [] };
